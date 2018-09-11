@@ -258,9 +258,12 @@ unset OS_AUTH_URL OS_PASSWORD
 2. 作为管理用户，请求一个身份验证令牌:
 
 ```
-$ openstack --os-auth-url http://controller:35357/v3 \
-  --os-project-domain-name Default --os-user-domain-name Default \
-  --os-project-name admin --os-username admin token issue
+$ openstack \
+  --os-auth-url http://controller:35357/v3 \
+  --os-project-domain-name Default \
+  --os-user-domain-name Default \
+  --os-project-name admin \
+  --os-username admin token issue
 
 Password:
 +------------+-----------------------------------------------------------------+
@@ -276,3 +279,4 @@ Password:
 ```
 
 >密码为： ADMIN_PASS
+>
