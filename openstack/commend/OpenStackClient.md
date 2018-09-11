@@ -63,27 +63,30 @@ openstack定义了了以下全局选项:
     Service URL, when using a service token for authentication
     *服务URL，即使用的 service 令牌*
 
-* --os-domain-name <auth-domain-name>¶
+* --os-domain-name <auth-domain-name>
 
     Domain-level authorization scope (by name)
+    *域级别验证 域名称*
 
-* --os-domain-id <auth-domain-id>¶
+* --os-domain-id <auth-domain-id>
 
     Domain-level authorization scope (by ID)
 
 * --os-project-name <auth-project-name>
 
     Project-level authentication scope (by name)
+    *项目级别认证 项目名称*
 
-* --os-project-id <auth-project-id>¶
+* --os-project-id <auth-project-id>
 
     Project-level authentication scope (by ID)
 
-* --os-project-domain-name <auth-project-domain-name>¶
+* --os-project-domain-name <auth-project-domain-name>
 
     Domain name containing project
+    *包含项目的域名，*
 
-* --os-project-domain-id <auth-project-domain-id>¶
+* --os-project-domain-id <auth-project-domain-id>
 
     Domain ID containing project
 
@@ -92,94 +95,93 @@ openstack定义了了以下全局选项:
     Authentication username
     *认证的用户名*
 
-* --os-password <auth-password>¶
+* --os-password <auth-password>
 
     Authentication password
     *认证的用户密码*
 
---os-token <token>¶
+* --os-token <token>
 
     Authenticated token or service token
 
---os-user-domain-name <auth-user-domain-name>¶
+* --os-user-domain-name <auth-user-domain-name>
 
     Domain name containing user
+    *包含user 的域名*
 
---os-user-domain-id <auth-user-domain-id>¶
+* --os-user-domain-id <auth-user-domain-id>
 
     Domain ID containing user
 
---os-trust-id <trust-id>¶
+* --os-trust-id <trust-id>¶
 
     ID of the trust to use as a trustee user
 
---os-default-domain <auth-domain>¶
+* --os-default-domain <auth-domain>
 
     Default domain ID (Default: ‘default’)
 
---os-region-name <auth-region-name>¶
+* --os-region-name <auth-region-name>
 
     Authentication region name
 
---os-cacert <ca-bundle-file>¶
+* --os-cacert <ca-bundle-file>
 
     CA certificate bundle file
 
---verify` | :option:`--insecure¶
+* --verify` | :option:`--insecure¶
 
     Verify or ignore server certificate (default: verify)
 
---os-cert <certificate-file>¶
+* --os-cert <certificate-file>
 
     Client certificate bundle file
 
---os-key <key-file>¶
+* --os-key <key-file>
 
     Client certificate key file
 
---os-identity-api-version <identity-api-version>¶
+* --os-identity-api-version <identity-api-version>
 
     Identity API version (Default: 2.0)
 
---os-XXXX-api-version <XXXX-api-version>¶
+* --os-XXXX-api-version <XXXX-api-version>
 
     Additional API version options will be available depending on the installed API libraries.
 
---os-interface <interface>¶
+* --os-interface <interface>
 
     Interface type. Valid options are public, admin and internal.
 
 
-Note
-
+>Note
 If you switch to openstackclient from project specified clients, like: novaclient, neutronclient and so on, please use –os-interface instead of –os-endpoint-type.
 
---os-profile <hmac-key>¶
+* --os-profile <hmac-key>
 
     Performance profiling HMAC key for encrypting context data
-
     This key should be the value of one of the HMAC keys defined in the configuration files of OpenStack services to be traced.
 
---os-beta-command¶
+* --os-beta-command
 
     Enable beta commands which are subject to change
 
---log-file <LOGFILE>¶
+* --log-file <LOGFILE>
 
     Specify a file to log output. Disabled by default.
 
--v, --verbose¶
+* -v, --verbose
 
     Increase verbosity of output. Can be repeated.
 
--q, --quiet¶
+* -q, --quiet
 
     Suppress output except warnings and errors
 
---debug
+* --debug
 
     Show tracebacks on errors and set verbosity to debug
 
---help
+* --help
 
     Show help message and exit

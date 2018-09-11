@@ -263,7 +263,8 @@ $ openstack \
   --os-project-domain-name Default \
   --os-user-domain-name Default \
   --os-project-name admin \
-  --os-username admin token issue
+  --os-username admin
+   token issue
 
 Password:
 +------------+-----------------------------------------------------------------+
@@ -279,4 +280,8 @@ Password:
 ```
 
 >密码为： ADMIN_PASS
->
+>--os-auth-url http://controller:35357/v3 设置url
+--os-project-domain-name Default \
+--os-user-domain-name Default \
+--os-project-name admin \
+--os-username admin
