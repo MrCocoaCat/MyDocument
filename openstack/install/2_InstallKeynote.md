@@ -74,20 +74,25 @@ keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 ```
 keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
 ```
->keystone-manage fernet_setup
+>keystone-manage fernet_setup 设置用于令牌（token）加密的Fernet密钥存储库
 
+>eystone-manage credential_setup 设置用于凭证（credential，用户密码）加密的Fernet密钥存储库。
 
 5. 引导标识服务
 
 ```
-keystone-manage bootstrap --bootstrap-password ADMIN_PASS \
+keystone-manage bootstrap \
+  --bootstrap-password ADMIN_PASS \
   --bootstrap-admin-url http://controller:5000/v3/ \
   --bootstrap-internal-url http://controller:5000/v3/ \
   --bootstrap-public-url http://controller:5000/v3/ \
   --bootstrap-region-id RegionOne
-
 ```
-将ADMIN_PASS替换为合适的密码
+
+将ADMIN_PASS替换为合适的密码,此密码为环境变量中的密码
+
+>keystone-manage bootstrap 执行基本的引导过程
+
 
 ##### 配置Apache HTTP 服务
 
@@ -96,7 +101,9 @@ keystone-manage bootstrap --bootstrap-password ADMIN_PASS \
 ```
 ServerName controller
 ```
+
 2. 为 /usr/share/keystone/wsgi-keystone.conf 文件创建链接
+
 ```
 ln -s /usr/share/keystone/wsgi-keystone.conf /etc/httpd/conf.d/
 ```
@@ -128,7 +135,8 @@ $ export OS_IDENTITY_API_VERSION=3
 
 身份服务为每个OpenStack服务提供身份验证服务。
 
-1. 创建默认domain
+1. 创建默认域(domain)，在‘keystone-manage bootstrap’步骤中已经存在“default”域。
+创建example域作为演示
 
 
 ```
@@ -142,10 +150,11 @@ $ openstack domain create --description "An Example Domain" example
 | id          | 2f4f80574fd84fe6ba9067228ae0a50c |
 | name        | example                          |
 +-------------+----------------------------------+
-
-
 ```
-2. 本指南使用一个服务项目，该项目为您添加到环境中的每个服务包含一个惟一的用户。创建创建service project
+
+>domain 名为example
+
+2. 创建一个server项目(project)，添加到环境中的每个服务包含一个惟一的用户。
 
 ```
 $ openstack project create --domain default \
@@ -164,9 +173,11 @@ $ openstack project create --domain default \
 +-------------+----------------------------------+
 ```
 
-3. 常规(非管理)任务应该使用非特权项目和用户。作为示例，本指南创建演示项目和使用
+>项目名为service
 
-* 创建demo project:
+3. 常规(非管理)任务应该使用常规权限的项目和用户。作为示例，创建demo项目用户
+
+* 创建demo项目:
 
 ```
 $ openstack project create --domain default \
@@ -184,8 +195,9 @@ $ openstack project create --domain default \
 | parent_id   | default                          |
 +-------------+----------------------------------+
 ```
+>项目名为demo
 
-* Create the demo user:
+* 创建 demo 用户:
 
 ```
 $ openstack user create --domain default \
@@ -205,9 +217,12 @@ Repeat User Password:
 +---------------------+----------------------------------+
 
 ```
-> 0
+> 密码设为0
+> --domain default 域名为default
+> 其用户名为demo
 
-* Create the user role:
+* 创建用户(user)角色(role):
+
 ```
 $ openstack role create user
 
@@ -219,14 +234,16 @@ $ openstack role create user
 | name      | user                             |
 +-----------+----------------------------------+
 ```
+>
 
-* Add the user role to the demo project and user:
+* 为demo项目和用户添加用户角色（user role）
 
 ```
-
  openstack role add --project demo --user demo user
 ```
-
+>--project demo 指定项目
+>--user demo  指定用户
+> 添加的角色为user
 
 #### 验证操作 Verify operation
 
