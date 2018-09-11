@@ -2,13 +2,18 @@
 
 ##### 在安装和配置认证服务之前，首先确保已创建数据库
 1. 使用root帐号连接数据库
+
 ```
 mysql -u root -p
 ```
+
 2. 创建keystone数据库
+
+
 ```
 MariaDB [(none)]> CREATE DATABASE keystone;
 ```
+
 3. 进行授权
 
 >grant 权限1,权限2,…权限n on 数据库名称.表名称 to 用户名@用户地址 identified by ‘连接口令’;
@@ -21,7 +26,8 @@ MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%'
 IDENTIFIED BY 'KEYSTONE_DBPASS';
 ```
 
-可将其中的KEYSTONE_DBPASS替换为合适的密码
+可将其中的KEYSTONE_DBPASS替换为合适的密码,
+即为keystone用户添加所有权限，其密码为KEYSTONE_DBPASS
 
 使用如下命令可以查看数据库状态
 
@@ -54,7 +60,9 @@ provider = fernet
 ```
 su -s /bin/sh -c "keystone-manage db_sync" keystone
 ```
+
 >su -s 指定执行的shell 即指定为/bin/sh
+keystone-manage db_sync　为同步数据库命令
 
 
 
