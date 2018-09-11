@@ -65,9 +65,6 @@ su -s /bin/sh -c "keystone-manage db_sync" keystone
 keystone-manage db_sync　为同步数据库命令
 
 
-
-
-
 4. 初始化Fernet密钥存储库
 
 ```
@@ -77,6 +74,8 @@ keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 ```
 keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
 ```
+>keystone-manage fernet_setup
+
 
 5. 引导标识服务
 
