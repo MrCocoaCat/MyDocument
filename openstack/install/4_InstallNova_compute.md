@@ -4,6 +4,43 @@
 
 https://docs.openstack.org/nova/queens/install/compute-install-rdo.htmls
 
+1. 安装软件包
+```
+ yum install openstack-nova-compute
+```
+2. vim /etc/nova/nova.conf
+
+```
+[DEFAULT]
+# ...
+enabled_apis = osapi_compute,metadata
+
+transport_url = rabbit://openstack:RABBIT_PASS@controller
+
+
+[api]
+# ...
+auth_strategy = keystone
+
+[keystone_authtoken]
+# ...
+auth_url = http://controller:5000/v3
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = nova
+password = NOVA_PASS
+
+```
+*
+```
+[DEFAULT]
+# ...
+my_ip = MANAGEMENT_INTERFACE_IP_ADDRESS
+
+```
 
 
 #### Add the compute node to the cell database

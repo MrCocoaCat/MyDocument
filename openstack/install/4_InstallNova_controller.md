@@ -51,23 +51,19 @@ MariaDB [(none)]> CREATE DATABASE nova_cell0;
 * 配置权限
 
 ```
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'localhost' \
-  IDENTIFIED BY 'NOVA_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
 
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'%' \
   IDENTIFIED BY 'NOVA_DBPASS';
 
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' \
-  IDENTIFIED BY 'NOVA_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
 
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' \
   IDENTIFIED BY 'NOVA_DBPASS';
 
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' \
-  IDENTIFIED BY 'NOVA_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
 
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' \
-  IDENTIFIED BY 'NOVA_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%'  IDENTIFIED BY 'NOVA_DBPASS';
 ```
 
 >为三个数据库配置权限
@@ -86,7 +82,7 @@ MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' \
 ```
 $ openstack user create --domain default --password-prompt nova
 
-User Password:
+User Password: NOVA_PASS
 Repeat User Password:
 +---------------------+----------------------------------+
 | Field               | Value                            |
@@ -101,6 +97,8 @@ Repeat User Password:
 
 ```
 >创建nova用户,这是一个表
+
+
 
 * 把admin角色添加到nova用户和项目中
 ```
@@ -123,6 +121,7 @@ $ openstack service create --name nova \
 | type        | compute                          |
 +-------------+----------------------------------+
 ```
+
 
 4. 创建nova服务端点
 
@@ -181,12 +180,12 @@ $ openstack endpoint create --region RegionOne \
 ```
 
 
-5. 创建一个placement服务用户（Create a Placement service user using your chosen PLACEMENT_PASS:）
+5. 创建一个placement服务 用户 （Create a Placement service user using your chosen PLACEMENT_PASS:）
 
 ```
 $ openstack user create --domain default --password-prompt placement
 
-User Password:
+User Password:PLACEMENT_PASS
 Repeat User Password:
 +---------------------+----------------------------------+
 | Field               | Value                            |
@@ -200,6 +199,8 @@ Repeat User Password:
 +---------------------+----------------------------------+
 ```
 
+> PLACEMENT_PASS
+
 6. 添加placement用户为placement服务admin角色
 
 ```
@@ -207,7 +208,7 @@ $ openstack role add --project service --user placement admin
 
 ```
 
-7. 在服务目录创建Placement API
+7. 在服务列表中 创建 Placement API
 
 ```
 $ openstack service create --name placement --description "Placement API" placement
@@ -305,12 +306,19 @@ connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova_api
 connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
 ```
 
+
+
+Replace NOVA_DBPASS with the password you chose for the Compute databases.
+
 * 在[DEFAULT]字段, 设置RabbitMQ消息队列接入权限
 ```
 [DEFAULT]
 # ...
 transport_url = rabbit://openstack:RABBIT_PASS@controller
 ```
+
+Replace RABBIT_PASS with the password you chose for the openstack account in RabbitMQ.
+
 * 在[api]及[keystone_authtoken]字段中,设置身份验证服务
 ```
 [api]
@@ -327,13 +335,15 @@ user_domain_name = default
 project_name = service
 username = nova
 password = NOVA_PASS
+
 ```
+
 * 在[DEFAULT]字段中,设置 my_ip 选项，为控制节点的IP地址
 
 ```
 [DEFAULT]
 # ...
-my_ip = 192.168.125.115
+my_ip = 192.168.125.207
 
 ```
 
@@ -373,8 +383,23 @@ api_servers = http://controller:9292
 lock_path = /var/lib/nova/tmp
 
 ```
+* in the [placement] section, configure the Placement API:
 
-* 由于软件包的一个bug，需要在/etc/httpd/conf.d/00-nova-placement-api.conf文件中添加如下配置
+```
+[placement]
+# ...
+os_region_name = RegionOne
+project_domain_name = Default
+project_name = service
+auth_type = password
+user_domain_name = Default
+auth_url = http://controller:5000/v3
+username = placement
+password = PLACEMENT_PASS
+```
+
+* 由于软件包的一个bug，需要在/etc/httpd/conf.d/00-nova-placement-api.conf
+文件中添加如下配置
 ```
 <Directory /usr/bin>
    <IfVersion >= 2.4>
