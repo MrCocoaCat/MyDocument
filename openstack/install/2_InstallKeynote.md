@@ -32,6 +32,7 @@ IDENTIFIED BY 'KEYSTONE_DBPASS';
 
 使用如下命令可以查看数据库状态
 
+>密码为KEYSTONE_DBPASS
 
 ```
 MariaDB [(none)]> show databases;
@@ -279,7 +280,7 @@ $ openstack project create --domain default \
 $ openstack user create --domain default \
   --password-prompt demo
 
-User Password:
+User Password: 0
 Repeat User Password:
 +---------------------+----------------------------------+
 | Field               | Value                            |
@@ -316,6 +317,7 @@ $ openstack role create user
 
 ```
  openstack role add --project demo --user demo user
+
 ```
 >--project demo 指定项目
 >--user demo  指定用户

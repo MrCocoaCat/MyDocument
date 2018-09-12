@@ -46,7 +46,7 @@ MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%'   IDENTIFIED 
 ```
 $ openstack user create --domain default --password-prompt glance
 
-User Password:
+User Password: GLANCE_PASS
 Repeat User Password:
 +---------------------+----------------------------------+
 | Field               | Value                            |
@@ -60,7 +60,7 @@ Repeat User Password:
 +---------------------+----------------------------------+
 
 ```
-> 密码设为0
+
 
 * 把admin角色添加到glance用户和service项目中
 ```
@@ -153,7 +153,7 @@ yum install openstack-glance
 # ...
 connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
 ```
-可将GLANCE_DBPASS更改为合适密码
+可将GLANCE_DBPASS更改为合适密码,与授权密码相同
 
 * 在 [keystone_authtoken] 和[paste_deploy]字段,配置身份服务访问:
 ```
@@ -173,6 +173,7 @@ password = GLANCE_PASS
 # ...
 flavor = keystone
 ```
+
 * 在 [glance_store] 字段, 设置本地文件系统及镜像存储位置
 ```
 [glance_store]
@@ -180,8 +181,10 @@ flavor = keystone
 stores = file,http
 default_store = file
 filesystem_store_datadir = /var/lib/glance/images/
-
 ```
+
+
+
 3. vim /etc/glance/glance-registry.conf 文件并完成以下操作
 
 * 在 [database]字段, 设置数据库接入
@@ -212,7 +215,7 @@ password = GLANCE_PASS
 flavor = keystone
 ```
 
-Replace GLANCE_DBPASS with the password you chose for the Image service database.
+
 
 4. 填充image服务 数据库
 
