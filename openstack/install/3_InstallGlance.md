@@ -29,10 +29,8 @@ MariaDB [(none)]> CREATE DATABASE glance;
 ```
 为glance数据库赋予权限
 ```
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' \
-  IDENTIFIED BY 'GLANCE_DBPASS';
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' \
-  IDENTIFIED BY 'GLANCE_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'GLANCE_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%'   IDENTIFIED BY 'GLANCE_DBPASS';
 
 ```
 2. 获取admin用户的环境变量，并创建服务认证
@@ -62,6 +60,7 @@ Repeat User Password:
 +---------------------+----------------------------------+
 
 ```
+> 密码设为0
 
 * 把admin角色添加到glance用户和service项目中
 ```
@@ -85,7 +84,7 @@ $ openstack service create --name glance \
 +-------------+----------------------------------+
 ```
 
-4. 创建glance服务的API endpoints
+4. 创建glance服务的端点
 
 ```
 $ openstack endpoint create --region RegionOne \
@@ -212,9 +211,10 @@ password = GLANCE_PASS
 # ...
 flavor = keystone
 ```
-GLANCE_PASS 可以替换为可用的密码
 
-4. 填充image服务数据库
+Replace GLANCE_DBPASS with the password you chose for the Image service database.
+
+4. 填充image服务 数据库
 
 ```
 su -s /bin/sh -c "glance-manage db_sync" glance

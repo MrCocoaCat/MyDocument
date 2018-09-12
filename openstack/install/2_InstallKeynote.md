@@ -42,7 +42,7 @@ MariaDB [(none)]> show databases;
 ```
 yum install openstack-keystone httpd mod_wsgi
 ```
-2. vim /etc/keystone/keystone.conf 文件并完善以下字段
+2.  文件并完善以下字段
 
 ```
 [database]
@@ -146,7 +146,7 @@ keystone-manage bootstrap \
 
 ```
 
-将ADMIN_PASS替换为合适的密码,此密码为环境变量中的密码
+将ADMIN_PASS替换为合适的密码,此密码为环境变量中的密码。填充数据库
 
 >keystone-manage bootstrap 执行基本的引导过程
 
@@ -339,7 +339,7 @@ $ openstack \
   --os-project-domain-name Default \
   --os-user-domain-name Default \
   --os-project-name admin \
-  --os-username admin
+  --os-username admin\
    token issue
 
 Password:
