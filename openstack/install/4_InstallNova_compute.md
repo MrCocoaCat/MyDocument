@@ -41,6 +41,6 @@ password = NOVA_PASS
 my_ip = MANAGEMENT_INTERFACE_IP_ADDRESS
 
 ```
-
+MANAGEMENT_INTERFACE_IP_ADDRESS  = 192.168.125.208
 
 #### Add the compute node to the cell database
