@@ -3,3 +3,7 @@
 
 
 https://docs.openstack.org/nova/queens/install/compute-install-rdo.htmls
+
+
+
+#### Add the compute node to the cell database

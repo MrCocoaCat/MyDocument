@@ -24,6 +24,7 @@ IDENTIFIED BY 'KEYSTONE_DBPASS';
 
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%'
 IDENTIFIED BY 'KEYSTONE_DBPASS';
+
 ```
 
 可将其中的KEYSTONE_DBPASS替换为合适的密码,
@@ -60,6 +61,60 @@ provider = fernet
 ```
 su -s /bin/sh -c "keystone-manage db_sync" keystone
 ```
+该命令执行之后，keystone数据库建立的相应的表，可以使用
+```
+show tables
+```
+进行查看
++-----------------------------+
+| Tables_in_keystone          |
++-----------------------------+
+| access_token                |
+| application_credential      |
+| application_credential_role |
+| assignment                  |
+| config_register             |
+| consumer                    |
+| credential                  |
+| endpoint                    |
+| endpoint_group              |
+| federated_user              |
+| federation_protocol         |
+| group                       |
+| id_mapping                  |
+| identity_provider           |
+| idp_remote_ids              |
+| implied_role                |
+| limit                       |
+| local_user                  |
+| mapping                     |
+| migrate_version             |
+| nonlocal_user               |
+| password                    |
+| policy                      |
+| policy_association          |
+| project                     |
+| project_endpoint            |
+| project_endpoint_group      |
+| project_tag                 |
+| region                      |
+| registered_limit            |
+| request_token               |
+| revocation_event            |
+| role                        |
+| sensitive_config            |
+| service                     |
+| service_provider            |
+| system_assignment           |
+| token                       |
+| trust                       |
+| trust_role                  |
+| user                        |
+| user_group_membership       |
+| user_option                 |
+| whitelisted_config          |
++-----------------------------+
+
 
 >su -s 指定执行的shell 即指定为/bin/sh
 keystone-manage db_sync　为同步数据库命令
@@ -81,17 +136,37 @@ keystone-manage credential_setup --keystone-user keystone --keystone-group keyst
 5. 引导标识服务
 
 ```
+
 keystone-manage bootstrap \
   --bootstrap-password ADMIN_PASS \
   --bootstrap-admin-url http://controller:5000/v3/ \
   --bootstrap-internal-url http://controller:5000/v3/ \
   --bootstrap-public-url http://controller:5000/v3/ \
   --bootstrap-region-id RegionOne
+
 ```
 
 将ADMIN_PASS替换为合适的密码,此密码为环境变量中的密码
 
 >keystone-manage bootstrap 执行基本的引导过程
+
+--bootstrap-region-id RegionOne，在表region 中生成以下内容
++-----------+-------------+------------------+-------+
+| id        | description | parent_region_id | extra |
++-----------+-------------+------------------+-------+
+| RegionOne |             | NULL             | {}    |
++-----------+-------------+------------------+-------+
+
+在表endpoint表中生成
+
++----------------------------------+--------------------+-----------+----------------------------------+----------------------------+-------+---------+-----------+
+| id                               | legacy_endpoint_id | interface | service_id                       | url                        | extra | enabled | region_id |
++----------------------------------+--------------------+-----------+----------------------------------+----------------------------+-------+---------+-----------+
+| 541f63f2daf645fc92d24285664adef4 | NULL               | public    | d43ed3733922488e9a5dd14396ba1194 | http://controller:5000/v3/ | {}    |       1 | RegionOne |
+| 74512328e9044b5a8691c64a7305d6eb | NULL               | admin     | d43ed3733922488e9a5dd14396ba1194 | http://controller:5000/v3/ | {}    |       1 | RegionOne |
+| dd8b5b7bcab445f4beaee0f5527a4704 | NULL               | internal  | d43ed3733922488e9a5dd14396ba1194 | http://controller:5000/v3/ | {}    |       1 | RegionOne |
++----------------------------------+--------------------+-----------+----------------------------------+----------------------------+-------+---------+-----------+
+
 
 
 ##### 配置Apache HTTP 服务
@@ -174,6 +249,7 @@ $ openstack project create --domain default \
 ```
 
 >项目名为service
+>在project 数据库中生成相关数据
 
 3. 常规(非管理)任务应该使用常规权限的项目和用户。作为示例，创建demo项目用户
 
@@ -255,7 +331,7 @@ $ openstack role create user
 unset OS_AUTH_URL OS_PASSWORD
 ```
 
-2. 作为管理用户，请求一个身份验证令牌:
+2. 作为admin用户，请求一个authentication令牌。这个命令使用admin user的密码
 
 ```
 $ openstack \
@@ -272,16 +348,16 @@ Password:
 +------------+-----------------------------------------------------------------+
 | expires    | 2016-02-12T20:14:07.056119Z                                     |
 | id         | gAAAAABWvi7_B8kKQD9wdXac8MoZiQldmjEO643d-e_j-XXq9AmIegIbA7UHGPv |
-|            | atnN21qtOMjCFWX7BReJEQnVOAj3nclRQgAYRsfSU_MrsuWb4EDtnjU7HEpoBb4 |
-|            | o6ozsA_NmFWEpLeKy0uNn_WeKbAhYygrsmQGA49dclHVnz-OMVLiyM9ws       |
 | project_id | 343d245e850143a096806dfaefa9afdc                                |
 | user_id    | ac3377633149401296f6c0d92d79dc16                                |
 +------------+-----------------------------------------------------------------+
 ```
 
 >密码为： ADMIN_PASS
+
 >--os-auth-url http://controller:35357/v3 设置url
---os-project-domain-name Default \
---os-user-domain-name Default \
---os-project-name admin \
+--os-project-domain-name Default
+--os-user-domain-name Default
+--os-project-name admin
 --os-username admin
+token issue 为命令，即发行一个新的令牌

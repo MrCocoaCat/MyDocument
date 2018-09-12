@@ -46,6 +46,7 @@ MariaDB [(none)]> CREATE DATABASE nova;
 MariaDB [(none)]> CREATE DATABASE nova_cell0;
 
 ```
+>创建nova_api,nova，nova_cell0 三个数据库
 
 * 配置权限
 
@@ -68,10 +69,15 @@ MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' \
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' \
   IDENTIFIED BY 'NOVA_DBPASS';
 ```
+
+>为三个数据库配置权限
+
+
 2. 获取admin用户的环境变量，并创建服务认证
 
 ```
 . admin-openrc
+
 ```
 
 3. 创建服务凭据
@@ -94,12 +100,15 @@ Repeat User Password:
 +---------------------+----------------------------------+
 
 ```
+>创建nova用户,这是一个表
 
 * 把admin角色添加到nova用户和项目中
 ```
  openstack role add --project service --user nova admin
 ```
+
 * 创建nova服务
+
 ```
 $ openstack service create --name nova \
   --description "OpenStack Compute" compute
@@ -431,7 +440,7 @@ su -s /bin/sh -c "nova-manage db sync" nova
 # systemctl enable openstack-nova-api.service \
   openstack-nova-consoleauth.service openstack-nova-scheduler.service \
   openstack-nova-conductor.service openstack-nova-novncproxy.service
-  
+
 # systemctl start openstack-nova-api.service \
   openstack-nova-consoleauth.service openstack-nova-scheduler.service \
   openstack-nova-conductor.service openstack-nova-novncproxy.service

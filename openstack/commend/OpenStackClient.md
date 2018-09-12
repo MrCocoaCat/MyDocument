@@ -1,4 +1,4 @@
-https://docs.openstack.org/python-openstackclient/latest/
+shttps://docs.openstack.org/python-openstackclient/latest/
 
 #### SYNOPSIS
 
@@ -120,6 +120,7 @@ openstack定义了了以下全局选项:
 * --os-default-domain <auth-domain>
 
     Default domain ID (Default: ‘default’)
+    *默认域名*
 
 * --os-region-name <auth-region-name>
 
@@ -185,3 +186,21 @@ If you switch to openstackclient from project specified clients, like: novaclien
 * --help
 
     Show help message and exit
+
+#### COMMANDS
+获取可用的命令信息使用命令：
+```
+openstack --help
+```
+获取特定命令的描述信息，使用命令
+```
+openstack help <command>
+```
+
+命令与相应的版本相关，可以限定相应的版本信息
+```
+openstack --os-identity-api-version 3 --help
+
+```
+
+[命令清单](https://docs.openstack.org/python-openstackclient/latest/cli/command-list.html)
