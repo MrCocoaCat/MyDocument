@@ -231,3 +231,71 @@ su -s /bin/sh -c "glance-manage db_sync" glance
 # systemctl start openstack-glance-api.service \
   openstack-glance-registry.service
 ```
+
+
+### Verify operation
+[参考地址](https://docs.openstack.org/glance/queens/install/verify.html)
+使用CirrOS验证映像服务的操作，CirrOS是一个小型Linux映像，可以帮助您测试OpenStack部署。
+有关如何下载和构建映像的更多信息，请参阅OpenStack虚拟机映像指南。有关如何管理映像的信息，请参阅OpenStack终端用户指南。
+
+1. 同步环境变量
+```
+$ . admin-openrc
+```
+
+2. 下载源镜像
+
+```
+wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
+```
+
+3. 使用QCOW2磁盘格式、bare容器格式和公共可见性将镜像上传到镜像服务，以便所有项目都可以访问:
+```
+openstack image create "cirros" \
+  --file cirros-0.4.0-x86_64-disk.img \
+  --disk-format qcow2 \
+  --container-format bare \
+  --public
+
++------------------+------------------------------------------------------+
+| Field            | Value                                                |
++------------------+------------------------------------------------------+
+| checksum         | 133eae9fb1c98f45894a4e60d8736619                     |
+| container_format | bare                                                 |
+| created_at       | 2015-03-26T16:52:10Z                                 |
+| disk_format      | qcow2                                                |
+| file             | /v2/images/cc5c6982-4910-471e-b864-1098015901b5/file |
+| id               | cc5c6982-4910-471e-b864-1098015901b5                 |
+| min_disk         | 0                                                    |
+| min_ram          | 0                                                    |
+| name             | cirros                                               |
+| owner            | ae7a98326b9c455588edd2656d723b9d                     |
+| protected        | False                                                |
+| schema           | /v2/schemas/image                                    |
+| size             | 13200896                                             |
+| status           | active                                               |
+| tags             |                                                      |
+| updated_at       | 2015-03-26T16:52:10Z                                 |
+| virtual_size     | None                                                 |
+| visibility       | public                                               |
++------------------+------------------------------------------------------+
+
+```
+
+>--file cirros-0.4.0-x86_64-disk.img 指定镜像文件
+--disk-format qcow2 指定镜像格式
+--container-format bare 指定容器类型
+--public 指定访问类型
+
+4. 验证镜像是否可用
+```
+$ openstack image list
+
++--------------------------------------+--------+--------+
+| ID                                   | Name   | Status |
++--------------------------------------+--------+--------+
+| 38047887-61a7-41ea-9b49-27987d5e8bb9 | cirros | active |
++--------------------------------------+--------+--------+
+
+
+```
