@@ -13,21 +13,19 @@ mysql -u root -p
 b. 创建cinder 数据库
 
 ```
-MariaDB [(none)]>
+MariaDB [(none)]>CREATE DATABASE cinder;
 ```
 
 c. 为cinder 创建合适的权限
 
 ```
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' \
-  IDENTIFIED BY 'CINDER_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'CINDER_DBPASS';
 
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' \
-  IDENTIFIED BY 'CINDER_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' IDENTIFIED BY 'CINDER_DBPASS';
 
 ```
 
-2.
+2. 同步环境变量
 
 ```
 $ . admin-openrc
@@ -39,7 +37,7 @@ a. 创建cinder user
 ```
 $ openstack user create --domain default --password-prompt cinder
 
-User Password:
+User Password: CINDER_PASS
 Repeat User Password:
 +---------------------+----------------------------------+
 | Field               | Value                            |
@@ -58,7 +56,7 @@ b. 为conder用户添加admin角色:
 ```
 $ openstack role add --project service --user cinder admin
 ```
-c. Create the cinderv2 and cinderv3 service entities:
+c. 创建 cinderv2 和 cinderv3 服务实例(entities):
 
 ```
 $ openstack service create --name cinderv2 \
@@ -90,7 +88,7 @@ $ openstack service create --name cinderv3 \
 
 ```
 
-4. Create the Block Storage service API endpoints:
+1. 创建 Block Storage 服务的API端点:
 
 ```
 $ openstack endpoint create --region RegionOne \
@@ -143,6 +141,9 @@ $ openstack endpoint create --region RegionOne \
 | service_type | volumev2                                 |
 | url          | http://controller:8776/v2/%(project_id)s |
 +--------------+------------------------------------------+
+```
+
+```
 
 $ openstack endpoint create --region RegionOne \
   volumev3 public http://controller:8776/v3/%\(project_id\)s
@@ -207,9 +208,9 @@ $ openstack endpoint create --region RegionOne \
 yum install openstack-cinder
 ```
 
-2. vim  the /etc/cinder/cinder.conf
+2. vim  /etc/cinder/cinder.conf
 
-a.  configure database access:
+a.  设置数据库接入权限:
 
 ```
 [database]
@@ -218,7 +219,7 @@ connection = mysql+pymysql://cinder:CINDER_DBPASS@controller/cinder
 
 ```
 
-a. configure RabbitMQ message queue access:
+a. 设置RabbitMQ消息队列权限:
 
 ```
 [DEFAULT]
@@ -228,7 +229,7 @@ transport_url = rabbit://openstack:RABBIT_PASS@controller
 ```
 
 
-b. In the [DEFAULT] and [keystone_authtoken] sections, configure Identity service access:
+b. In the [DEFAULT] and [keystone_authtoken] sections, 设置认证服务权限:
 
 ```
 [DEFAULT]
@@ -248,7 +249,7 @@ username = cinder
 password = CINDER_PASS
 ```
 
-c. In the [DEFAULT] section, configure the my_ip option to use the management interface IP address of the controller node:
+c. 在 [DEFAULT] 字段, 设置 the my_ip 选项， use the management interface IP address of the controller node:
 
 ```
 [DEFAULT]
@@ -265,7 +266,7 @@ lock_path = /var/lib/cinder/tmp
 
 ```
 
-4. Populate the Block Storage database:
+4. 填充Block Storage 数据库:
 
 ```
  su -s /bin/sh -c "cinder-manage db sync" cinder
@@ -285,7 +286,11 @@ os_region_name = RegionOne
 
 ```
 # systemctl restart openstack-nova-api.service
+```
 
+开启服务，并重启
+
+```
 # systemctl enable openstack-cinder-api.service openstack-cinder-scheduler.service
 
 # systemctl start openstack-cinder-api.service openstack-cinder-scheduler.service

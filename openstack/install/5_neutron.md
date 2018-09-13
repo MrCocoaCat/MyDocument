@@ -111,7 +111,7 @@ MariaDB [(none)]> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' \
 ```
 $ openstack user create --domain default --password-prompt neutron
 
-User Password:
+User Password:NEUTRON_PASS
 Repeat User Password:
 +---------------------+----------------------------------+
 | Field               | Value                            |
@@ -215,7 +215,9 @@ Self-service网络通常使用覆盖网络。覆盖网络协议(如VXLAN)包括�
 网络服务通过DHCP自动为实例提供正确的MTU值。但是，有些云映像不使用DHCP或忽略DHCP MTU选项，需要使用元数据或脚本进行配置。
 
 ***
+**详细见**
 [](./5_neutron_net2.md)
+
 ***
 
 #####　配置metadata agent
