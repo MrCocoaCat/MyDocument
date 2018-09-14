@@ -1,4 +1,29 @@
 ### 安装neutron
+### Overview
+OpenStack项目是一个开源的云计算平台，支持所有类型的云环境。该项目旨在实现简单的实现、大规模的可伸缩性和丰富的特性集。来自世界各地的云计算专家为这个项目做出了贡献。
+
+OpenStack通过各种补充服务提供了一个基础设施即服务(IaaS)解决方案。每个服务都提供了一个应用程序编程接口(API)来促进这种集成。
+
+本指南介绍了使用适合具有足够Linux经验的OpenStack新用户的功能示例体系结构逐步部署主要OpenStack服务的过程。本指南不打算用于生产系统安装，而是创建一个最小的概念验证，以学习OpenStack。
+在熟悉了这些OpenStack服务的基本安装、配置、操作和故障排除之后，您应该考虑使用生产体系结构进行部署的以下步骤:
+
+Determine and implement the necessary core and optional services to meet performance and redundancy requirements.
+Increase security using methods such as firewalls, encryption, and service policies.
+Implement a deployment tool such as Ansible, Chef, Puppet, or Salt to automate deployment and management of the production environment.
+### Example architecture
+### Networking
+#### Networking Option 1: Provider networks
+提供者网络选项以最简单的方式部署OpenStack网络提供者网络选项以最简单的方式部署OpenStack网络服务，主要使用层2(桥接/交换)服务和网络的VLAN分割。从本质上讲，它将虚拟网络连接到物理网络，并依赖物理网络基础设施提供第三层(路由)服务。此外，DHCP服务向实例提供IP地址信息。
+OpenStack用户需要更多关于底层的信息
+![](assets/markdown-img-paste-20180913203636868.png)
+
+#### Networking Option 2: Self-service networks
+Self-service网络选项通过层3(路由)服务增强了提供者网络选项，这些层3(路由)服务支持使用覆盖分割方法(如虚拟可扩展LAN)的自助服务网络。本质上，它使用网络地址转换(NAT)将虚拟网络路由到物理网络。此外，此选项为高级服务(如LBaaS和FWaaS)提供了基础。
+
+OpenStack用户可以在不了解数据网络基础设施的情况下创建虚拟网络。如果相应地配置了layer-2插件，这还可以包括VLAN网络。
+
+![](assets/markdown-img-paste-20180913203847714.png)
+
 ### Contents
 
 OpenStack网络（neutron）管理您OpenStack环境中虚拟网络基础设施（VNI）所有网络方面和物理网络基础设施（PNI）的接入层方面。OpenStack网络允许租户创建包括像 firewall， :term:`load balancer`和 :term:`virtual private network (VPN)`等这样服务的高级网络虚拟拓扑。
@@ -50,20 +75,20 @@ OpenStack网络(neutron)管理着OpenStack环境中虚拟网络基础设施(VNI)
 #### Host networking
 在为您选择部署的体系结构在每个节点上安装操作系统之后，您必须配置网络接口。我们建议您禁用任何自动化网络管理工具，并手动编辑适合您的发行版的配置文件。有关如何在发行版上配置网络的更多信息，请参阅SLES 12或openSUSE文档。
 
-所有节点都需要Internet访问，用于管理目的，例如包安装、安全更新、域名系统(DNS)和网络时间协议(NTP)。在大多数情况下，节点应该通过管理网络接口获得Internet访问。为了强调网络分离的重要性，示例体系结构使用管理网络的私有地址空间，并假设物理网络基础设施通过网络地址转换(NAT)或其他方法提供Internet访问。示例体系结构为提供者(外部)网络使用可路由的IP地址空间，并假设物理网络基础设施提供了直接的Internet访问。
+所有节点都需要Internet访问，用于管理目的，例如包安装、安全更新、域名系统(DNS)和网络时间协议(NTP)。在大多数情况下，节点应该通过 *management network* 接口获得Internet访问。为了强调网络分离的重要性，示例体系结构使用管理网络的私有地址空间，并假设物理网络基础设施通过网络地址转换(NAT)或其他方法提供Internet访问。示例体系结构为提供者(外部)网络使用可路由的IP地址空间，并假设物理网络基础设施提供了直接的Internet访问。
 
 在Provider网络体系结构中，所有实例都直接连接到提供者网络。在Self-service(私有)网络体系结构中，实例可以附加到自助服务或Provider网络。Self-service网络可以完全驻留在OpenStack中，或者通过提供者网络使用网络地址转换(NAT)提供某种程度的外部网络访问。
 
 
 ![](assets/markdown-img-paste-20180908204246978.png)
 
-The example architectures assume use of the following networks:
+示例结构如下
 
-    Management on 10.0.0.0/24 with gateway 10.0.0.1
+    管理网络在10.0.0.0/24 网关为 10.0.0.1
 
     This network requires a gateway to provide Internet access to all nodes for administrative purposes such as package installation, security updates, Domain Name System (DNS), and Network Time Protocol (NTP).
 
-    Provider on 203.0.113.0/24 with gateway 203.0.113.1
+    Provider 在 203.0.113.0/24 网关为  203.0.113.1
 
     This network requires a gateway to provide Internet access to instances in your OpenStack environment.
 
@@ -72,7 +97,8 @@ The example architectures assume use of the following networks:
 
 网络接口名称因分布而异。传统上，接口使用eth，后面跟着一个序号。为了涵盖所有的变体，本指南将第一个接口作为编号最低的接口，第二个接口作为编号最高的接口。
 
-除非您打算使用本例体系结构中提供的精确配置，否则您必须修改此过程中的网络以匹配您的环境。除了IP地址之外，每个节点必须通过名称解析其他节点。例如，控制器名称必须解析为10.0.0.11，即控制器节点上管理接口的IP地址。
+除非您打算使用本例体系结构中提供的精确配置，否则您必须修改此过程中的网络以匹配您的环境。除了IP地址之外，每个节点必须通过名称解析其他节点。
+例如，控制节点名称必须解析为10.0.0.11，即控制器节点的management network的IP地址。
 
 
 #####　安装必备条件

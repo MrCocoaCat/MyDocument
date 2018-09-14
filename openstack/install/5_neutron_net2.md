@@ -142,8 +142,9 @@ physical_interface_mappings = provider:PROVIDER_INTERFACE_NAME
 
 ```
  **将PROVIDER_INTERFACE_NAME 替换  为提供底层网络服务的物理网络端口名称**
+Replace PROVIDER_INTERFACE_NAME with the name of the underlying provider physical network interface.
 
-> physical_interface_mappings = provider:ens3
+> physical_interface_mappings = provider:ens4
 
 * 在[vxlan]部分，启用vxlan覆盖网络，配置处理覆盖网络的物理网络接口的IP地址，并启用layer-2 population
 
@@ -153,7 +154,7 @@ enable_vxlan = true
 local_ip = OVERLAY_INTERFACE_IP_ADDRESS
 l2_population = true
 ```
-**将OVERLAY_INTERFACE_IP_ADDRESS替换为自己的IP地址**
+**将OVERLAY_INTERFACE_IP_ADDRESS替换为management IP地址**
 >192.168.125.207
 
 * 在 [securitygroup] 字段, enable security groups and configure the Linux bridge iptables firewall driver:
