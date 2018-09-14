@@ -13,9 +13,48 @@ https://docs.openstack.org/install-guide/openstack-services.html
 
 *   Dashboard – [horizon installation for Queens](https://docs.openstack.org/horizon/queens/install/)
 *   Block Storage service – [cinder installation for Queens](https://docs.openstack.org/cinder/queens/install/)
+
 ### 安装环境
 
+#### 安全
+
+**Passwords**
+| Password name | Description|
+|:-------------:|:----------:|
+|ADMIN_PASS     |Password of user admin|
+|CINDER_DBPASS	|Database password for the Block Storage service|
+|CINDER_PASS	  |Password of Block Storage service user cinder|
+|DASH_DBPASS	  |Database password for the Dashboard|
+|DEMO_PASS	    |Password of user demo|
+|GLANCE_DBPASS	|Database password for Image service|
+|GLANCE_PASS	  |Password of Image service user glance|
+|KEYSTONE_DBPASS|	Database password of Identity service|
+|METADATA_SECRET|	Secret for the metadata proxy|
+|NEUTRON_DBPASS	|Database password for the Networking service
+|NEUTRON_PASS	  |Password of Networking service user neutron|
+|NOVA_DBPASS	  |Database password for Compute service|
+|NOVA_PASS	   |Password of Compute service user nova|
+|PLACEMENT_PASS|	Password of the Placement service user placement|
+|RABBIT_PASS	 |Password of RabbitMQ user openstack|
+#### Host networking
+在为您选择部署的体系结构在每个节点上安装操作系统之后，您必须配置网络接口。我们建议您禁用任何自动化网络管理工具，并手动编辑适合您的发行版的配置文件。
 #### 设置主机名及IP
+所有节点都需要Internet访问用于管理，例如包安装、安全更新、DNS和NTP。在大多数情况下，节点应该通过管理网络接口(management network interface)获得Internet访问。
+
+为了强调网络分离的重要性，示例体系结构使用管理网络的私有地址空间，并假设物理网络基础结构通过NAT或其他方法提供Internet访问。示例体系结构为提供者(外部)网络使用可路由的IP地址空间，并假设物理网络基础设施提供了直接的Internet访问。在provider网络结构中, 所有的示例均直接连接在provider网络上. 在 self-service (private) 网络结构中,示例可以 连接到self-service网络或provider网络. Self-service网络可以完全驻留在OpenStack中，或者通过提供者网络使用NAT提供某种程度的外部网络访问。
+![](assets/markdown-img-paste-20180914103706181.png)
+
+示例结构使用一下网络配置：
+* Management on 10.0.0.0/24 with gateway 10.0.0.1
+这个网络为所有节点提供Internet网络访问，均可以管理软件包，安全更新，DNS和NTP。
+
+
+* Provider on 203.0.113.0/24 with gateway 203.0.113.1
+
+这个网络需要一个网关来提供对OpenStack环境中的实例的Internet访问。
+
+controller节点的management网卡，设为10.0.0.11。
+
 
 1. vim /etc/hosts
 
@@ -24,7 +63,17 @@ IP   controller
 ```
 即 "IP地址，域名，主机名"
 **其中域名可以省略，不要删除127.0.0.1项**
-> *192.168.125.115   controller*
+```
+# controller
+10.19.19.13       controller
+
+# compute1
+10.19.19.23       compute1
+
+# compute2
+10.19.19.25       compute2
+```
+
 
 #### 网络时间同步协议(NTP)
 
