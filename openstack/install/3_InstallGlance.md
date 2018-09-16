@@ -187,6 +187,8 @@ filesystem_store_datadir = /var/lib/glance/images/
 
 3. vim /etc/glance/glance-registry.conf 文件并完成以下操作
 
+>
+
 * 在 [database]字段, 设置数据库接入
 
 ```
@@ -234,6 +236,7 @@ su -s /bin/sh -c "glance-manage db_sync" glance
 
 
 ### Verify operation
+
 [参考地址](https://docs.openstack.org/glance/queens/install/verify.html)
 使用CirrOS验证映像服务的操作，CirrOS是一个小型Linux映像，可以帮助您测试OpenStack部署。
 有关如何下载和构建映像的更多信息，请参阅OpenStack虚拟机映像指南。有关如何管理映像的信息，请参阅OpenStack终端用户指南。
@@ -296,6 +299,5 @@ $ openstack image list
 +--------------------------------------+--------+--------+
 | 38047887-61a7-41ea-9b49-27987d5e8bb9 | cirros | active |
 +--------------------------------------+--------+--------+
-
 
 ```

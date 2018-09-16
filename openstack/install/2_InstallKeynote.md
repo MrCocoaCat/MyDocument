@@ -1,6 +1,7 @@
 ### 安装keysnote（Identity service）
 
-##### 在安装和配置认证服务之前，首先确保已创建数据库
+#### 在安装和配置认证服务之前，首先确保已创建数据库
+
 1. 使用root帐号连接数据库
 
 ```
@@ -19,17 +20,14 @@ MariaDB [(none)]> CREATE DATABASE keystone;
 >grant 权限1,权限2,…权限n on 数据库名称.表名称 to 用户名@用户地址 identified by ‘连接口令’;
 
 ```
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost'
-IDENTIFIED BY 'KEYSTONE_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'KEYSTONE_DBPASS';
 
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%'
 IDENTIFIED BY 'KEYSTONE_DBPASS';
 
 ```
 
-可将其中的KEYSTONE_DBPASS替换为合适的密码,
 即为keystone用户添加所有权限，其密码为KEYSTONE_DBPASS
-
 使用如下命令可以查看数据库状态
 
 >密码为KEYSTONE_DBPASS
@@ -43,7 +41,7 @@ MariaDB [(none)]> show databases;
 ```
 yum install openstack-keystone httpd mod_wsgi
 ```
-2.  文件并完善以下字段
+2.  vim /etc/keystone/keystone.conf
 
 ```
 [database]
@@ -182,6 +180,7 @@ ServerName controller
 
 ```
 ln -s /usr/share/keystone/wsgi-keystone.conf /etc/httpd/conf.d/
+
 ```
 
 ##### 安装完成启动服务
@@ -280,7 +279,7 @@ $ openstack project create --domain default \
 $ openstack user create --domain default \
   --password-prompt demo
 
-User Password: 0
+User Password: DEMO_PASS
 Repeat User Password:
 +---------------------+----------------------------------+
 | Field               | Value                            |
@@ -294,7 +293,6 @@ Repeat User Password:
 +---------------------+----------------------------------+
 
 ```
-> 密码设为0
 > --domain default 域名为default
 > 其用户名为demo
 
@@ -344,7 +342,8 @@ $ openstack \
   --os-username admin\
    token issue
 
-Password:
+Password: ADMIN_PASS
+
 +------------+-----------------------------------------------------------------+
 | Field      | Value                                                           |
 +------------+-----------------------------------------------------------------+
@@ -363,3 +362,32 @@ Password:
 --os-project-name admin
 --os-username admin
 token issue 为命令，即发行一个新的令牌
+
+#### 创建脚本
+前面的部分使用了环境变量和命令选项的组合，通过openstack客户机与标识服务交互。为了提高客户端操作的效率，OpenStack支持简单的客户端环境脚本，也称为OpenRC文件。这些脚本通常包含所有客户机的通用选项，但也支持惟一选项。有关更多信息，请参阅OpenStack终端用户指南。
+
+1. 创建admin-openrc文件，添加以下内容:
+
+```
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_USER_DOMAIN_NAME=Default
+export OS_PROJECT_NAME=admin
+export OS_USERNAME=admin
+export OS_PASSWORD=ADMIN_PASS
+export OS_AUTH_URL=http://controller:5000/v3
+export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
+```
+
+2. 创建demo-openrc
+
+```
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_USER_DOMAIN_NAME=Default
+export OS_PROJECT_NAME=demo
+export OS_USERNAME=demo
+export OS_PASSWORD=DEMO_PASS
+export OS_AUTH_URL=http://controller:5000/v3
+export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
+```

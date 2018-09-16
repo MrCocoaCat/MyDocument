@@ -229,6 +229,7 @@ yum install rabbitmq-server
 systemctl enable rabbitmq-server.service
 systemctl start rabbitmq-server.service
 ```
+
 3. 添加openstack用户
 
 ```
@@ -240,16 +241,15 @@ rabbitmqctl add_user openstack RABBIT_PASS
 4. 许可设定，未openstack用户添加读写权限
 
 ```
-
 rabbitmqctl set_permissions openstack ".*" ".*" ".*"
-
 ```
 
 #### 安装Memcached
 
-服务的身份服务身份验证机制使用Memcached缓存令牌。memcached服务通常在**控制器节点**上运行。
+服务的身份服务身份验证机制使用Memcached缓存令牌。memcached服务通常在 **控制器节点** 上运行。
 
 1. 安装相应软件包
+
 ```
 yum install memcached python-memcached
 ```
@@ -290,7 +290,9 @@ ETCD_NAME="controller"
 #[Clustering]
 ETCD_INITIAL_ADVERTISE_PEER_URLS="http://192.168.125.115:2380"
 ETCD_ADVERTISE_CLIENT_URLS="http://192.168.125.115:2379"
+# 注意 = 
 ETCD_INITIAL_CLUSTER="controller=http://192.168.125.115:2380"
+
 ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster-01"
 ETCD_INITIAL_CLUSTER_STATE="new"
 ```
