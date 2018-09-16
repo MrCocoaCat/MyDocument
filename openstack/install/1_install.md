@@ -77,6 +77,10 @@ IP   controller
 
 #### 网络时间同步协议(NTP)
 
+#####控制节点
+
+以下命令在控制节点上执行
+
 1. 安装包
 ```
 yum install chrony
@@ -108,11 +112,37 @@ allow 10.0.0.0/24
 systemctl enable chronyd.service
 systemctl start chronyd.service
 ```
-#### 安装openstack相关包
+
+##### 其他节点
 1. 安装包
+```
+ yum install chrony
+```
+2. 配置chrony.conf 文件并注释掉或删除除一个服务器密钥之外的所有密钥。
+将其更改为引用控制器节点。vim /etc/chrony.conf
+```
+server controller iburst
+```
+3. 将 iburst line 中的pool 2.debian.pool.ntp.org 注释掉 iburst line.
+4. 重启服务
 
 ```
+# systemctl enable chronyd.service
+# systemctl start chronyd.service
+```
+
+#### 安装openstack相关包
+在所有节点运行以下命令
+
+1. 安装包
+* centos
+```
 yum install centos-release-openstack-queens -y
+```
+
+* RHEL
+```
+yum install https://rdoproject.org/repos/rdo-release.rpm
 ```
 
 2. 更新软件包
@@ -132,8 +162,6 @@ yum install python-openstackclient -y
 yum install openstack-selinux
 ```
 
-
-
 #### SQL 数据库
 大多数OpenStack服务使用SQL数据库来存储信息。数据库通常在controller节点上运行。本指南中使用MariaDB。
 
@@ -142,7 +170,7 @@ yum install openstack-selinux
 ```
 yum install mariadb mariadb-server python2-PyMySQL
 ```
-2. 创建并修改/etc/my.cnf.d/openstack.cnf文件，并新增[mysql]字段，并将bind-address设置为管理节点地址，并将编码方式设置未utf8,修改内容如下
+2. vim /etc/my.cnf.d/openstack.cnf文件，并新增[mysql]字段，并将bind-address设置为管理节点地址，并将编码方式设置未utf8,修改内容如下
 
 ```
 [mysqld]
@@ -166,17 +194,18 @@ collation-server = utf8_general_ci
 character-set-server = utf8
 ```
 
-
 3. 启动服务，并设置为开机启动
 ```
 ＃ 设置为开机启动
 systemctl enable mariadb.service
+
 ＃　启动服务
 systemctl start mariadb.service
 
 ```
 
 4. 执行mysql_secure_installation脚本设置安全属性，并为root帐号设置合适密码
+
 ```
 mysql_secure_installation
 ```
