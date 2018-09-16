@@ -42,7 +42,9 @@ mysql -u root -p
 
 ```
 MariaDB [(none)]> CREATE DATABASE nova_api;
+
 MariaDB [(none)]> CREATE DATABASE nova;
+
 MariaDB [(none)]> CREATE DATABASE nova_cell0;
 
 ```
@@ -53,17 +55,19 @@ MariaDB [(none)]> CREATE DATABASE nova_cell0;
 ```
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
 
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'%' \
-  IDENTIFIED BY 'NOVA_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
+
 
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
 
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' \
-  IDENTIFIED BY 'NOVA_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
+
+
 
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
 
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%'  IDENTIFIED BY 'NOVA_DBPASS';
+
 ```
 
 >为三个数据库配置权限
@@ -102,10 +106,10 @@ Repeat User Password:
 
 * 把admin角色添加到nova用户和项目中
 ```
- openstack role add --project service --user nova admin
+openstack role add --project service --user nova admin
 ```
 
-* 创建nova服务
+* 创建nova服务端点
 
 ```
 $ openstack service create --name nova \
@@ -123,7 +127,7 @@ $ openstack service create --name nova \
 ```
 
 
-4. 创建nova服务端点
+4. 创建计算服务的API端点
 
 ```
 $ openstack endpoint create --region RegionOne \
@@ -304,6 +308,7 @@ connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova_api
 [database]
 # ...
 connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
+
 ```
 
 
@@ -424,7 +429,8 @@ su -s /bin/sh -c "nova-manage api_db sync" nova
 ```
 
 >出现警告  /usr/lib/python2.7/site-packages/oslo_db/sqlalchemy/enginefacade.py:332: NotSupportedWarning: Configuration option(s) ['use_tpool'] not supported
-  exception.NotSupportedWarning
+
+>exception.NotSupportedWarning
   将.py文件中332的语句注释掉
 
 
@@ -434,13 +440,13 @@ su -s /bin/sh -c "nova-manage api_db sync" nova
 su -s /bin/sh -c "nova-manage cell_v2 map_cell0" nova
 ```
 
-5. 创建cell1 cell
+5. 创建cell1
 
 ```
 su -s /bin/sh -c "nova-manage cell_v2 create_cell --name=cell1 --verbose" nova 109e1d4b-536a-40d0-83c6-5f121b82b650
 ```
 
-6. 同步nova数据库
+6. 填充 nova数据库
 
 ```
 su -s /bin/sh -c "nova-manage db sync" nova
@@ -469,4 +475,90 @@ su -s /bin/sh -c "nova-manage db sync" nova
 # systemctl start openstack-nova-api.service \
   openstack-nova-consoleauth.service openstack-nova-scheduler.service \
   openstack-nova-conductor.service openstack-nova-novncproxy.service
+```
+
+
+#### 验证操作
+1.  使用脚本设置环境变量
+2. 列出服务组件以验证每个流程的成功启动和注册
+```
++----+--------------------+------------+----------+---------+-------+----------------------------+
+| Id | Binary             | Host       | Zone     | Status  | State | Updated At                 |
++----+--------------------+------------+----------+---------+-------+----------------------------+
+|  1 | nova-consoleauth   | controller | internal | enabled | up    | 2016-02-09T23:11:15.000000 |
+|  2 | nova-scheduler     | controller | internal | enabled | up    | 2016-02-09T23:11:15.000000 |
+|  3 | nova-conductor     | controller | internal | enabled | up    | 2016-02-09T23:11:16.000000 |
+|  4 | nova-compute       | compute1   | nova     | enabled | up    | 2016-02-09T23:11:20.000000 |
++----+--------------------+------------+----------+---------+-------+----------------------------+
+```
+
+3. 列出身份服务中的API端点，以验证与身份服务的连接
+```
+$ openstack catalog list
+
++-----------+-----------+-----------------------------------------+
+| Name      | Type      | Endpoints                               |
++-----------+-----------+-----------------------------------------+
+| keystone  | identity  | RegionOne                               |
+|           |           |   public: http://controller:5000/v3/    |
+|           |           | RegionOne                               |
+|           |           |   internal: http://controller:5000/v3/  |
+|           |           | RegionOne                               |
+|           |           |   admin: http://controller:5000/v3/     |
+|           |           |                                         |
+| glance    | image     | RegionOne                               |
+|           |           |   admin: http://controller:9292         |
+|           |           | RegionOne                               |
+|           |           |   public: http://controller:9292        |
+|           |           | RegionOne                               |
+|           |           |   internal: http://controller:9292      |
+|           |           |                                         |
+| nova      | compute   | RegionOne                               |
+|           |           |   admin: http://controller:8774/v2.1    |
+|           |           | RegionOne                               |
+|           |           |   internal: http://controller:8774/v2.1 |
+|           |           | RegionOne                               |
+|           |           |   public: http://controller:8774/v2.1   |
+|           |           |                                         |
+| placement | placement | RegionOne                               |
+|           |           |   public: http://controller:8778        |
+|           |           | RegionOne                               |
+|           |           |   admin: http://controller:8778         |
+|           |           | RegionOne                               |
+|           |           |   internal: http://controller:8778      |
+|           |           |                                         |
++-----------+-----------+-----------------------------------------+
+```
+
+4. 列出图像服务中的镜像，以验证与镜像服务的连接
+
+```
+$ openstack image list
+
++--------------------------------------+-------------+-------------+
+| ID                                   | Name        | Status      |
++--------------------------------------+-------------+-------------+
+| 9a76d9f9-9620-4f2e-8c69-6c5691fae163 | cirros      | active      |
++--------------------------------------+-------------+-------------+
+```
+
+5. 检查cells和placement API是否成功工作
+```
+# nova-status upgrade check
+
++---------------------------+
+| Upgrade Check Results     |
++---------------------------+
+| Check: Cells v2           |
+| Result: Success           |
+| Details: None             |
++---------------------------+
+| Check: Placement API      |
+| Result: Success           |
+| Details: None             |
++---------------------------+
+| Check: Resource Providers |
+| Result: Success           |
+| Details: None             |
++---------------------------+
 ```
