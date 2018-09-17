@@ -299,7 +299,6 @@ su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf \
 
 ```
 # systemctl restart openstack-nova-api.service
-
 ```
 
 4. 开启网络服务，并设置其开机启动
