@@ -128,3 +128,8 @@ Created a new subnet:
 | updated_at        | 2017-03-29T05:48:29Z                 |
 +-------------------+--------------------------------------+
  ```
+>openstack subnet create \
+--network provider \
+--allocation-pool start=192.168.125.210,end=192.168.125.240 \
+--dns-nameserver 159.226.8.7 --gateway 192.168.125.254 \
+--subnet-range 192.168.125.0/24 provide

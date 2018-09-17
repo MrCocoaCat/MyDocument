@@ -1,7 +1,10 @@
 #### Self-service network
 
+>先创建provide 网络
+
 如果选择networking选项2，还可以创建一个self-service (private) 网络，通过NAT连接到物理网络基础设施。 这个网络包括一个DHCP服务器，它为实例提供IP地址。这个网络上的实例可以自动访问外部网络，如Internet。但是，从外部网络(如Internet)访问此网络上的实例需要一个浮动IP地址。
 demo或其他非特权用户可以创建这个网络，因为它只提供对demo项目中的实例的连接。
+
 ![](assets/markdown-img-paste-20180917155036996.png)
 
 *Networking Option 2: Self-service networks - Overview*
@@ -156,6 +159,7 @@ $ openstack router add subnet router selfservice
 
 ```
 openstack router set router --external-gateway provider
+
 ```
 
 #### 验证操作
@@ -202,5 +206,6 @@ PING 203.0.113.102 (203.0.113.102) 56(84) bytes of data.
 64 bytes from 203.0.113.102: icmp_req=4 ttl=64 time=0.216 ms
 
 --- 203.0.113.102 ping statistics ---
-rtt min/avg/max/mdev = 0.165/0.297/0.619/0.187 ms
+rtt min/avg/max/mdev = 0.165/0.297/0.619/0.187 ms\
+
 ```
