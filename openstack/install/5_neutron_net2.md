@@ -11,7 +11,7 @@
 ##### 配置server组件
 vim /etc/neutron/neutron.conf 文件
 
-  * 配置数据库权限，在[database]字段写入以下内容
+* 配置数据库权限，在[database]字段写入以下内容
 
 ```
 [database]
@@ -77,7 +77,7 @@ username = nova
 password = NOVA_PASS
 ```
 
-* In the [oslo_concurrency] section, configure the lock path:
+* 在[oslo_concurrency]字段, 设置lock path:
 
 ```
 [oslo_concurrency]
@@ -87,7 +87,7 @@ lock_path = /var/lib/neutron/tmp
 
 ###### 配置 Modular Layer 2 (ML2) plug-in
 
- Modular Layer 2 (ML2) plug-in使用Linux桥接机制为实例构建第2层(桥接和交换)虚拟网络基础结构
+Modular Layer 2 (ML2) plug-in使用Linux桥接机制为实例构建第2层(桥接和交换)虚拟网络基础结构
 
 vim /etc/neutron/plugins/ml2/ml2_conf.ini 文件
 
@@ -108,6 +108,7 @@ mechanism_drivers = linuxbridge,l2population
 
 # 在 [ml2]字段, 开启 port security extension driver
 extension_drivers = port_security
+
 ```
 
 * 在 [ml2_type_flat] 字段, 配置虚拟机网络为flat network
@@ -141,7 +142,7 @@ Linux bridge agent为实例构建第2层(桥接和交换)虚拟网络基础设�
 physical_interface_mappings = provider:PROVIDER_INTERFACE_NAME
 
 ```
- **将PROVIDER_INTERFACE_NAME 替换  为提供底层网络服务的物理网络端口名称**
+ **将PROVIDER_INTERFACE_NAME 替换  为提供底层网络服务的物理 网络端口 名称**
 Replace PROVIDER_INTERFACE_NAME with the name of the underlying provider physical network interface.
 
 > physical_interface_mappings = provider:ens4
@@ -154,7 +155,8 @@ enable_vxlan = true
 local_ip = OVERLAY_INTERFACE_IP_ADDRESS
 l2_population = true
 ```
-**将OVERLAY_INTERFACE_IP_ADDRESS替换为management IP地址**
+**将OVERLAY_INTERFACE_IP_ADDRESS替换为 management IP 地址**
+
 >192.168.125.207
 
 * 在 [securitygroup] 字段, enable security groups and configure the Linux bridge iptables firewall driver:
@@ -173,6 +175,7 @@ net.bridge.bridge-nf-call-iptables=1
 net.bridge.bridge-nf-call-ip6tables=1
 ```
 ###### 配置 layer-3 agent
+layer-3 agent(L3)代理为self-service 虚拟网络提供路由和NAT服务。
 
 *vim /etc/neutron/l3_agent.ini* 文件
 * 在[DEFAULT] 字段, 配置 the Linux bridge interface driver and external network bridge:
@@ -186,7 +189,7 @@ interface_driver = linuxbridge
 ###### 配置 DHCP agent
 
  DHCP agent为虚拟网络 提供 DHCP 服务
- *vim  /etc/neutron/dhcp_agent.ini* 文件，在[DEFAULT] 字段, 配置Linux桥接接口驱动程序Dnsmasq DHCP驱动程序，并启用隔离的元数据，以便提供者网络上的实例可以通过网络访问元数据
+ *vim  /etc/neutron/dhcp_agent.ini* ，在[DEFAULT] 字段, 配置Linux桥接接口驱动程序Dnsmasq DHCP驱动程序，并启用隔离的元数据，以便提供者网络上的实例可以通过网络访问元数据
  ```
  [DEFAULT]
 # ...

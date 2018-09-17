@@ -116,11 +116,9 @@ MariaDB [(none)] CREATE DATABASE neutron;
 * 设置登录数据库的权限
 
 ```
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' \
-  IDENTIFIED BY 'NEUTRON_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' IDENTIFIED BY 'NEUTRON_DBPASS';
 
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' \
-  IDENTIFIED BY 'NEUTRON_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' IDENTIFIED BY 'NEUTRON_DBPASS';
 
 ```
 
@@ -155,6 +153,7 @@ Repeat User Password:
 
 ```
  openstack role add --project service --user neutron admin
+
 ```
 
 * 创建neutron服务
@@ -259,6 +258,7 @@ metadata_proxy_shared_secret = METADATA_SECRET
 ```
 Replace METADATA_SECRET with a suitable secret for the metadata proxy.
 
+
 ##### 配置 Compute service 以使用 Networking service
 
 *vim /etc/nova/nova.conf* 文件，加入以下内容
@@ -277,10 +277,12 @@ username = neutron
 password = NEUTRON_PASS
 service_metadata_proxy = true
 metadata_proxy_shared_secret = METADATA_SECRET
+
 ```
 
 
 ##### 结束安装并配置
+
 1. 网络服务初始化脚本期望有一个符号链接/etc/neutron/plugin.ini指向ML2插件配置文件/etc/neutron/ plugins/ml2/ml2_con.ini。如果这个符号链接不存在，使用以下命令创建:
 ```
 ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
