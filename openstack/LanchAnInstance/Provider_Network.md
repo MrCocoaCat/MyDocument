@@ -2,6 +2,8 @@
 在启动实例之前，必须创建必要的虚拟网络基础结构。对于连网选项1，实例使用provider (external) 网络，它通过2层网络(bridging/switching)连接到物理网络基础设施。这个网络包括一个DHCP服务器，它为实例提供IP地址。
 管理员或其他特权用户必须创建这个网络，因为它直接连接到物理网络基础结构。
 
+> 所使用的为示例IP,需要根据自己的环境进行改变
+
 ![](assets/markdown-img-paste-20180917170729944.png)
 *Networking Option 1: Provider networks - Overview*
 
