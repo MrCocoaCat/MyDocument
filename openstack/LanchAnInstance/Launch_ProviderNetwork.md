@@ -58,7 +58,7 @@ $ openstack security group list
 
 #### Launch the instance¶
 
-1. Launch the instance:
+1. 启动一个实例:
 Replace PROVIDER_NET_ID with the ID of the provider provider network.
 
 ```

@@ -95,9 +95,6 @@ server NTP_SERVER iburst
 NTP_SERVER 为主机名或IP地址
 > *server 192.168.125.115 iburst*
 
-
->其他节点：server controller iburst
-
 3. 保证其他服务节点可以访问控制节点的chrony daemon,需要在同一个chrony.conf文件中写入以下内容
 
 ```
@@ -135,6 +132,7 @@ server controller iburst
 在所有节点运行以下命令
 
 1. 安装包
+
 * centos
 ```
 yum install centos-release-openstack-queens -y
@@ -290,7 +288,7 @@ ETCD_NAME="controller"
 #[Clustering]
 ETCD_INITIAL_ADVERTISE_PEER_URLS="http://192.168.125.115:2380"
 ETCD_ADVERTISE_CLIENT_URLS="http://192.168.125.115:2379"
-# 注意 = 
+# 注意 =
 ETCD_INITIAL_CLUSTER="controller=http://192.168.125.115:2380"
 
 ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster-01"
