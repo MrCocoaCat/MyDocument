@@ -11,13 +11,6 @@ yum install openstack-neutron-linuxbridge ebtables ipset
 
 * vim /etc/neutron/neutron.conf
 
-  * 在[database]字段, 注释掉所有的选项，因为计算节点不需要连接数据库
-  。
-  * 在[DEFAULT]字段, 仅开启compute和metadata的APIs
-  ```
-  [DEFAULT]
-  # ...
-  enabled_apis = osapi_compute,metadata
   ```
   * In the [DEFAULT] section, 配置 RabbitMQ消息队列的接入
 
@@ -49,5 +42,5 @@ yum install openstack-neutron-linuxbridge ebtables ipset
   * 在[oslo_concurrency]字段, configure the lock path:
 
   ```
-  
+
   ```

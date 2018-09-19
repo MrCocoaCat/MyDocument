@@ -29,6 +29,8 @@ OpenStack通过各种补充服务提供了一个基础设施即服务(IaaS)解�
 https://docs.openstack.org/nova/queens/install/overview.html
 
 
+
+
 ### 安装Nova
 Nova提供在統一的計算資源抽象
 
@@ -561,23 +563,4 @@ $ openstack image list
 | Result: Success           |
 | Details: None             |
 +---------------------------+
-```
-
-
-
-#### 排错
-```
-systemctl status  -l libvirtd.service、
-```
-
-报错
-
-```
-9月 18 17:42:25 compute1.localdomain systemd[1]: [/usr/lib/systemd/system/libvirtd.service:36] Unknown lvalue 'TasksMax' in section 'Service'
-```
-
-解决：
-更新系统软件包
-```
-yum install systemd-*
 ```
