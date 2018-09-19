@@ -1,6 +1,7 @@
 本节介绍如何在计算节点上为Ubuntu、openSUSE和SUSE Linux Enterprise以及Red Hat Enterprise Linux和CentOS安装和配置计算服务。
-该服务支持多个虚拟机监控程序来部署实例或虚拟机.为了简单起见，此配置使用了Quick EMUlator (QEMU)管理程序，在支持虚拟机硬件加速的计算节点上使用基于内核的VM (KVM)扩展。在遗留硬件上，此配置使用通用QEMU管理程序。您可以按照这些说明进行一些小的修改，以使用额外的计算节点水平缩放您的环境。
+该服务支持多个虚拟机监控程序来部署实例或虚拟机.为了简单起见，此配置使用了Quick EMUlator (QEMU)管理程序，在支持虚拟机硬件加速的计算节点上使用基于内核的VM(KVM)扩展。在遗留硬件上，此配置使用通用QEMU管理程序。您可以按照这些说明进行一些小的修改，以使用额外的计算节点水平缩放您的环境。
 
+>本节假设您正在按照本指南中的指示一步一步地配置第一个计算节点。如果您希望配置其他计算节点，请以与示例体系结构部分中的第一个计算节点类似的方式进行准备。每个附加的计算节点都需要一个惟一的IP地址。
 
 https://docs.openstack.org/nova/queens/install/compute-install-rdo.htmls
 
@@ -113,9 +114,33 @@ egrep -c '(vmx|svm)' /proc/cpuinfo
 
 ```
 # systemctl enable libvirtd.service openstack-nova-compute.service
-# systemctl start libvirtd.service openstack-nova-compute.service
+# systemctl start libvirtd.service openstack-nova-compute.service         
 
 ```
 
 
 #### Add the compute node to the cell database
+1. Source the admin credentials to enable admin-only CLI commands, then confirm there are compute hosts in the database:
+```
+$ . admin-openrc
+
+$ openstack compute service list --service nova-compute
++----+-------+--------------+------+-------+---------+----------------------------+
+| ID | Host  | Binary       | Zone | State | Status  | Updated At                 |
++----+-------+--------------+------+-------+---------+----------------------------+
+| 1  | node1 | nova-compute | nova | up    | enabled | 2017-04-14T15:30:44.000000 |
++----+-------+--------------+------+-------+---------+----------------------------+
+```
+
+2. Discover compute hosts:
+```
+# su -s /bin/sh -c "nova-manage cell_v2 discover_hosts --verbose" nova
+
+Found 2 cell mappings.
+Skipping cell0 since it does not contain hosts.
+Getting compute nodes from cell 'cell1': ad5a5985-a719-4567-98d8-8d148aaae4bc
+Found 1 computes in cell: ad5a5985-a719-4567-98d8-8d148aaae4bc
+Checking host mapping for compute host 'compute': fe58ddc1-1d65-4f87-9456-bc040dc106b3
+Creating host mapping for compute host 'compute': fe58ddc1-1d65-4f87-9456-bc040dc106b3
+
+```

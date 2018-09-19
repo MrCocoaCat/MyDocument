@@ -562,3 +562,22 @@ $ openstack image list
 | Details: None             |
 +---------------------------+
 ```
+
+
+
+#### 排错
+```
+systemctl status  -l libvirtd.service、
+```
+
+报错
+
+```
+9月 18 17:42:25 compute1.localdomain systemd[1]: [/usr/lib/systemd/system/libvirtd.service:36] Unknown lvalue 'TasksMax' in section 'Service'
+```
+
+解决：
+更新系统软件包
+```
+yum install systemd-*
+```
