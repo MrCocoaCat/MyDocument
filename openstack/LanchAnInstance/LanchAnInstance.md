@@ -120,3 +120,16 @@ $ openstack security group rule create --proto icmp default
     ```
 #### Launch an instance
 如果选择网络选项1，则只能在provider网络上启动实例。如果选择networking选项2，可以在provider网络和 self-service 网络上启动实例。
+
+
+镜像下载地址
+
+```
+CentOS6：http://cloud.centos.org/centos/6/images/
+
+CentOS7：http://cloud.centos.org/centos/7/images/
+
+Ubuntu14.04：http://cloud-images.ubuntu.com/trusty/current/
+
+Ubuntu16.04：http://cloud-images.ubuntu.com/xenial/current/
+```
