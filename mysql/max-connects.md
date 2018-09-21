@@ -1,3 +1,4 @@
+
 mysql> show status like 'Threads%';
 +-------------------+-------+
 | Variable_name     | Value |
