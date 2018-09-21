@@ -133,3 +133,8 @@ Ubuntu14.04：http://cloud-images.ubuntu.com/trusty/current/
 
 Ubuntu16.04：http://cloud-images.ubuntu.com/xenial/current/
 ```
+
+清华镜像地址：
+```
+https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cloud-images/xenial/
+```
