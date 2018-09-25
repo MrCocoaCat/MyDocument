@@ -75,6 +75,7 @@ linuxbridge_agent.ini:
 [linux_bridge]
 physical_interface_mappings = provider:eth1
 ```
+>创建了一个网络
 
 3. 创建子网
 ```
@@ -135,3 +136,58 @@ Created a new subnet:
 --allocation-pool start=192.168.125.210,end=192.168.125.240 \
 --dns-nameserver 159.226.8.7 --gateway 192.168.125.254 \
 --subnet-range 192.168.125.0/24 provide
+
+
+*tapd2701667-65*: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        ether 82:cb:2b:67:dd:dd  txqueuelen 1000  (Ethernet)
+        RX packets 206  bytes 23676 (23.1 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 1494  bytes 153854 (150.2 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+
+查看linux网桥
+
+bridge name	bridge id		STP enabled	interfaces
+
+brqc39f867c-60		8000.82cb2b67dddd	no		enp130s0f0
+							*tapd2701667-65*
+
+
+创建一个网桥，其连接一个新建的tap 和 物理网卡
+创建一个名为tapd2701667-65的tap ,同时将其加入命名空间中
+
+
+$ip netns exec qdhcp-c39f867c-6039-41e7-97a6-22ace2e3c425 ip link list
+
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT qlen 1
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: *ns-d2701667-65@if22*: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT qlen 1000
+    link/ether fa:16:3e:a4:60:be brd ff:ff:ff:ff:ff:ff link-netnsid 0
+
+
+
+
+查看
+
+
+$ip netns exec qdhcp-c39f867c-6039-41e7-97a6-22ace2e3c425 ifconfig
+
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1  (Local Loopback)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+*ns-d2701667-65*: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 169.254.169.254  netmask 255.255.0.0  broadcast 169.254.255.255
+        inet6 fe80::f816:3eff:fea4:60be  prefixlen 64  scopeid 0x20<link>
+        ether fa:16:3e:a4:60:be  txqueuelen 1000  (Ethernet)
+        RX packets 71  bytes 7850 (7.6 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 5  bytes 438 (438.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
