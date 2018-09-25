@@ -61,7 +61,7 @@ Created a new network:
 
 --external 选项将虚拟网络定义为external。 如果想创建internal网络,可以使用 --internal instead. 默认值为internal。
 
---provider-physical-network provider 及 --provider-network-type flat 选项连接虚拟网络至flat(native/untagged)， eth1网络接口的物理网络， on the host using information。在一下文件中
+--provider-physical-network provider 及 --provider-network-type flat 选项连接虚拟网络至flat(native/untagged)， eth1网络接口的物理网络，在以下文件中
 
 ml2_conf.ini:
 
@@ -138,6 +138,9 @@ Created a new subnet:
 --subnet-range 192.168.125.0/24 provide
 
 
+
+
+
 *tapd2701667-65*: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         ether 82:cb:2b:67:dd:dd  txqueuelen 1000  (Ethernet)
         RX packets 206  bytes 23676 (23.1 KiB)
@@ -155,10 +158,12 @@ brqc39f867c-60		8000.82cb2b67dddd	no		enp130s0f0
 
 
 创建一个网桥，其连接一个新建的tap 和 物理网卡
-创建一个名为tapd2701667-65的tap ,同时将其加入命名空间中
+创建一个名为 *tapd2701667-65* 的tap ,同时将其加入命名空间中
 
-
+查看命名空间：
+```
 $ip netns exec qdhcp-c39f867c-6039-41e7-97a6-22ace2e3c425 ip link list
+```
 
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT qlen 1
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -168,11 +173,11 @@ $ip netns exec qdhcp-c39f867c-6039-41e7-97a6-22ace2e3c425 ip link list
 
 
 
-查看
+查看命名空间内网络结构
 
-
+```
 $ip netns exec qdhcp-c39f867c-6039-41e7-97a6-22ace2e3c425 ifconfig
-
+```
 
 lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         inet 127.0.0.1  netmask 255.0.0.0

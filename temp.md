@@ -1,3 +1,11 @@
+openstack subnet create \
+ --network provider \
+ --allocation-pool start=192.168.125.220,end=192.168.125.240 \
+ --dns-nameserver DNS_RESOLVER \
+ --gateway 192.168.125.254 \
+ --subnet-range 192.168.125.0 provider
+
+
 openstack server create --flavor m1.nano --image cirros \
   --nic net-id=3e6c7f51-609f-4fdb-b999-b013941ab46f\
   --security-group default \

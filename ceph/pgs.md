@@ -18,6 +18,7 @@ Total PGs = (Total_number_of_OSD * 100) / max_replication_count
 ```
 $ ceph osd pool get rbd pg_num
 pg_num: 128
+
 $ ceph osd pool get rbd pgp_num
 pgp_num: 128
 ```
@@ -30,8 +31,10 @@ pool 2 'rbd' replicated size 3 min_size 2 crush_ruleset 0 object_hash rjenkins p
 
 4. 变更rbd的pg_num和pgp_num为256：
 
+```
 $ ceph osd pool set rbd pg_num 256
 $ ceph osd pool set rbd pgp_num 256
+```
 
 5. 如果有其他pool，同步调整它们的pg_num和pgp_num，以使负载更加均衡。
 

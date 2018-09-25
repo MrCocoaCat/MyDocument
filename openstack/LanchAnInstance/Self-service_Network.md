@@ -112,6 +112,9 @@ openstack subnet create --network selfservice \
 | updated_at        | 2016-11-04T18:30:54Z                 |
 +-------------------+--------------------------------------+
 ```
+> 增加一个命名空间
+及一个vxlan-34
+
 
 #### Create a router
 
