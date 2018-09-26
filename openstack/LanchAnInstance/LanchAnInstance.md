@@ -138,3 +138,18 @@ Ubuntu16.04：http://cloud-images.ubuntu.com/xenial/current/
 ```
 https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cloud-images/xenial/
 ```
+
+
+#####
+
+[修改密码](https://blog.csdn.net/kwame211/article/details/79802619?utm_source=copy )
+
+```
+#!/bin/sh
+passwd ubuntu<<EOF
+ubuntu
+ubuntu
+EOF
+sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+service ssh restart
+```
