@@ -170,6 +170,7 @@ firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
 
 >vim /etc/sysctl.conf
 
+**/etc/sysctl.conf**
 ```
 net.bridge.bridge-nf-call-iptables=1
 net.bridge.bridge-nf-call-ip6tables=1
