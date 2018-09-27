@@ -122,6 +122,8 @@ $ openstack security group rule create --proto icmp default
 如果选择网络选项1，则只能在provider网络上启动实例。如果选择networking选项2，可以在provider网络和 self-service 网络上启动实例。
 
 
+
+#### openstack镜像下载
 镜像下载地址
 
 ```
@@ -140,7 +142,7 @@ https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cloud-images/xenial/
 ```
 
 
-#####
+##### 官方镜像修改密码
 
 [修改密码](https://blog.csdn.net/kwame211/article/details/79802619?utm_source=copy )
 
@@ -153,3 +155,23 @@ EOF
 sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 service ssh restart
 ```
+
+##### 修改数量限制
+
+
+max_age=0                                        利用率刷新的时间间隔
+quota_instances=10                               instance个数
+quota_cores=20                                   vcpus的个数
+quota_ram=5120000                                内存显示，单位是MB
+quota_floating_ips=10                            floating-ip的个数
+quota_fixed_ips=-1                               fixed-ip的个数
+quota_metadata_items=128                         metadata的个数
+quota_injected_files=10                          注入文件个数
+quota_injected_file_content_bytes=10240          每个注入文件的大小
+quota_injected_file_path_bytes=255               注入文件路径长度
+quota_security_groups=10                         安全组的个数
+quota_security_group_rules=20                    每个安全组中的规则
+quota_key_pairs=100                              keys的个数
+
+https://blog.csdn.net/qq_21398167/article/details/46682885?utm_source=copy
+quota_volumes = 10 在cinder.conf中配置
