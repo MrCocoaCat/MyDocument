@@ -95,8 +95,9 @@ $ openstack security group rule create --proto icmp default
 +-------------------+--------------------------------------+
 ```
     * Permit secure shell (SSH) access:
-    ```
-    $ openstack security group rule create --proto tcp --dst-port 22 default
+    
+ ```
+ $ openstack security group rule create --proto tcp --dst-port 22 default
 
 +-------------------+--------------------------------------+
 | Field             | Value                                |
@@ -117,7 +118,7 @@ $ openstack security group rule create --proto icmp default
 | security_group_id | 89ff5c84-e3d1-46bb-b149-e621689f0696 |
 | updated_at        | 2017-03-30T00:43:35Z                 |
 +-------------------+--------------------------------------+
-    ```
+```
 #### Launch an instance
 如果选择网络选项1，则只能在provider网络上启动实例。如果选择networking选项2，可以在provider网络和 self-service 网络上启动实例。
 
