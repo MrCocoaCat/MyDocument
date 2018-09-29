@@ -43,4 +43,73 @@ filter array 以a作为可接受的开头,r作为拒绝的开头。 数组需要
   yum install openstack-cinder targetcli python-keystone
  ```
 
- 2. vim /etc/cinder/cinder.conf 
+ 2. vim /etc/cinder/cinder.conf
+
+* 在[database]字段，配置数据库接入权限
+```
+[database]
+# ...
+connection = mysql+pymysql://cinder:CINDER_DBPASS@controller/cinder
+```
+* 在[DEFAULT]字段, 设置RabbitMQ 消息队列权限
+```
+[DEFAULT]
+# ...
+transport_url = rabbit://openstack:RABBIT_PASS@controller
+```
+* 在[DEFAULT]及[keystone_authtoken] 字段, 配置认证服务接入
+```
+[DEFAULT]
+# ...
+auth_strategy = keystone
+
+[keystone_authtoken]
+# ...
+auth_uri = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers = controller:11211
+auth_type = password
+project_domain_id = default
+user_domain_id = default
+project_name = service
+username = cinder
+password = CINDER_PASS
+```
+* 在 [DEFAULT] 字段, 配置 my_ip 选项
+```
+[DEFAULT]
+# ...
+my_ip = MANAGEMENT_INTERFACE_IP_ADDRESS
+```
+* 在[lvm]部分中，使用lvm驱动程序、cinder-volumes卷组、iSCSI协议和适当的iSCSI服务配置lvm后端。如果[lvm]部分不存在，创建它:
+```
+[lvm]
+volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver
+volume_group = cinder-volumes
+iscsi_protocol = iscsi
+iscsi_helper = lioadm
+```
+* 在[DEFAULT] 字段， enable the LVM back end:
+```
+[DEFAULT]
+# ...
+enabled_backends = lvm
+```
+* In the [DEFAULT] section, configure the location of the Image service API:
+```
+[DEFAULT]
+# ...
+glance_api_servers = http://controller:9292
+```
+* In the [oslo_concurrency] section, configure the lock path:
+```
+[oslo_concurrency]
+# ...
+lock_path = /var/lib/cinder/tmp
+```
+### Finalize installation
+开启存储服务，包括其所依赖的服务，并且设置其开机启动
+```
+# systemctl enable openstack-cinder-volume.service target.service
+# systemctl start openstack-cinder-volume.service target.service
+```
