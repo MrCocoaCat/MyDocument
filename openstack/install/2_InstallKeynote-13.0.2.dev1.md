@@ -206,7 +206,7 @@ ln -s /usr/share/keystone/wsgi-keystone.conf /etc/httpd/conf.d/
 
 ```
 systemctl enable httpd.service
-systemctl start httpd.service
+systemctl start httpd.services
 ```
 
 2. 配置管理账户

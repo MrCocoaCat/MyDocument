@@ -1,18 +1,21 @@
 ### 安装glance
 glance为虚拟机提供虚拟机的镜像服务，其本身不负责实际的存储。
 OpenStack 的镜像服务 (glance) 允许用户发现、注册和恢复虚拟机镜像。它提供了一个 REST API，允许您查询虚拟机镜像的 metadata 并恢复一个实际的镜像。您可以存储虚拟机镜像通过不同位置的镜像服务使其可用，就像 OpenStack 对象存储那样从简单的文件系统到对象存储系统。
+>为了简单起见，本指南描述了如何配置映像服务以使用文件后端，该文件后端将上传并存储在承载映像服务的控制器节点上。默认情况下，这个目录是/var/lib/glance/images/。在继续之前，确保controller节点在这个目录中至少有几GB的可用空间。由于文件后端通常是控制器节点的本地端，因此它通常不适合多节点部署。有关其他后端需求的信息，请参阅配置参考资
+
+OpenStack映像服务是基础设施即服务(IaaS)的核心。它接受对磁盘或服务器映像的API请求，以及来自最终用户或OpenStack计算组件的元数据定义。它还支持在各种存储库类型(包括OpenStack对象存储)上存储磁盘或服务器映像。它接受对磁盘或服务器映像的API请求，以及来自最终用户或OpenStack计算组件的元数据定义。它还支持在各种存储库类型(包括OpenStack对象存储)上存储磁盘或服务器映像。在OpenStack映像服务上运行许多周期性的进程以支持缓存。复制服务通过集群确保一致性和可用性。其他周期性过程包括 auditors, updaters, 及 reapers。
+OpenStack镜像服务包括以下组件:
 
 * glance-api
-
-    Accepts Image API calls for image discovery, retrieval, and storage.
+    接受镜像发现、检索和存储的API调用。
 * glance-registry
+    存储、处理和检索关于映像的元数据。元数据包括大小和类型等项。
+>registry是用于OpenStack映像服务的私有内部服务。不要向用户公开此服务。
 
-    Stores, processes, and retrieves metadata about images. Metadata includes items such as size and type.
 * Database
-    Stores image metadata and you can choose your database depending on your preference. Most deployments use MySQL or SQLite.
+    存储图像元数据，您可以根据自己的喜好选择数据库。大多数部署都使用MySQL或SQLite。
 * Storage repository for image files
-    Various repository types are supported including normal file systems (or any filesystem mounted on the glance-api controller node), Object Storage, RADOS block devices, VMware datastore, and HTTP. Note that some repositories will only support read-only usage.
-    usage.
+    支持各种存储库类型，包括普通文件系统(或安装在gles -api控制器节点上的任何文件系统)、对象存储、RADOS块设备、VMware数据存储和HTTP。注意，有些存储库只支持只读使用。
 * Metadata definition service
     A common API for vendors, admins, services, and users to meaningfully define their own custom metadata. This metadata can be used on different types of resources like images, artifacts, volumes, flavors, and aggregates. A definition includes the new property’s key, description, constraints, and the resource types which it can be associated with.
 
