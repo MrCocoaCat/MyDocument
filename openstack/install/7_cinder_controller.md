@@ -1,4 +1,4 @@
-
+### Install and configure controller node
 本节描述如何在控制器节点上安装和配置代码为cinder的块存储服务。
 此服务至少需要一个额外的存储节点，该节点为实例提供卷。
 ### Prerequisites
@@ -255,7 +255,7 @@ c. 在 [DEFAULT] 字段, 设置 the my_ip 选项， use the management interface
 my_ip = 192.168.125.207
 ```
 
-3. In the [oslo_concurrency] section, configure the lock path:
+3. 在[oslo_concurrency] 字段, 设置lock path:
 
 ```
 [oslo_concurrency]

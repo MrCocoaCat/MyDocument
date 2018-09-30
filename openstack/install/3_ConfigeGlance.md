@@ -5,3 +5,5 @@ Glance有许多选项，您可以使用它们来配置Glance API服务器、Glan
 * ~/
 * /etc/glance
 * /etc
+Glance API服务器配置文件应该命名为gls-api.conf。类似地，Glance注册中心服务器配置文件应该命名为gls-registry.conf。由于Glance为每个服务维护一个配置文件，因此还有许多其他配置文件。
+如果您通过操作系统的包管理系统安装了Glance，很可能会在/etc/ glance中安装示例配置文件。

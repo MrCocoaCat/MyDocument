@@ -1,6 +1,7 @@
 https://docs.openstack.org/cinder/queens/install/cinder-storage-install-rdo.html
 
 ### Prerequisites
+在存储节点上安装和配置块存储服务之前，必须准备好存储设备。
 
 1. Install the supporting utility packages:
 ```
@@ -75,12 +76,14 @@ project_name = service
 username = cinder
 password = CINDER_PASS
 ```
+
 * 在 [DEFAULT] 字段, 配置 my_ip 选项
 ```
 [DEFAULT]
 # ...
 my_ip = MANAGEMENT_INTERFACE_IP_ADDRESS
 ```
+
 * 在[lvm]部分中，使用lvm驱动程序、cinder-volumes卷组、iSCSI协议和适当的iSCSI服务配置lvm后端。如果[lvm]部分不存在，创建它:
 ```
 [lvm]
@@ -89,24 +92,29 @@ volume_group = cinder-volumes
 iscsi_protocol = iscsi
 iscsi_helper = lioadm
 ```
+
 * 在[DEFAULT] 字段， enable the LVM back end:
+
 ```
 [DEFAULT]
 # ...
 enabled_backends = lvm
 ```
+
 * In the [DEFAULT] section, configure the location of the Image service API:
 ```
 [DEFAULT]
 # ...
 glance_api_servers = http://controller:9292
 ```
-* In the [oslo_concurrency] section, configure the lock path:
+
+* 在[oslo_concurrency] 字段, 配置lock path:
 ```
 [oslo_concurrency]
 # ...
 lock_path = /var/lib/cinder/tmp
 ```
+
 ### Finalize installation
 开启存储服务，包括其所依赖的服务，并且设置其开机启动
 ```
