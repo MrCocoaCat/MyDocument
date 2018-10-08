@@ -138,19 +138,71 @@ Created a new subnet:
 --dns-nameserver 159.226.8.7 --gateway 192.168.125.254 \
 --subnet-range 192.168.125.0/24 provide
 
-***
 
-**查看网络结构**
+#### 网络分析
+
+查看openstack 网络
+
 ```
-tapd2701667-65: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-        ether 82:cb:2b:67:dd:dd  txqueuelen 1000  (Ethernet)
-        RX packets 206  bytes 23676 (23.1 KiB)
+[root@controller ~]# openstack network show provider
++---------------------------+--------------------------------------+
+| Field                     | Value                                |
++---------------------------+--------------------------------------+
+| admin_state_up            | UP                                   |
+| availability_zone_hints   |                                      |
+| availability_zones        | nova                                 |
+| created_at                | 2018-09-25T09:06:27Z                 |
+| description               |                                      |
+| dns_domain                | None                                 |
+| id                        | 065fd30d-6304-48d2-9496-73cb90345d29 |
+| ipv4_address_scope        | None                                 |
+| ipv6_address_scope        | None                                 |
+| is_default                | False                                |
+| is_vlan_transparent       | None                                 |
+| mtu                       | 1500                                 |
+| name                      | provider                             |
+| port_security_enabled     | True                                 |
+| project_id                | 871273cbfca841a49e6136e4d8ac7961     |
+| provider:network_type     | flat                                 |
+| provider:physical_network | provider                             |
+| provider:segmentation_id  | None                                 |
+| qos_policy_id             | None                                 |
+| revision_number           | 6                                    |
+| router:external           | External                             |
+| segments                  | None                                 |
+| shared                    | True                                 |
+| status                    | ACTIVE                               |
+| subnets                   | 59492b24-f091-498a-a226-0d0f8666af32 |
+| tags                      |                                      |
+| updated_at                | 2018-09-25T09:06:55Z                 |
++---------------------------+--------------------------------------+
+
+```
+
+
+##### 查看网络结构
+```
+$ ifconfig
+
+
+brq065fd30d-63: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.125.123  netmask 255.255.255.0  broadcast 192.168.125.255
+        inet6 fe80::b096:bcff:fe1e:25bd  prefixlen 64  scopeid 0x20<link>
+        ether 00:25:90:95:dc:f2  txqueuelen 1000  (Ethernet)
+        RX packets 3398977  bytes 387969686 (369.9 MiB)
         RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 1494  bytes 153854 (150.2 KiB)
+        TX packets 11120  bytes 24120389 (23.0 MiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+tap7df9ed2e-d8: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+                ether 3a:6a:f9:0c:1a:0c  txqueuelen 1000  (Ethernet)
+                RX packets 5  bytes 438 (438.0 B)
+                RX errors 0  dropped 0  overruns 0  frame 0
+                TX packets 3408085  bytes 436468251 (416.2 MiB)
+                TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
 
-**查看linux网桥**
+##### 查看linux网桥
 
 ```
 $ brctl show
@@ -160,27 +212,21 @@ brq065fd30d-63		8000.00259095dcf2	no		enp4s0f0
 							tap7df9ed2e-d8
 ```
 
-创建一个网桥，其连接一个新建的tap 和 物理网卡
-创建一个名为 *tapd2701667-65* 的tap ,同时将其加入命名空间中
+创建一个网桥，其连接一个新建的tap(tap7df9ed2e-d8)和物理网卡enp4s0f0
 
-**查看命名空间**
-```
-$ip netns exec qdhcp-c39f867c-6039-41e7-97a6-22ace2e3c425 ip link list
-
-
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT qlen 1
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-2: *ns-d2701667-65@if22*: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT qlen 1000
-    link/ether fa:16:3e:a4:60:be brd ff:ff:ff:ff:ff:ff link-netnsid 0
+##### 查看命名空间
 
 ```
+$ip netns
 
+qdhcp-065fd30d-6304-48d2-9496-73cb90345d29 (id: 3)
+```
+新建了一个命名空间
 
-**查看命名空间内网络结构**
+##### 查看命名空间内网络结构
 
 ```
-$ip netns exec qdhcp-c39f867c-6039-41e7-97a6-22ace2e3c425 ifconfig
-
+$ip netns exec qdhcp-065fd30d-6304-48d2-9496-73cb90345d29 ifconfig
 
 lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         inet 127.0.0.1  netmask 255.0.0.0
@@ -191,12 +237,15 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         TX packets 0  bytes 0 (0.0 B)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
-*ns-d2701667-65*: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-        inet 169.254.169.254  netmask 255.255.0.0  broadcast 169.254.255.255
-        inet6 fe80::f816:3eff:fea4:60be  prefixlen 64  scopeid 0x20<link>
-        ether fa:16:3e:a4:60:be  txqueuelen 1000  (Ethernet)
-        RX packets 71  bytes 7850 (7.6 KiB)
+ns-7df9ed2e-d8: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.125.210  netmask 255.255.255.0  broadcast 192.168.125.255
+        inet6 fe80::f816:3eff:fe92:cd5b  prefixlen 64  scopeid 0x20<link>
+        ether fa:16:3e:92:cd:5b  txqueuelen 1000  (Ethernet)
+        RX packets 3416706  bytes 437607621 (417.3 MiB)
         RX errors 0  dropped 0  overruns 0  frame 0
         TX packets 5  bytes 438 (438.0 B)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
 ```
+
+#### 添加实例后
