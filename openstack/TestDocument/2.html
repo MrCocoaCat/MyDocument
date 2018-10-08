@@ -1,0 +1,131 @@
+<h4 id="测试环境">测试环境</h4>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">节点名称</th>
+<th style="text-align: center;">主机名称</th>
+<th style="text-align: center;">manage IP</th>
+<th style="text-align: center;">provider IP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">控制节点</td>
+<td style="text-align: center;">controller</td>
+<td style="text-align: center;">192.168.125.123</td>
+<td style="text-align: center;">10.19.19.23</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">计算节点1</td>
+<td style="text-align: center;">compute1</td>
+<td style="text-align: center;">192.168.125.125</td>
+<td style="text-align: center;">10.19.19.25</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">计算节点2</td>
+<td style="text-align: center;">compute2</td>
+<td style="text-align: center;">192.168.125.113</td>
+<td style="text-align: center;">10.19.19.13</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">计算节点3</td>
+<td style="text-align: center;">compute3</td>
+<td style="text-align: center;">192.168.125.119</td>
+<td style="text-align: center;">10.19.19.119</td>
+</tr>
+</tbody>
+</table>
+<h4 id="单台服务器最多可以起多少台虚拟机">单台服务器最多可以起多少台虚拟机</h4>
+<p>openstack默认配置为可以创建10 个实例，可以修改nova.conf配置，设置虚拟机数量限制。</p>
+<h4 id="虚拟机之间的网络通信带宽">虚拟机之间的网络通信带宽</h4>
+<p>创建测试实例如下：</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">名称</th>
+<th style="text-align: center;">所在节点</th>
+<th style="text-align: center;">virsh 名称</th>
+<th style="text-align: center;">网络地址</th>
+<th style="text-align: center;">网络类型</th>
+<th style="text-align: center;">浮动IP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">ubuntu2</td>
+<td style="text-align: center;">compute1</td>
+<td style="text-align: center;">instance-00000027</td>
+<td style="text-align: center;">192.168.125.221</td>
+<td style="text-align: center;">provider</td>
+<td style="text-align: center;">none</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">ubuntu3</td>
+<td style="text-align: center;">compute3</td>
+<td style="text-align: center;">instance-0000002c</td>
+<td style="text-align: center;">192.168.125.217</td>
+<td style="text-align: center;">provider</td>
+<td style="text-align: center;">none</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">ubuntu1</td>
+<td style="text-align: center;">compute3</td>
+<td style="text-align: center;">instance-0000002d</td>
+<td style="text-align: center;">192.168.125.213</td>
+<td style="text-align: center;">provider</td>
+<td style="text-align: center;">none</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">ubuntu4</td>
+<td style="text-align: center;">compute3</td>
+<td style="text-align: center;">instance-0000002e</td>
+<td style="text-align: center;">172.16.1.5</td>
+<td style="text-align: center;">self</td>
+<td style="text-align: center;">none</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">ubuntu5</td>
+<td style="text-align: center;">compute1</td>
+<td style="text-align: center;">instance-0000002f</td>
+<td style="text-align: center;">172.16.2.9</td>
+<td style="text-align: center;">self</td>
+<td style="text-align: center;">none</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">ubuntu6</td>
+<td style="text-align: center;">compute1</td>
+<td style="text-align: center;">instance-00000030</td>
+<td style="text-align: center;">172.16.1.4</td>
+<td style="text-align: center;">self</td>
+<td style="text-align: center;">192.168.125.211</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">ubuntu7</td>
+<td style="text-align: center;">compute1</td>
+<td style="text-align: center;">instance-00000031</td>
+<td style="text-align: center;">172.16.1.8</td>
+<td style="text-align: center;">self</td>
+<td style="text-align: center;">192.168.125.224</td>
+</tr>
+</tbody>
+</table>
+<p>实例配置 * 系统：ubuntu16.04 * 内存：4G * vcpu:4</p>
+<h5 id="同服务器内同网络云主机之间的">同服务器内，同网络云主机之间的</h5>
+<p>测试ubuntu1与ubuntu3之间的带宽，以ubuntu3作为iperf3服务器</p>
+<p><img src="assets/markdown-img-paste-20180926152529776.png" /></p>
+<h5 id="跨服务器的同网络云主机之间的">跨服务器的，同网络云主机之间的</h5>
+<p>测试ubuntu4与ubuntu3之间带宽，以ubuntu3作为iperf3服务器</p>
+<p><img src="assets/markdown-img-paste-20180926152914224.png" /></p>
+<h5 id="不同网络同服务器经过路由器的">不同网络，同服务器，经过路由器的</h5>
+<p>ubuntu5与ubuntu6之间，以ubuntu5作为iperf3服务器</p>
+<p><img src="assets/markdown-img-paste-20180926191210269.png" /></p>
+<h5 id="不同网络不同服务器经过路由器的">不同网络，不同服务器，经过路由器的</h5>
+<p>测试Ubuntu4和Ubuntu5之间的带宽，以ubuntu4作为iperf3服务器</p>
+<p><img src="assets/markdown-img-paste-20180926173623218.png" /></p>
+<h5 id="通过浮动ip个人电脑与云主机之间的">通过浮动IP，个人电脑与云主机之间的</h5>
+<p>测试Ubuntu6的浮动IP与本地192.168.122.146之间的带宽 iperf3服务器无法连接，可以ping通</p>
+<h5 id="物理云主机与云主机之间的">物理云主机与云主机之间的</h5>
+<p>测试Ubuntu6与Ubuntu7 虚拟机之间的网络通信带宽。 iperf3服务器无法连接，可以ping通</p>
+<h4 id="创建云主机时间">创建云主机时间</h4>
+<p>查看nova日志，创建实例时间为47秒</p>
+<p><img src="assets/markdown-img-paste-20180927112056334.png" /></p>
