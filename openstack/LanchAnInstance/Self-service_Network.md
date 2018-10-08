@@ -73,7 +73,7 @@ $ openstack subnet create \
 ```
 替换 DNS_RESOLVER 为DNS resolver的IP 地址. In most cases, you can use one from the /etc/resolv.conf file on the host.
 
-替换 SELFSERVICE_NETWORK_GATEWAY 为在self-service network 中想使用的网关，typically the “.1” IP address.
+替换 SELFSERVICE_NETWORK_GATEWAY 为在self-service network 中想使用的网关，通常 “.1” 的IP 地址设置为网管.
 
 替换 SELFSERVICE_NETWORK_CIDR 为子网，之后使用在self-service网络上。您可以使用任意值,建议参考RFC 1918.
 
@@ -126,6 +126,7 @@ provider网络必须包括路由器:  external选项使 self-service 路由器�
 1. 同步环境变量
 
 2. 创建路由
+
 ```
 $ openstack router create router
 
@@ -186,6 +187,7 @@ qdhcp-0e62efcd-8cee-46c7-b163-d8df05c3c5ad
 ```
 
 3. 列出路由器上的端口，以确定provider network网络上的网关IP地址:
+
 ```
 $ openstack port list --router router
 

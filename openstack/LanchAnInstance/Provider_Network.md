@@ -63,14 +63,14 @@ Created a new network:
 
 --provider-physical-network provider 及 --provider-network-type flat 选项连接虚拟网络至flat(native/untagged)， eth1网络接口的物理网络，在以下文件中
 
-ml2_conf.ini:
+**ml2_conf.ini**
 
 ```
 [ml2_type_flat]
 flat_networks = provider
 ```
 
-linuxbridge_agent.ini:
+**linuxbridge_agent.ini**
 ```
 [linux_bridge]
 physical_interface_mappings = provider:eth1
@@ -78,6 +78,7 @@ physical_interface_mappings = provider:eth1
 >创建了一个网络
 
 3. 创建子网
+
 ```
 openstack subnet create \
  --network provider \
@@ -137,47 +138,49 @@ Created a new subnet:
 --dns-nameserver 159.226.8.7 --gateway 192.168.125.254 \
 --subnet-range 192.168.125.0/24 provide
 
+***
 
-
-
-
-*tapd2701667-65*: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+**查看网络结构**
+```
+tapd2701667-65: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         ether 82:cb:2b:67:dd:dd  txqueuelen 1000  (Ethernet)
         RX packets 206  bytes 23676 (23.1 KiB)
         RX errors 0  dropped 0  overruns 0  frame 0
         TX packets 1494  bytes 153854 (150.2 KiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+```
 
+**查看linux网桥**
 
-查看linux网桥
+```
+$ brctl show
 
 bridge name	bridge id		STP enabled	interfaces
-
-brqc39f867c-60		8000.82cb2b67dddd	no		enp130s0f0
-							*tapd2701667-65*
-
+brq065fd30d-63		8000.00259095dcf2	no		enp4s0f0
+							tap7df9ed2e-d8
+```
 
 创建一个网桥，其连接一个新建的tap 和 物理网卡
 创建一个名为 *tapd2701667-65* 的tap ,同时将其加入命名空间中
 
-查看命名空间：
+**查看命名空间**
 ```
 $ip netns exec qdhcp-c39f867c-6039-41e7-97a6-22ace2e3c425 ip link list
-```
+
 
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT qlen 1
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
 2: *ns-d2701667-65@if22*: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT qlen 1000
     link/ether fa:16:3e:a4:60:be brd ff:ff:ff:ff:ff:ff link-netnsid 0
 
+```
 
 
-
-查看命名空间内网络结构
+**查看命名空间内网络结构**
 
 ```
 $ip netns exec qdhcp-c39f867c-6039-41e7-97a6-22ace2e3c425 ifconfig
-```
+
 
 lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         inet 127.0.0.1  netmask 255.0.0.0
@@ -196,3 +199,4 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         RX errors 0  dropped 0  overruns 0  frame 0
         TX packets 5  bytes 438 (438.0 B)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+```
