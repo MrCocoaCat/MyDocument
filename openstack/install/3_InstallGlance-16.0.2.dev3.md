@@ -148,7 +148,10 @@ $ openstack endpoint create --region RegionOne \
 ```
 yum install openstack-glance
 ```
-2. vim /etc/glance/glance-api.conf 文件进行如下操作：
+2. 配置 *glance-api.conf* 文件
+
+glance-api 负责接受镜像发现、检索和存储的API调用。
+ vim /etc/glance/glance-api.conf 文件进行如下操作：
 
 * 在[database]字段, 设置数据库权限:
 ```
@@ -188,9 +191,10 @@ filesystem_store_datadir = /var/lib/glance/images/
 
 
 
-3. vim /etc/glance/glance-registry.conf 文件并完成以下操作
+3. 配 *glance-registry.conf*
+glance-registry.conf 负责存储、处理和检索关于映像的元数据。元数据包括大小和类型等项。
 
->
+vim /etc/glance/glance-registry.conf 文件并完成以下操作
 
 * 在 [database]字段, 设置数据库接入
 
@@ -220,8 +224,6 @@ password = GLANCE_PASS
 flavor = keystone
 ```
 
-
-
 4. 填充image服务 数据库
 
 ```
@@ -250,7 +252,6 @@ $ . admin-openrc
 ```
 
 2. 下载源镜像
-
 ```
 wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
 ```

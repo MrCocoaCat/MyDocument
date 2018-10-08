@@ -206,7 +206,9 @@ $ openstack endpoint create --region RegionOne \
 yum install openstack-cinder
 ```
 
-2. vim  /etc/cinder/cinder.conf
+2. 配置 *cinder.conf* 文件
+vim  /etc/cinder/cinder.conf
+
 
 a.  设置数据库接入权限:
 
@@ -217,7 +219,7 @@ connection = mysql+pymysql://cinder:CINDER_DBPASS@controller/cinder
 
 ```
 
-a. 设置RabbitMQ消息队列权限:
+b. 设置RabbitMQ消息队列权限:
 
 ```
 [DEFAULT]
@@ -227,7 +229,7 @@ transport_url = rabbit://openstack:RABBIT_PASS@controller
 ```
 
 
-b. In the [DEFAULT] and [keystone_authtoken] sections, 设置认证服务权限:
+c. 在[DEFAULT]和[keystone_authtoken] 字段, 设置认证服务权限:
 
 ```
 [DEFAULT]
@@ -247,7 +249,7 @@ username = cinder
 password = CINDER_PASS
 ```
 
-c. 在 [DEFAULT] 字段, 设置 the my_ip 选项， use the management interface IP address of the controller node:
+d. 在 [DEFAULT] 字段, 设置 the my_ip 选项， use the management interface IP address of the controller node:
 
 ```
 [DEFAULT]
