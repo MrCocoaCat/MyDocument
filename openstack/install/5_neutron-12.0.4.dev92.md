@@ -243,9 +243,8 @@ Self-service网络通常使用覆盖网络。覆盖网络协议(如VXLAN)包括�
 **详细见**
 [](./5_neutron_net2.md)
 
-***
 
-#####　配置metadata agent
+##### 配置metadata agent
 
 *vim /etc/neutron/metadata_agent.ini* 文件，在[DEFAULT]字段
 

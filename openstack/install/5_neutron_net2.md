@@ -176,9 +176,11 @@ net.bridge.bridge-nf-call-iptables=1
 net.bridge.bridge-nf-call-ip6tables=1
 ```
 ###### 配置 layer-3 agent
+
 layer-3 agent(L3)代理为self-service 虚拟网络提供路由和NAT服务。
 
-*vim /etc/neutron/l3_agent.ini* 文件
+*vim /etc/neutron/l3_agent.ini*
+
 * 在[DEFAULT] 字段, 配置 the Linux bridge interface driver and external network bridge:
 
 ```
