@@ -111,12 +111,19 @@ extension_drivers = port_security
 
 ```
 
+ tenant_network_types 告诉 ML2 当普通用户在自己的 Tenant（Project）中创建网络时，默认创建哪种 type 的网。
+
+
 * 在 [ml2_type_flat] 字段, 配置虚拟机网络为flat network
 ```
 [ml2_type_flat]
 # ...
 flat_networks = provider
 ```
+>provider 只是一个lable。label 是 flat 网络的标识，在创建 flat 时需要指定 label。label 的名字可以是任意字符串，只要确保各个节点 ml2_conf.ini 中的 label 命名一致就可以了。
+如果要创建多个 flat 网络，需要定义多个 label，用逗号隔开，当然也需要用到多个物理网卡，如下所示：
+physical_interface_mappings = flat1:eth1,flat2:eth2
+
 * 在 [ml2_type_vxlan] 字段, 配置 self-service networks的VXLAN network identifier范围
 ```
 [ml2_type_vxlan]
@@ -143,7 +150,8 @@ physical_interface_mappings = provider:PROVIDER_INTERFACE_NAME
 
 ```
  **将PROVIDER_INTERFACE_NAME 替换  为提供底层网络服务的物理 网络端口 名称**
-Replace PROVIDER_INTERFACE_NAME with the name of the underlying provider physical network interface.
+
+通过 physical_interface_mappings 指明 provider 对应的物理网卡为。
 
 > physical_interface_mappings = provider:ens4
 
