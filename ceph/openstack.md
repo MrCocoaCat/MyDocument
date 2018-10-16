@@ -1,4 +1,6 @@
 (安装地址)[http://docs.ceph.com/docs/master/rbd/rbd-openstack/]
+(官方中文文档)[http://docs.ceph.org.cn/rbd/rbd-openstack/]
+
 ### CREATE A POOL
 默认情况下，Ceph块设备使用rbd池。您可以使用任何可用的池。我们建议创建一个用于Cinder的池和一个用于Glanc的池。确保Ceph集群正在运行，然后创建池。
 ```
@@ -42,7 +44,11 @@ sudo yum install ceph-common
 
 1. 创建新的用户
 
-创建client.glance用户
+* 监视器能力： 监视器能力包括 r 、 w 、 x 和 allow profile {cap} ，例如
+* OSD 能力： OSD 能力包括 r 、 w 、 x 、 class-read 、 class-write 和 profile osd 。另外， OSD 能力还支持存储池和命名空间的配置。
+
+
+创建client.glance用户,
 
 ```
 ceph auth get-or-create client.glance mon 'profile rbd' osd 'profile rbd pool=images'
@@ -98,24 +104,31 @@ ceph auth get-or-create client.cinder | ssh {your-nova-compute-server} sudo tee 
 
 ```
 ceph auth get-key client.cinder | ssh {your-compute-node} tee client.cinder.key
+
 ```
 
 然后，在计算节点上，向libvirt添加密钥，并删除密钥的临时副本:
 ```
 uuidgen
-457eb676-33da-42ec-9a8c-9293d545c337
+9191d801-4d57-476e-acfb-84bf55d0bd54
+```
 
+```
 cat > secret.xml <<EOF
 <secret ephemeral='no' private='no'>
-  <uuid>457eb676-33da-42ec-9a8c-9293d545c337</uuid>
+  <uuid>9191d801-4d57-476e-acfb-84bf55d0bd54</uuid>
   <usage type='ceph'>
     <name>client.cinder secret</name>
   </usage>
 </secret>
 EOF
+```
+
+```
 sudo virsh secret-define --file secret.xml
 Secret 457eb676-33da-42ec-9a8c-9293d545c337 created
-sudo virsh secret-set-value --secret 457eb676-33da-42ec-9a8c-9293d545c337 --base64 $(cat client.cinder.key) && rm client.cinder.key secret.xml
+
+sudo virsh secret-set-value --secret 9191d801-4d57-476e-acfb-84bf55d0bd54 --base64 $(cat client.cinder.key)&&rm client.cinder.key secret.xml
 ```
 稍后保存秘密的uuid，以便配置nova-compute。
 
@@ -143,7 +156,7 @@ rbd_store_chunk_size = 8
  ```
 **ENABLE COPY-ON-WRITE CLONING OF IMAGES（开启）**
 注意，这将通过Glance的API公开后端位置，因此启用此选项的端点不应公开访问。
-如果您想启用镜像的写入复制，MITAKA 之外的版本。还可以在[DEFAULT]部分下添加:
+如果你想允许使用 image 的写时复制克隆，MITAKA 之外的版本。还可以在[DEFAULT]部分下添加:
 
 ```
 [DEFAULT]
@@ -183,6 +196,11 @@ hw_qemu_guest_agent=yes
 os_require_quiesce=yes
 ```
 
+重启glance
+
+```
+systemctl restart openstack-glance-api
+```
 #### 配置 CINDER
 OpenStack需要驱动程序与Ceph块设备进行交互。还必须为块设备指定池名。
 在OpenStack 节点上, 编辑文件 /etc/cinder/cinder.conf 并添加一下内容
