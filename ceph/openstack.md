@@ -22,6 +22,7 @@ rbd pool init vms
 ```
 ssh {your-openstack-server} sudo tee /etc/ceph/ceph.conf </etc/ceph/ceph.conf
 ```
+
 **INSTALL CEPH CLIENT PACKAGES**
 
 在glance-api 节点,需要为librbd安装 Python bindings
@@ -41,13 +42,19 @@ sudo yum install ceph-common
 
 1. 创建新的用户
 
-创建client.glance、client.cinder、client.cinder-backup三个用户
+创建client.glance用户
 
 ```
 ceph auth get-or-create client.glance mon 'profile rbd' osd 'profile rbd pool=images'
+```
+创建client.cinder用户
 
+```
 ceph auth get-or-create client.cinder mon 'profile rbd' osd 'profile rbd pool=volumes, profile rbd pool=vms, profile rbd-read-only pool=images'
+```
 
+创建client.cinder-backup用户
+```
 ceph auth get-or-create client.cinder-backup mon 'profile rbd' osd 'profile rbd pool=backups'
 
 ```
@@ -81,11 +88,42 @@ ceph auth get-or-create client.cinder-backup | ssh {your-cinder-backup-server} s
 ssh {your-cinder-backup-server} sudo chown cinder:cinder /etc/ceph/ceph.client.cinder-backup.keyring
 ```
 
+运行 nova-compute的节点需要keyring文件
+```
+ceph auth get-or-create client.cinder | ssh {your-nova-compute-server} sudo tee /etc/ceph/ceph.client.cinder.keyring
+```
+
+他们还需要存储 client.cinder 的秘密密钥在libvirt中。libvirt进程需要它访问集群，同时从Cinder附加块设备。
+在运行nova-compute的节点上创建密钥的临时副本:
+
+```
+ceph auth get-key client.cinder | ssh {your-compute-node} tee client.cinder.key
+```
+
+然后，在计算节点上，向libvirt添加密钥，并删除密钥的临时副本:
+```
+uuidgen
+457eb676-33da-42ec-9a8c-9293d545c337
+
+cat > secret.xml <<EOF
+<secret ephemeral='no' private='no'>
+  <uuid>457eb676-33da-42ec-9a8c-9293d545c337</uuid>
+  <usage type='ceph'>
+    <name>client.cinder secret</name>
+  </usage>
+</secret>
+EOF
+sudo virsh secret-define --file secret.xml
+Secret 457eb676-33da-42ec-9a8c-9293d545c337 created
+sudo virsh secret-set-value --secret 457eb676-33da-42ec-9a8c-9293d545c337 --base64 $(cat client.cinder.key) && rm client.cinder.key secret.xml
+```
+稍后保存秘密的uuid，以便配置nova-compute。
+
 ************************
 
 ### CONFIGURE OPENSTACK TO USE CEPH
 
-#### CONFIGURING GLANCE
+#### 配置GLANCE
 
 Glance可以使用多个后端来存储镜像。要默认使用Ceph块设备，请像下面这样配置Glance。
 *KILO 及之后版本*
@@ -145,7 +183,7 @@ hw_qemu_guest_agent=yes
 os_require_quiesce=yes
 ```
 
-#### CONFIGURING CINDER
+#### 配置 CINDER
 OpenStack需要驱动程序与Ceph块设备进行交互。还必须为块设备指定池名。
 在OpenStack 节点上, 编辑文件 /etc/cinder/cinder.conf 并添加一下内容
 
@@ -173,7 +211,7 @@ rbd_user = cinder
 rbd_secret_uuid = 457eb676-33da-42ec-9a8c-9293d545c337
 ```
 
-#### CONFIGURING NOVA
+#### 配置 NOVA
 
 
 为了将所有虚拟机直接引导到Ceph，必须配置Nova的临时后端。建议在Ceph配置文件中启用RBD缓存(默认情况下启用，因为是Giant)。此外，启用管理套接字在进行故障排除时带来了很多好处。使用Ceph块设备让每个虚拟机有一个套接字将有助于调查性能和/或错误行为。

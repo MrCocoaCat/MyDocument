@@ -183,7 +183,7 @@ flavor = keystone
 * 在 [glance_store] 字段, 设置本地文件系统及镜像存储位置
 ```
 [glance_store]
-# ...
+
 stores = file,http
 default_store = file
 filesystem_store_datadir = /var/lib/glance/images/
