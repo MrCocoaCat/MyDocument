@@ -93,7 +93,7 @@ iscsi_protocol = iscsi
 iscsi_helper = lioadm
 ```
 
-* 在[DEFAULT] 字段， enable the LVM back end:
+* 在[DEFAULT] 字段， 开启LVM back end:
 
 ```
 [DEFAULT]

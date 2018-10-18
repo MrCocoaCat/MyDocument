@@ -1,3 +1,27 @@
+### 准备工作
+在配置openstack 之前，需要将使用ceph的节点设置为ceph 客户端
+
+1. 修改改客户端的/etc/hosts，/etc/hostname两个文件
+
+2. 将部署机的公钥发送到客户端
+```
+ssh-copy-id {userame}@node1
+```
+
+3. 修改部署机的~/.ssh/config 文件，指定链接的用户
+
+4. 首先更新客户端的yum源，使客户端可以安装ceph
+
+5. 在部署机（10.19.19.1）上执行下列命令：
+
+在/my_cluster/目录下执行
+```
+ceph-deploy install client.{客户端名字}
+ceph-deploy admin client.{客户端名字}
+```
+
+***
+
 (安装地址)[http://docs.ceph.com/docs/master/rbd/rbd-openstack/]
 (官方中文文档)[http://docs.ceph.org.cn/rbd/rbd-openstack/]
 
@@ -99,7 +123,7 @@ ssh {your-cinder-backup-server} sudo chown cinder:cinder /etc/ceph/ceph.client.c
 ceph auth get-or-create client.cinder | ssh {your-nova-compute-server} sudo tee /etc/ceph/ceph.client.cinder.keyring
 ```
 
-他们还需要存储 client.cinder 的秘密密钥在libvirt中。libvirt进程需要它访问集群，同时从Cinder附加块设备。
+还需要存储 client.cinder 的秘密密钥在libvirt中。libvirt进程需要它访问集群，同时从Cinder附加块设备。
 在运行nova-compute的节点上创建密钥的临时副本:
 
 ```
@@ -144,8 +168,7 @@ Glance可以使用多个后端来存储镜像。要默认使用Ceph块设备，�
 编辑 /etc/glance/glance-api.conf文件
 
  ```
-
- [glance_store]
+[glance_store]
 stores = rbd
 default_store = rbd
 rbd_store_pool = images
@@ -242,11 +265,11 @@ ceph daemon /var/run/ceph/ceph-client.cinder.19195.32310016.asok help
 
 ```
 [client]
-    rbd cache = true
-    rbd cache writethrough until flush = true
-    admin socket = /var/run/ceph/guests/$cluster-$type.$id.$pid.$cctid.asok
-    log file = /var/log/qemu/qemu-guest-$pid.log
-    rbd concurrent management ops = 20
+rbd cache = true
+rbd cache writethrough until flush = true
+admin socket = /var/run/ceph/guests/$cluster-$type.$id.$pid.$cctid.asok
+log file = /var/log/qemu/qemu-guest-$pid.log
+rbd concurrent management ops = 20
 ```
 
 为这些路径配置permissions权限
