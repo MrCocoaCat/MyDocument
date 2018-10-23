@@ -279,6 +279,7 @@ ceph osd pool set {pool-name} {key} {value}
 默认值:	0
 
 #### 获取存储池选项值
+
 要获取一个存储池的选项值，执行命令：
 ```
 ceph osd pool get {pool-name} {key}

@@ -3,6 +3,7 @@
 
 
 优化:　　
+
 ##### PG Number
 
 PG和PGP数量一定要根据OSD的数量进行调整，计算公式如下，但是最后算出的结果一定要接近或者等于一个2的指数。调整PGP不会引起PG内的对象的分裂，但是会引起PG的分布的变动三、总结PG是指定存储池存储对象的目录有多少个，PGP是存储池PG的OSD分布组合个数PG的增加会引起PG内的数据进行分裂，分裂到相同的OSD上新生成的PG当中PGP的增加会引起部分PG的分布进行变化，但是不会引起PG内对象的变动
@@ -51,33 +52,33 @@ pg ( placement group ) 是数据存储的重要单位
 
 
 常见的 pg 状态
-creating (创建中)
+* creating (创建中)
 PG 正在被创建, 通常当存储池正在卑创建或增加一个存储池的 PG 数量时, PG 会呈现这个状态
-Down (失效)
+* Down (失效)
 PG 处于失效状态, PG 应该处于离线状态
-repair(修复)
+* repair(修复)
 PG 正在被检查, 被发现的任何不一致都将尽可能被修复.
-peering (等待互联)
+* peering (等待互联)
 当 ceph peering pg, ceph 将会把 pg 副本协定导入 osd, 当 ceph 完成 peering, 意味着 osd 同意当前 PG 状态, 并允许写入
 PG 处于 peering 过程中, peering 由主 osd 发起的使存放 PG 副本的所有 OSD 就 PG 的所有对象和元素数据的状态达成一致的过程,  peering 过程完成后, 主 OSD 就可以接受客户端写请求.
-Active (活动)
+* Active (活动)
 当 ceph 完成 peering 过程, pg 将会变成 active, active 状态意味着 pg 中的数据变得可用, 主 pg 将可执行读写操作
 PG 是活动的, 意味着 PG 中的数据可以被读写, 对该 PG 的操作请求都讲会被处理.
-Clean (干净)
+* Clean (干净)
 当 pg 显示 clean 状态, 主 osd 与副本 osd 成功同步并且没有异步复制, ceph 在 pg 中所有对象具有正确的副本数量
 PG 中的所有对象都已经卑复制了规定的副本数量.
-Replay (重做)
+* Replay (重做)
 某 OSD 崩溃后, PG 正在等待客户端重新发起操作
-Degraded (降级)
+* Degraded (降级)
 当客户端写对象到主 osd, 主 OSD 会把数据写复制到对应复制 OSD, 在主 OSD 把对象写入存储后, PG 会显示为 degraded 状态, 直到主 osd 从复制 OSD 中接收到创建副本对象完成信息
 PG 处于 active+degraded 原因是因为 OSD 是处于活跃, 但并没有完成所有的对象副本写入, 假如 OSD DOWN, CEPH 标记每个 PG 分配到这个相关 OSD 的
 状态为 degraded, 当 OSD 重新上线, OSD 将会重新恢复,
 假如 OSD DOWN 并且 degraded 状态持续, CEPH 会标记 DOWN OSD, 并会对集群迁移相关 OSD 的数据, 对应时间由 mon osd down out interval 参数决定
 PG 可以被北极为 degraded, 因为 ceph 在对应 PG 中无法找到一个或者多个相关的对象, 你不可以读写 unfound 对象, 你仍然可以访问标记为 degraded PG 的其他数据
 PG 中部分对象的副本数量未达到规定的数量
-Inconsistent (不一致)
+* Inconsistent (不一致)
 PG副本出现不一致, 对象大小不正确或者恢复借宿后某个副本出现对象丢失现象
-recoverying (恢复中)
+* recoverying (恢复中)
 ceph 设备故障容忍在一定范围的软件与硬件问题, 当 OSD 变 DOWN, 那么包含该 OSD 的 PG 副本都会有问题, 当 OSD 恢复, OSD 对应的 PG 将会更新
 并反映出当前状态, 在一段时间周期后, OSD 将会恢复 recoverying 状态
 
@@ -92,7 +93,7 @@ osd recovery max active 设定限制对一个 osd 从故障后, 恢复请求并�
 osd recovery max chunk 限制恢复时的数据 chunk 大小, 预防网络堵塞
 
 PG 正在迁移或者同步对象及其副本, 一个 OSD 停止服务(DOWN), 其内容将会落后与 PG 内的其他副本, 这时 PG 将会进入 recoverying 状态, 该 OSD 上的对象将从其他副本同步过来
-BACK FILLING (回填)
+* BACK FILLING (回填)
 当新 OSD 加入集群, CRUSH 将会为集群新添加的 OSD 重新分配 PG, 强制新的 OSD 接受重新分配的 PG 并把一定数量的负载转移到新 OSD 中
 back filling OSD 会在后台处理, 当 backfilling 完成, 新的 OSD 完成后, 将开始对请求进行服务
 
@@ -113,7 +114,7 @@ REMAPPED (重映射)
 PG 迁移完成, 当数据迁移完成,  mapping 将会使用新的 OSD 响应主 OSD 服务
 
 当 PG 的 action set 变化后, 数据将会从旧 acting set 迁移到新 action set, 新主 OSD 需要过一段时间后才能提供服务, 因此它会让老的主 OSD 继续提供服务, 知道 PG 迁移完成, 数据迁移完成后, PG map 将会使用新 acting set 中的主 OSD
-STALE (旧)
+* STALE (旧)
 当 ceph 使用 heartbeat 确认主机与进程是否运行,  ceph osd daemon 可能由于网络临时故障, 获得一个卡住状态 (stuck state) 没有得到心跳回应
 默认, osd daemon 会每 0.5 秒报告 PG, up 状态, 启动与故障分析,
 假如 PG 中主 OSD 因为故障没有回应 monitor 或者其他 OSD 报告 主 osd down, 那么 monitor 将会标记 PG stale,

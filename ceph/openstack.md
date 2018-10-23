@@ -150,7 +150,7 @@ EOF
 
 ```
 sudo virsh secret-define --file secret.xml
-Secret 457eb676-33da-42ec-9a8c-9293d545c337 created
+Secret 9191d801-4d57-476e-acfb-84bf55d0bd54 created
 
 sudo virsh secret-set-value --secret 9191d801-4d57-476e-acfb-84bf55d0bd54 --base64 $(cat client.cinder.key)&&rm client.cinder.key secret.xml
 ```
@@ -224,6 +224,14 @@ os_require_quiesce=yes
 ```
 systemctl restart openstack-glance-api
 ```
+
+验证
+
+```
+ rados -p images ls
+```
+
+
 #### 配置 CINDER
 OpenStack需要驱动程序与Ceph块设备进行交互。还必须为块设备指定池名。
 在OpenStack 节点上, 编辑文件 /etc/cinder/cinder.conf 并添加一下内容
@@ -249,7 +257,7 @@ rados_connect_timeout = -1
 
 ```
 rbd_user = cinder
-rbd_secret_uuid = 457eb676-33da-42ec-9a8c-9293d545c337
+rbd_secret_uuid = 9191d801-4d57-476e-acfb-84bf55d0bd54
 ```
 
 #### 配置 NOVA
@@ -277,4 +285,26 @@ rbd concurrent management ops = 20
 ```
 mkdir -p /var/run/ceph/guests/ /var/log/qemu/
 chown qemu:libvirtd /var/run/ceph/guests /var/log/qemu/
+```
+
+
+JUNO
+在 Juno 版中， Ceph 块设备移到了 [libvirt] 段下。编辑所有计算节点上的 /etc/nova/nova.conf 文件，在 [libvirt] 段下添加：
+```
+(6982)
+[libvirt]
+images_type = rbd
+images_rbd_pool = vms
+images_rbd_ceph_conf = /etc/ceph/ceph.conf
+rbd_user = cinder
+rbd_secret_uuid = 9191d801-4d57-476e-acfb-84bf55d0bd54
+disk_cachemodes="network=writeback"
+```
+禁用文件注入也是一个好习惯。启动一个实例时， Nova 通常试图打开虚拟机的根文件系统。然后， Nova 会把比如密码、 ssh 密钥等值注入到文件系统中。然而，最好依赖元数据服务和 cloud-init 。
+
+编辑所有计算节点上的 /etc/nova/nova.conf 文件，在 [libvirt] 段下添加：
+```
+inject_password = false
+inject_key = false
+inject_partition = -2
 ```
