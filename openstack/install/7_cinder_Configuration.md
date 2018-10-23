@@ -34,5 +34,51 @@
 **快照(Snapshots)**——卷的只读时间点副本。快照可以从当前正在使用的卷(通过使用force True)或处于可用状态创建。然后，可以使用快照创建一个新的卷。
 **备份(Backups)**——当前存储在对象存储(swift)中的卷的存档副本。
 
+### 更改cinder配额限制
+1. 显示现有项目
+```
+$ openstack project list
++----------------------------------+------+
+| ID                               | Name |
++----------------------------------+------+
+| 1c619f4c392e419683fc3525c7fa2200 | demo |
++----------------------------------+------+
+```
+
+2. 显示制定项目的quato值
+```
+$ cinder quota-show 1c619f4c392e419683fc3525c7fa2200
+
++----------------------+-------+
+| Property             | Value |
++----------------------+-------+
+| backup_gigabytes     | 1000  |
+| backups              | 1000  |
+| gigabytes            | 1000  |
+| groups               | 10    |
+| per_volume_gigabytes | -1    |
+| snapshots            | 10    |
+| volumes              | 15    |
++----------------------+-------+
+```
+
+3. 更新制定项目的配额
+```
+$ cinder quota-update --volumes 1000 1c619f4c392e419683fc3525c7fa2200
+
++----------------------+-------+
+| Property             | Value |
++----------------------+-------+
+| backup_gigabytes     | 1000  |
+| backups              | 1000  |
+| gigabytes            | 1000  |
+| groups               | 10    |
+| per_volume_gigabytes | -1    |
+| snapshots            | 10    |
+| volumes              | 1000  |
++----------------------+-------+
+
+```
+
 ### Cinder Configuration Options
 ()[]https://docs.openstack.org/cinder/queens/sample_config.html
