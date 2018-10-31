@@ -14,7 +14,7 @@ ssh-copy-id {userame}@node1
 
 5. 在部署机（10.19.19.1）上执行下列命令：
 
-在/my_cluster/目录下执行
+在~/my_cluster/目录下执行
 ```
 ceph-deploy install client.{客户端名字}
 ceph-deploy admin client.{客户端名字}
