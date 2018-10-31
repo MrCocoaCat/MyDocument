@@ -39,7 +39,7 @@ common_opts = [
 |oslo_config.types.URI|oslo_config.cfg.URIOpt|
 
 
-### Registering Options(注册选项)
+#### Registering Options(注册选项)
 选项模式在运行时向配置管理器注册，但在引用选项之前:
 ```
 class ExtensionManager(object):
@@ -86,7 +86,7 @@ def add_common_opts(conf):
     conf.register_cli_opts(cli_opts)
 ```
 
-### Option Groups(选项组)
+#### Option Groups(选项组)
 选项可以注册为属于一个组:
 ```
 rabbit_group = cfg.OptGroup(name='rabbit',
@@ -132,17 +132,17 @@ glance-api.conf:
 ```
 --rabbit-host localhost --rabbit-port 9999
 ```
-### Dynamic Groups(动态组)
+#### Dynamic Groups(动态组)
 
 组可以通过应用程序代码动态注册。这给示例生成器、发现机制和验证工具带来了挑战，因为它们事先不知道所有组的名称。构造函数的dynamic_group_owner参数指定在另一个组中注册的选项的全名，该组控制动态组的重复实例。这个选项通常是一个MultiStrOpt。例如，Cinder支持多个存储后端设备和服务。为了配置Cinder以与多个后端通信，enabled_backends选项设置为后端名称列表。每个后端组都包含与该设备或服务通信的选项。
 
-### Driver Groups
+#### Driver Groups
 要解决这个问题，可以使用driver_option参数来命名组的驱动选项。每个驱动程序选项都应该定义自己的发现入口点名称空间，以返回该驱动程序的选项集，使用前缀“oslo.config.opts”加上驱动程序选项名。
 在上面描述的Cinder案例中，volume_backend_name选项是组的静态定义的一部分，因此driver_option应该被设置为“volume_backend_name”。
 并且插件应该在oslo.config.opts下注册。使用与主插件相同的名称注册“oslo.config.opts”。
 居住在Cinder代码库中的驱动程序有一个名为“cinder”的入口点注册。
 
-### Special Handling Instructions
+#### Special Handling Instructions
 可根据需要声明选项，以便在用户不为选项提供值时引发错误:
 ```
 opts = [
@@ -160,7 +160,7 @@ opts = [
 ]
 ```
 
-### Dictionary Options(字典的选择)
+#### Dictionary Options(字典的选择)
 
 如果您需要最终用户指定一个键/值对字典，那么您可以使用DictOpt:
 ```
@@ -174,7 +174,7 @@ opts = [
 [DEFAULT]
 foo = k1:v1,k2:v2
 ```
-### Advanced Option (高级选项)
+#### Advanced Option (高级选项)
 如果您需要在示例文件中将某个选项标记为advanced，则使用该选项，表明大多数用户通常不使用该选项，并且可能对稳定性和/或性能产生重大影响:
 ```
 from oslo_config import cfg
