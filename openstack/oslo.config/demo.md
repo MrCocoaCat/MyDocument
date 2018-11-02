@@ -1,3 +1,4 @@
+https://www.cnblogs.com/Security-Darren/p/3854797.html
 OpenStack的oslo项目旨在独立出系统中可重用的基础功能，oslo.config就是其中一个被广泛使用的库，该项工作的主要目的就是解析OpenStack中命令行（CLI）或配置文件（.conf）中的配置信息。
 
 在本文的语境下，有这么几个概念：
