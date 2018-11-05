@@ -19,7 +19,8 @@ common_opts = [
 ```
 
 #### Option Types
-选项可以通过Opt构造函数的类型参数拥有任意类型。类型参数是一个可调用的对象，它接受一个字符串，如果该字符串不能转换，则返回该特定类型的值或引发ValueError。
+选项可以通过Opt构造函数的类型参数拥有任意类型。类型参数是一个可调用的对象，
+它接受一个字符串，如果该字符串不能转换，则返回该特定类型的值或引发ValueError。
 为了方便起见，oslo_config中有预定义的选项子类，设置选项类型如下表所示:
 
 
@@ -69,7 +70,9 @@ def get_bind_host(conf):
 def get_bind_port(conf):
     return conf.bind_port
 ```
+
 可以选择通过命令行提供一个选项。在解析命令行之前，必须向config manager注册这些选项(为了-help和CLI arg验证的目的):
+
 ```
 cli_opts = [
     cfg.BoolOpt('verbose',
@@ -84,6 +87,7 @@ cli_opts = [
 
 def add_common_opts(conf):
     conf.register_cli_opts(cli_opts)
+
 ```
 
 #### Option Groups(选项组)
@@ -169,7 +173,9 @@ opts = [
                 default={})
 ]
 ```
+
 最终用户可以在配置文件中指定foo选项，如下所示:
+
 ```
 [DEFAULT]
 foo = k1:v1,k2:v2

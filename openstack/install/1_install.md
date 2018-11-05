@@ -277,6 +277,7 @@ OpenStack服务可以使用Etcd，这是一种分布式可靠的键值存储，�
 yum install etcd
 ```
 2. vim /etc/etcd/etcd.conf
+
 并设置以下字段  ETCD_INITIAL_CLUSTER, ETCD_INITIAL_ADVERTISE_PEER_URLS, ETCD_ADVERTISE_CLIENT_URLS, ETCD_LISTEN_CLIENT_URLS．使其他节点可以连接值管理网络
 ```
 #[Member]
@@ -285,6 +286,7 @@ ETCD_DATA_DIR="/var/lib/etcd/default.etcd"
 ETCD_LISTEN_PEER_URLS="http://192.168.125.115:2380"
 ETCD_LISTEN_CLIENT_URLS="http://192.168.125.115:2379"
 ETCD_NAME="controller"
+
 #[Clustering]
 ETCD_INITIAL_ADVERTISE_PEER_URLS="http://192.168.125.115:2380"
 ETCD_ADVERTISE_CLIENT_URLS="http://192.168.125.115:2379"
