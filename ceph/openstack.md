@@ -17,6 +17,7 @@ ssh-copy-id {userame}@node1
 在~/my_cluster/目录下执行
 ```
 ceph-deploy install client.{客户端名字}
+
 ceph-deploy admin client.{客户端名字}
 ```
 
@@ -49,7 +50,7 @@ rbd pool init vms
 ssh {your-openstack-server} sudo tee /etc/ceph/ceph.conf </etc/ceph/ceph.conf
 ```
 
-**INSTALL CEPH CLIENT PACKAGES**
+#### 安装CEPH包(INSTALL CEPH CLIENT PACKAGES)
 
 在glance-api 节点,需要为librbd安装 Python bindings
 
@@ -63,35 +64,43 @@ sudo yum install python-rbd
 sudo yum install ceph-common
 ```
 
-**SETUP CEPH CLIENT AUTHENTICATION**
+#### 设置CLIENT认证(SETUP CEPH CLIENT AUTHENTICATION)
 添加认证信息
 
-1. 创建新的用户
+**创建新的用户**
 
 * 监视器能力： 监视器能力包括 r 、 w 、 x 和 allow profile {cap} ，例如
 * OSD 能力： OSD 能力包括 r 、 w 、 x 、 class-read 、 class-write 和 profile osd 。另外， OSD 能力还支持存储池和命名空间的配置。
 
 
-创建client.glance用户,
+1. 创建 *client.glance* 用户,
 
+glance 账户对images存储池具有
 ```
-ceph auth get-or-create client.glance mon 'profile rbd' osd 'profile rbd pool=images'
-```
-创建client.cinder用户
-
-```
-ceph auth get-or-create client.cinder mon 'profile rbd' osd 'profile rbd pool=volumes, profile rbd pool=vms, profile rbd-read-only pool=images'
+ceph auth get-or-create client.glance
+mon 'profile rbd'
+osd 'profile rbd pool=images'
 ```
 
-创建client.cinder-backup用户
-```
-ceph auth get-or-create client.cinder-backup mon 'profile rbd' osd 'profile rbd pool=backups'
+2. 创建 *client.cinder* 用户
 
 ```
+ceph auth get-or-create client.cinder
+mon 'profile rbd'
+osd 'profile rbd pool=volumes, profile rbd pool=vms, profile rbd-read-only pool=images'
+```
 
-2. 添加key
+3. 创建 *client.cinder-backup* 用户
+```
+ceph auth get-or-create client.cinder-backup
+mon 'profile rbd'
+osd 'profile rbd pool=backups'
 
-为glance 添加key
+```
+
+**添加key**
+
+1. 为glance 添加key
 
 ```
 ceph auth get-or-create client.glance | ssh {your-glance-api-server} sudo tee /etc/ceph/ceph.client.glance.keyring
@@ -104,14 +113,14 @@ ssh {your-glance-api-server} sudo chown glance:glance /etc/ceph/ceph.client.glan
 >ssh 192.168.125.125 sudo chown glance:glance /etc/ceph/ceph.client.glance.keyring
 
 
-为cinder添加key
+2. 为cinder添加key
 ```
 ceph auth get-or-create client.cinder | ssh {your-volume-server} sudo tee /etc/ceph/ceph.client.cinder.keyring
 
 ssh {your-cinder-volume-server} sudo chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring
 ```
 
-为cinder-backup添加key
+3. 为cinder-backup添加key
 ```
 ceph auth get-or-create client.cinder-backup | ssh {your-cinder-backup-server} sudo tee /etc/ceph/ceph.client.cinder-backup.keyring
 
