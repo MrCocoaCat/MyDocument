@@ -26,10 +26,13 @@ OpenStack镜像服务包括以下组件:
 ```
 mysql -u root -p
 ```
+
 创建glance数据库
+
 ```
 MariaDB [(none)]> CREATE DATABASE glance;
 ```
+
 为glance数据库赋予权限
 ```
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'GLANCE_DBPASS';
