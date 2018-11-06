@@ -102,6 +102,7 @@ enabled_backends = lvm
 ```
 
 * In the [DEFAULT] section, configure the location of the Image service API:
+
 ```
 [DEFAULT]
 # ...
