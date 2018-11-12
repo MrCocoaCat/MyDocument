@@ -2,7 +2,7 @@ https://docs.openstack.org/install-guide/openstack-services.html
 
 利用Devstack 可以安装快速openstack，但为了更好的理清openstack，本文使用手动安装。
 参考[](https://docs.openstack.org/install-guide/)
-安装版本为**Queue** 版本，最小的openstack需安装以下组件：
+安装版本为 **Queue** 版本，最小的openstack需安装以下组件：
 
 *   Identity service – [keystone installation for Queens](https://docs.openstack.org/keystone/queens/install/)
 *   Image service – [glance installation for Queens](https://docs.openstack.org/glance/queens/install/)
@@ -104,7 +104,7 @@ allow 10.0.0.0/24
 将10.0.0.0/24　替换为相对的子网
 > *allow 192.168.125.0/24*
 
-４．重启NT服务
+４．重启NTP服务
 
 ```
 systemctl enable chronyd.service
