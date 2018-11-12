@@ -1,3 +1,4 @@
+```
 [ ] 需要匹配的时候，需要转义(这个是叛徒)
 
   echo "[ ]"|sed 's/\[.*\]/aaa/g'
@@ -40,17 +41,9 @@ echo "ccc"| sed 's/c*/aaa/g'#正确
 echo "ccc"| sed 's/c\*/aaa/g'#错误
 echo "ccc"| sed 's/c+/aaa/g'#错误
 echo "ccc"| sed 's/c\+/aaa/g'#正确
+```
 
-
-
-
-
-
-
-
-
-
-
+***
 ***
 删除头空格
 ```
