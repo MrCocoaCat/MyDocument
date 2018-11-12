@@ -1,8 +1,6 @@
 [官方文档](https://docs.openstack.org/install-guide/openstack-services.html)
 
-利用Devstack 可以安装快速openstack，但为了更好的理清openstack，本文使用手动安装。
-参考[](https://docs.openstack.org/install-guide/)
-安装版本为 **Queue** 版本，最小的openstack需安装以下组件：
+利用Devstack 可以安装快速openstack，但为了更好的理清openstack，本文使用手动安装。安装版本为 **Queue** 版本，最小的openstack需安装以下组件：
 
 *   身份认证服务(Identity service) – [keystone installation for Queens](https://docs.openstack.org/keystone/queens/install/)
 *   镜像服务(Image service) – [glance installation for Queens](https://docs.openstack.org/glance/queens/install/)
@@ -11,8 +9,8 @@
 
 建议安装的软件包为：
 
-*   Dashboard – [horizon installation for Queens](https://docs.openstack.org/horizon/queens/install/)
-*   Block Storage service – [cinder installation for Queens](https://docs.openstack.org/cinder/queens/install/)
+*   控制面板(Dashboard) – [horizon installation for Queens](https://docs.openstack.org/horizon/queens/install/)
+*   块存储服务(Block Storage service) – [cinder installation for Queens](https://docs.openstack.org/cinder/queens/install/)
 
 ### 安装环境
 
@@ -150,12 +148,12 @@ yum upgrade
 yum install python-openstackclient -y
 ```
 
-4. RHEL and CentOS 默认启动了SELinux，安装openstack-selinux为openstack安全策略进行管理
+4. RHEL及CentOS默认启动了SELinux，安装openstack-selinux为openstack安全策略进行管理
 ```
 yum install openstack-selinux
 ```
 
-#### SQL 数据库
+#### SQL数据库
 大多数OpenStack服务使用SQL数据库来存储信息。数据库通常在controller节点上运行。本指南中使用MariaDB。
 
 1. 安装相应软件包
@@ -254,9 +252,10 @@ systemctl enable memcached.service
 systemctl start memcached.service
 ```
 
-#### Etcd
+#### 安装Etcd
 
 OpenStack服务可以使用Etcd，这是一种分布式可靠的键值存储，用于分布式键锁定、存储配置、跟踪服务实时性和其他场景。
+
 1. 安装相应软件包
 ```
 yum install etcd
@@ -264,6 +263,8 @@ yum install etcd
 2. vim /etc/etcd/etcd.conf
 
 并设置以下字段  ETCD_INITIAL_CLUSTER, ETCD_INITIAL_ADVERTISE_PEER_URLS, ETCD_ADVERTISE_CLIENT_URLS, ETCD_LISTEN_CLIENT_URLS．使其他节点可以连接值管理网络
+
+以控制节点管理IP地址设置相关选项,以使其他节点通过管理网络进行访问
 ```
 #[Member]
 

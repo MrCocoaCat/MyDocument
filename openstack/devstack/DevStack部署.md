@@ -48,6 +48,7 @@ stack.sh是Openstack 的安装脚本，其可以安装并且配置变量。包�
     enable_service placement-api
     enable_service placement-client
 ```
+
 ```
 [stack@kuber-node1 devstack]$ virtualenv ../requirements/.venv/
 ```
