@@ -1,13 +1,13 @@
-https://docs.openstack.org/install-guide/openstack-services.html
+[官方文档](https://docs.openstack.org/install-guide/openstack-services.html)
 
 利用Devstack 可以安装快速openstack，但为了更好的理清openstack，本文使用手动安装。
 参考[](https://docs.openstack.org/install-guide/)
 安装版本为 **Queue** 版本，最小的openstack需安装以下组件：
 
-*   Identity service – [keystone installation for Queens](https://docs.openstack.org/keystone/queens/install/)
-*   Image service – [glance installation for Queens](https://docs.openstack.org/glance/queens/install/)
-*   Compute service – [nova installation for Queens](https://docs.openstack.org/nova/queens/install/)
-*   Networking service – [neutron installation for Queens](https://docs.openstack.org/neutron/queens/install/)
+*   身份认证服务(Identity service) – [keystone installation for Queens](https://docs.openstack.org/keystone/queens/install/)
+*   镜像服务(Image service) – [glance installation for Queens](https://docs.openstack.org/glance/queens/install/)
+*   计算服务(Compute service) – [nova installation for Queens](https://docs.openstack.org/nova/queens/install/)
+*   网络服务(Networking service) – [neutron installation for Queens](https://docs.openstack.org/neutron/queens/install/)
 
 建议安装的软件包为：
 
@@ -18,7 +18,8 @@ https://docs.openstack.org/install-guide/openstack-services.html
 
 #### 安全
 
-**Passwords**
+所使用的密码及相关含义
+
 | Password name | Description|
 |:-------------:|:----------:|
 |ADMIN_PASS     |Password of user admin|
@@ -33,9 +34,10 @@ https://docs.openstack.org/install-guide/openstack-services.html
 |NEUTRON_DBPASS	|Database password for the Networking service
 |NEUTRON_PASS	  |Password of Networking service user neutron|
 |NOVA_DBPASS	  |Database password for Compute service|
-|NOVA_PASS	   |Password of Compute service user nova|
-|PLACEMENT_PASS|	Password of the Placement service user placement|
-|RABBIT_PASS	 |Password of RabbitMQ user openstack|
+|NOVA_PASS	    |Password of Compute service user nova|
+|PLACEMENT_PASS |	Password of the Placement service user placement|
+|RABBIT_PASS	  |Password of RabbitMQ user openstack|
+
 #### Host networking
 在为您选择部署的体系结构在每个节点上安装操作系统之后，您必须配置网络接口。我们建议您禁用任何自动化网络管理工具，并手动编辑适合您的发行版的配置文件。
 
@@ -49,38 +51,35 @@ https://docs.openstack.org/install-guide/openstack-services.html
 * Management on 10.0.0.0/24 with gateway 10.0.0.1
 这个网络为所有节点提供Internet网络访问，均可以管理软件包，安全更新，DNS和NTP。
 
-
 * Provider on 203.0.113.0/24 with gateway 203.0.113.1
 
 这个网络需要一个网关来提供对OpenStack环境中的实例的Internet访问。
-
 controller节点的management网卡，设为10.0.0.11。
 
 
 1. vim /etc/hosts
-
+写入如下格式
 ```
 IP   controller
 ```
 即 "IP地址，域名，主机名"
-**其中域名可以省略，不要删除127.0.0.1项**
-```
-# controller
-10.19.19.13       controller
+>**其中域名可以省略，禁止删除127.0.0.1项**
 
-# compute1
-10.19.19.23       compute1
+  ```
+  # controller
+  10.19.19.13       controller
 
-# compute2
-10.19.19.25       compute2
-```
+  # compute1
+  10.19.19.23       compute1
+
+  # compute2
+  10.19.19.25       compute2
+  ```
 
 
 #### 网络时间同步协议(NTP)
 
-#####控制节点
-
-以下命令在控制节点上执行
+以下命令在 **控制节点** 上执行
 
 1. 安装包
 ```
@@ -88,30 +87,27 @@ yum install chrony
 ```
 
 2. vim /etc/chrony.conf 文件中写入以下内容
-
 ```
 server NTP_SERVER iburst
 ```
-
 NTP_SERVER 为主机名或IP地址
 > *server 192.168.125.115 iburst*
 
 3. 保证其他服务节点可以访问控制节点的chrony daemon,需要在同一个chrony.conf文件中写入以下内容
-
 ```
 allow 10.0.0.0/24
 ```
 将10.0.0.0/24　替换为相对的子网
 > *allow 192.168.125.0/24*
 
-４．重启NTP服务
-
+4. 重启NTP服务
 ```
 systemctl enable chronyd.service
 systemctl start chronyd.service
 ```
 
-##### 其他节点
+以下命令在 **其他节点** 上执行
+
 1. 安装包
 ```
  yum install chrony
@@ -123,26 +119,26 @@ server controller iburst
 ```
 3. 将 iburst line 中的pool 2.debian.pool.ntp.org 注释掉 iburst line.
 4. 重启服务
-
 ```
 # systemctl enable chronyd.service
 # systemctl start chronyd.service
 ```
 
 #### 安装openstack相关包
+
 在所有节点运行以下命令
 
 1. 安装包
 
-* centos
-```
-yum install centos-release-openstack-queens -y
-```
+  * centos
+  ```
+  yum install centos-release-openstack-queens -y
+  ```
 
-* RHEL
-```
-yum install https://rdoproject.org/repos/rdo-release.rpm
-```
+  * RHEL
+  ```
+  yum install https://rdoproject.org/repos/rdo-release.rpm
+  ```
 
 2. 更新软件包
 ```
@@ -150,13 +146,11 @@ yum upgrade
 ```
 
 3. 安装OpenStack client
-
 ```
 yum install python-openstackclient -y
 ```
 
 4. RHEL and CentOS 默认启动了SELinux，安装openstack-selinux为openstack安全策略进行管理
-
 ```
 yum install openstack-selinux
 ```
@@ -165,80 +159,74 @@ yum install openstack-selinux
 大多数OpenStack服务使用SQL数据库来存储信息。数据库通常在controller节点上运行。本指南中使用MariaDB。
 
 1. 安装相应软件包
-
 ```
 yum install mariadb mariadb-server python2-PyMySQL
 ```
 2. vim /etc/my.cnf.d/openstack.cnf文件，并新增[mysql]字段，并将bind-address设置为管理节点地址，并将编码方式设置未utf8,修改内容如下
 
-```
-[mysqld]
-# 监听地址,0.0.0.0设置为全部可以监听
-# 可以设置未controller的IP地址
-bind-address = 0.0.0.0
+  ```
+  [mysqld]
+  # 监听地址,0.0.0.0设置为全部可以监听
+  # 可以设置未controller的IP地址
+  bind-address = 0.0.0.0
 
-# 默认存储引擎innodb
-default-storage-engine = innodb
+  # 默认存储引擎innodb
+  default-storage-engine = innodb
 
-# 设置独享的表空间，如果不设置，会是共享表空间
-innodb_file_per_table = on
+  # 设置独享的表空间，如果不设置，会是共享表空间
+  innodb_file_per_table = on
 
-# 最大连接数
-max_connections = 4096
+  # 最大连接数
+  max_connections = 4096
 
-# 校对规则
-collation-server = utf8_general_ci
+  # 校对规则
+  collation-server = utf8_general_ci
 
-# 数据库建库字符集
-character-set-server = utf8
-```
+  # 数据库建库字符集
+  character-set-server = utf8
+  ```
 
 3. 启动服务，并设置为开机启动
-```
-＃ 设置为开机启动
-systemctl enable mariadb.service
 
-＃　启动服务
-systemctl start mariadb.service
+  ```
+  #设置为开机启动
+  systemctl enable mariadb.service
 
-```
+  #启动服务
+  systemctl start mariadb.service
+
+  ```
 
 4. 执行mysql_secure_installation脚本设置安全属性，并为root帐号设置合适密码
-
 ```
 mysql_secure_installation
 ```
-
 [SQL database](https://docs.openstack.org/install-guide/environment-sql-database.html)
 
 
-####　消息队列RabbitMQ
+#### 消息队列RabbitMQ
+
 OpenStack使用消息队列来协调服务之间的操作和状态信息。
 消息队列服务通常在 **控制器节点** 上运行。OpenStack支持多个消息队列服务，包括RabbitMQ、Qpid和ZeroMQ。但是，大多数penStack的发行版都支持特定的消息队列服务。因为大多数发行版均支持RabbitMQ消息队列服务，故安装RabbitMQ消息队列
 
 1. 安装包
-
 ```
 yum install rabbitmq-server
 ```
 
 2. 启动消息队列并设置为开机启动
-
 ```
 systemctl enable rabbitmq-server.service
 systemctl start rabbitmq-server.service
 ```
 
 3. 添加openstack用户
-
 ```
 rabbitmqctl add_user openstack RABBIT_PASS
 ```
-
 >RABBIT_PASS 替换为合适的密码
 
 4. 许可设定，未openstack用户添加读写权限
-
 ```
 rabbitmqctl set_permissions openstack ".*" ".*" ".*"
 ```
@@ -248,15 +236,12 @@ rabbitmqctl set_permissions openstack ".*" ".*" ".*"
 服务的身份服务身份验证机制使用Memcached缓存令牌。memcached服务通常在 **控制器节点** 上运行。
 
 1. 安装相应软件包
-
 ```
 yum install memcached python-memcached
 ```
 
 2. vim /etc/sysconfig/memcached
-
 确定服务使用的是controller节点的management　IP地址,以使其他节点可以通过management网络访问控制节点
-
 ```
 OPTIONS="-l 127.0.0.1,::1,controller"
 ```
@@ -264,7 +249,6 @@ OPTIONS="-l 127.0.0.1,::1,controller"
 
 
 3. 开启Memcached服务并设为开机启动
-
 ```
 systemctl enable memcached.service
 systemctl start memcached.service
@@ -297,7 +281,7 @@ ETCD_INITIAL_CLUSTER="controller=http://192.168.125.115:2380"
 ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster-01"
 ETCD_INITIAL_CLUSTER_STATE="new"
 ```
-其中192.168.125.115为控制节点的网络，需改成自己的IP地址
+ 其中192.168.125.115为控制节点的网络，需改成自己的IP地址
 
 3. 启动服务
 ```
