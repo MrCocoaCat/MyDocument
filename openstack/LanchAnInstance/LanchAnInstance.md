@@ -28,7 +28,9 @@ $ openstack flavor create --id 0 --vcpus 1 --ram 64 --disk 1 m1.nano
 +----------------------------+---------+
 ```
 #### Generate a key pair
+
 大多数云映像支持公钥身份验证，而不是传统的密码身份验证。在启动实例之前，必须向计算服务添加公钥。
+
 1. 同步环境变量
 ```
 $ . demo-openrc
@@ -95,7 +97,7 @@ $ openstack security group rule create --proto icmp default
 +-------------------+--------------------------------------+
 ```
     * Permit secure shell (SSH) access:
-    
+
  ```
  $ openstack security group rule create --proto tcp --dst-port 22 default
 

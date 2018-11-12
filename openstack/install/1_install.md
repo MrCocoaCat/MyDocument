@@ -38,6 +38,7 @@ https://docs.openstack.org/install-guide/openstack-services.html
 |RABBIT_PASS	 |Password of RabbitMQ user openstack|
 #### Host networking
 在为您选择部署的体系结构在每个节点上安装操作系统之后，您必须配置网络接口。我们建议您禁用任何自动化网络管理工具，并手动编辑适合您的发行版的配置文件。
+
 #### 设置主机名及IP
 所有节点都需要Internet访问用于管理，例如包安装、安全更新、DNS和NTP。在大多数情况下，节点应该通过管理网络接口(management network interface)获得Internet访问。
 

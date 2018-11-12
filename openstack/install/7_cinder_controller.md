@@ -293,5 +293,5 @@ os_region_name = RegionOne
 ```
 # systemctl enable openstack-cinder-api.service openstack-cinder-scheduler.service
 
-# systemctl start openstack-cinder-api.service openstack-cinder-scheduler.service
+# systemctl restart openstack-cinder-api.service openstack-cinder-scheduler.service
 ```
