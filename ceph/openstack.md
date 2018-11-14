@@ -31,8 +31,9 @@ ceph-deploy admin client.{客户端名字}
 ```
 ceph osd pool create volumes 128
 ceph osd pool create images 128
-ceph osd pool create backups 128
 ceph osd pool create vms 128
+
+ceph osd pool create backups 128
 ```
 新创建的池必须在使用之前进行初始化。使用rbd工具初始化池
 ```
