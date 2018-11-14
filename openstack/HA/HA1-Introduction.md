@@ -28,23 +28,23 @@ SPOF是一种单独的设备或软件，如果出现故障，会导致系统停�
 
 * 无状态服务（Stateless）
 
-在您的请求之后提供响应的服务，然后不需要进一步关注。要使无状态的服务高度可用，需要提供冗余实例并平衡它们的负载。无状态的OpenStack服务包括nova-api、nova-conductor、gls -api、keystone-api、neutron-api和nova-scheduler。
+在您的请求之后提供响应的服务，然后不需要进一步关注。要使无状态的服务高度可用，需要提供冗余实例并平衡它们的负载。无状态的OpenStack服务包括nova-api、nova-conductor、gls-api、keystone-api、neutron-api和nova-scheduler。
 
-有状态服务(stateful)
+* 有状态服务(stateful)
 
 服务的后续请求依赖于第一个请求的结果。有状态服务更难管理，因为单个操作通常涉及多个请求。提供额外的实例和负载平衡并不能解决问题。例如，horizon用户界面每次进入新页面时都自动重置。有状态的OpenStack服务包括OpenStack数据库和消息队列。使有状态服务高可用性取决于您选择的是Active/passive配置还是active/active配置。
 
 #### Active/passive versus active/active
 
-有状态服务(stateful)可以配置为 active/passive 或 ctive/active，其定义如下:
+有状态服务(stateful)可以配置为 active/passive 或 active/active，其定义如下:
 
-* active/passive configuration
+* active/passive 配置
 
 **维护可在活动服务失败时联机的冗余实例**。 例如，OpenStack在维护灾难恢复数据库的同时写入主数据库，如果主数据库发生故障，该数据库可以联机。有状态服务的典型 active/passive 安装和维护可在需要时联机的替换资源。 使用虚拟IP地址（VIP）处理请求，这有助于以最小的重新配置返回服务。 单独的应用程序（如Pacemaker或Corosync）会监视这些服务，并在必要时将备份联机。
 
 >故障节点上的访问请求或自动转到另外一个正常运行节点上，或通过负载均衡器在剩余的正常运行的节点上进行负载均衡。这种模式下集群中的节点通常部署了相同的软件并具有相同的参数配置，同时各服务在这些节点上并行运行。
 
-* active/active configuration
+* active/active 配置
 
 **每个服务均具有一份，其同时管理主系统和冗余系统**。发生故障時，用户可能並不会觉察。 在主系统修复之前,备份系统已经在线运行,并承担所提高的负载。
 
@@ -76,6 +76,6 @@ OpenStack支持由管理高可用性环境的服务管理的单控制器高可�
 ### 配置计算节点
 安装指南提供了安装多个计算节点的说明。要使计算节点高度可用，您必须配置环境，使其包含API和其他服务的多个实例。
 #### 为实例配置高可用性
-截至2016年9月，OpenStack高可用社区正在设计和开发一种官方的、统一的方式来为实例提供高可用性。我们正在开发从计算节点上的硬件或与管理程序相关的软件故障中自动恢复，或其他可能阻止实例正常运行的故障，例如煤渣卷I/O路径问题。
+截至2016年9月，OpenStack高可用社区正在设计和开发一种官方的、统一的方式来为实例提供高可用性。我们正在开发从计算节点上的硬件或与管理程序相关的软件故障中自动恢复，或其他可能阻止实例正常运行的故障，例如cinder I/O路径问题。
 
 更多的细节可以在OpenStack的HA社区和产品工作组(PWG)共同编写的用户故事中找到，其中这个特性被认为是OpenStack中缺失的功能，应该以高度优先的方式处理。
