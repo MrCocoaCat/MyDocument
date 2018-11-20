@@ -1,7 +1,7 @@
 local network 不会与宿主机的任何物理网卡连接，流量只被限制在宿主机内，同时也不关联任何的 VLAN ID。
 
 flat network 是不带 tag 的网络，宿主机的物理网卡通过网桥与 flat network 连接，每个 flat network 都会占用一个物理网卡
-
+vlan network 是带 tag 的网络。
 
 
 ovs-dpctl 用来配置switch内核模块。
