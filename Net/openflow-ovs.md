@@ -269,12 +269,12 @@ actions=mod_vlan_vid:101,normal"
 
 查看交换机中的所有 Table
 ```
-ovs-ofctl dump-tables ovs-switch
+ovs-ofctl dump-tables br
 ```
 
 查看交换机中的所有流表项
 ```
-ovs−ofctl dump−flows ovs-switch
+ovs−ofctl dump−flows br
 ```
 
 删除编号为 100 的端口上的所有流表项
@@ -285,4 +285,10 @@ ovs-ofctl del-flows ovs-switch "in_port=100"
 查看交换机上的端口信息
 ```
 ovs-ofctl show ovs-switch
+```
+
+
+```
+ovs-ofctl add-flow br2 "in_port=14,dl_vlan=200,actions=strip_vlan,output:1"
+[root@client ~]# ovs-ofctl add-flow br2 "in_port=1,dl_vlan=0xffff,actions=mod_vlan_vid:200,output:14"
 ```
