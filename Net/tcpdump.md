@@ -3,7 +3,70 @@
 tcpdump是一个用于截取网络分组，并输出分组内容的工具。凭借强大的功能和灵活的截取策略，使其成为类UNIX系统下用于网络分析和问题排查的首选工具。
 tcpdump提供了源代码，公开了接口，因此具备很强的可扩展性，对于网络维护和入侵者都是非常有用的工具。
 tcpdump 支持针对网络层、协议、主机、网络或端口的过滤，并提供and、or、not等逻辑语句来帮助你去掉无用的信息。
+### 示例
 
+1. 默认启动
+```
+tcpdump -vv
+```
+
+2. 过滤主机
+```
+tcpdump -i eth1 host 192.168.1.1
+tcpdump -i eth1 src host 192.168.1.1
+tcpdump -i eth1 dst host 192.168.1.1
+```
+抓取所有经过eth1，目的或源地址是192.168.1.1的网络数据
+指定源地址，192.168.1.1
+指定目的地址，192.168.1.1
+
+3. 过滤端口
+```
+tcpdump -i eth1 port 25
+tcpdump -i eth1 src port 25
+tcpdump -i eth1 dst port 25
+```
+eth1，目的或源端口是25的网络数据
+指定源端口
+指定目的端口
+
+4. 网络过滤
+```
+tcpdump -i eth1 net 192.168
+tcpdump -i eth1 src net 192.168
+tcpdump -i eth1 dst net 192.168
+```
+5. 协议过滤
+```
+tcpdump -i eth1 arp
+tcpdump -i eth1 ip
+tcpdump -i eth1 tcp
+tcpdump -i eth1 udp
+tcpdump -i eth1 icmp
+```
+
+
+6. 常用表达式
+```
+非 : ! or "not" (去掉双引号)
+且 : && or "and"
+或 : || or "or"
+```
+
+抓取所有经过eth1，目的地址是192.168.1.254或192.168.1.200端口是80的TCP数
+```
+tcpdump -i eth1 '((tcp) and (port 80) and ((dst host 192.168.1.254) or (dst host 192.168.1.200)))'
+```
+
+抓取所有经过eth1，目标MAC地址是00:01:02:03:04:05的ICMP数据
+```
+tcpdump -i eth1 '((icmp) and ((ether dst host 00:01:02:03:04:05)))'
+```
+
+抓取所有经过eth1，目的网络是192.168，但目的主机不是192.168.1.200的TCP数据
+```
+tcpdump -i eth1 '((tcp) and ((dst net 192.168) and (not dst host 192.168.1.200)))'
+```
 
 ### 语法
 完整的英文文档：https://www.tcpdump.org/tcpdump_man.html
@@ -79,68 +142,3 @@ tcpdump 支持针对网络层、协议、主机、网络或端口的过滤，并
 * **-vv 输出详细的报文信息。**
 
 * -w 直接将分组写入文件中，而不是不分析并打印出来。
-
-### 示例
-
-1. 默认启动
-```
-tcpdump -vv
-```
-
-2. 过滤主机
-```
-tcpdump -i eth1 host 192.168.1.1
-tcpdump -i eth1 src host 192.168.1.1
-tcpdump -i eth1 dst host 192.168.1.1
-```
-抓取所有经过eth1，目的或源地址是192.168.1.1的网络数据
-指定源地址，192.168.1.1
-指定目的地址，192.168.1.1
-
-3. 过滤端口
-```
-tcpdump -i eth1 port 25
-tcpdump -i eth1 src port 25
-tcpdump -i eth1 dst port 25
-```
-eth1，目的或源端口是25的网络数据
-指定源端口
-指定目的端口
-
-4. 网络过滤
-```
-tcpdump -i eth1 net 192.168
-tcpdump -i eth1 src net 192.168
-tcpdump -i eth1 dst net 192.168
-```
-5. 协议过滤
-```
-tcpdump -i eth1 arp
-tcpdump -i eth1 ip
-tcpdump -i eth1 tcp
-tcpdump -i eth1 udp
-tcpdump -i eth1 icmp
-```
-
-
-6. 常用表达式
-```
-非 : ! or "not" (去掉双引号)
-且 : && or "and"
-或 : || or "or"
-```
-
-抓取所有经过eth1，目的地址是192.168.1.254或192.168.1.200端口是80的TCP数
-```
-tcpdump -i eth1 '((tcp) and (port 80) and ((dst host 192.168.1.254) or (dst host 192.168.1.200)))'
-```
-
-抓取所有经过eth1，目标MAC地址是00:01:02:03:04:05的ICMP数据
-```
-tcpdump -i eth1 '((icmp) and ((ether dst host 00:01:02:03:04:05)))'
-```
-
-抓取所有经过eth1，目的网络是192.168，但目的主机不是192.168.1.200的TCP数据
-```
-tcpdump -i eth1 '((tcp) and ((dst net 192.168) and (not dst host 192.168.1.200)))'
-```
