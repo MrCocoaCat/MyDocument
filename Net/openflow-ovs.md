@@ -274,14 +274,14 @@ ovs-ofctl dump-tables br
 
 查看交换机中的所有流表项
 ```
-ovs−ofctl dump−flows br
+ovs-ofctl dump-flows br
 ```
 
-删除编号为 100 的端口上的所有流表项
+删除编号为 100 的端口上的所有流
 ```
 ovs-ofctl del-flows ovs-switch "in_port=100"
-```
 
+```
 查看交换机上的端口信息
 ```
 ovs-ofctl show ovs-switch
@@ -291,4 +291,28 @@ ovs-ofctl show ovs-switch
 ```
 ovs-ofctl add-flow br2 "in_port=14,dl_vlan=200,actions=strip_vlan,output:1"
 [root@client ~]# ovs-ofctl add-flow br2 "in_port=1,dl_vlan=0xffff,actions=mod_vlan_vid:200,output:14"
+```
+
+```
+ovs-ofctl add-flow %s "ip,ip_src=%s,idle_timeout=0,priority=60000,actions=drop",
+```
+
+### 在得分点所在的ovs设置acl规则，使得攻击点不能访问本队的5个得分点
+```
+ovs-ofctl add-flow br_unicom "nw_src=10.121.21.1/16,nw_dst=10.121.100.11/16,priority=60000,actions=drop"
+```
+
+```
+ovs-ofctl add-flow br_unicom "ip, nw_src=10.121.21.1/16,nw_dst=10.121.100.11/16,idle_timeout=0,priority=60000,actions=drop"
+```
+
+
+```
+"ovs-ofctl add-flow %s ip,ip_src=%s,idle_timeout=0,priority=60000,actions=drop",
+```
+
+
+实验：
+```
+ovs-ofctl add-flow br_unicom "ip, nw_src=10.121.21.3,nw_dst=10.121.100.35,actions=drop"
 ```
