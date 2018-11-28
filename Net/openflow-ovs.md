@@ -1,5 +1,7 @@
 https://www.ibm.com/developerworks/cn/cloud/library/1401_zhaoyi_openswitch/
 
+https://blog.csdn.net/rocson001/article/details/73163041
+
 ### Open vSwitch 概述
 Open vSwitch（下面简称为 OVS）是由 Nicira Networks 主导的，运行在虚拟化平台（例如 KVM，Xen）上的虚拟交换机。在虚拟化平台上，OVS 可以为动态变化的端点提供 2 层交换功能，很好的控制虚拟网络中的访问策略、网络隔离、流量监控等等。
 

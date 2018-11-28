@@ -55,3 +55,8 @@ localHttp.repo
 setenforce 0
 
 ```
+更改后为permissive
+
+```
+systemctl stop firewalled
+```

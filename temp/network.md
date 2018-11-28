@@ -62,3 +62,14 @@ service network restart
 
 nameserver 8.8.8.8
 nameserver 159.226.8.7
+
+
+
+
+
+
+
+#
+/etc/network/
+
+sudo /etc/init.d/networking restart
