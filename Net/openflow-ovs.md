@@ -292,6 +292,7 @@ ovs-ofctl show ovs-switch
 
 ```
 ovs-ofctl add-flow br2 "in_port=14,dl_vlan=200,actions=strip_vlan,output:1"
+
 [root@client ~]# ovs-ofctl add-flow br2 "in_port=1,dl_vlan=0xffff,actions=mod_vlan_vid:200,output:14"
 ```
 
@@ -316,5 +317,5 @@ ovs-ofctl add-flow br_unicom "ip, nw_src=10.121.21.1/16,nw_dst=10.121.100.11/16,
 
 实验：
 ```
-ovs-ofctl add-flow br_unicom "ip, nw_src=10.121.21.3,nw_dst=10.121.100.35,actions=drop"
+ "ip, nw_src=10.121.21.3,nw_dst=10.121.100.35,actions=drop"
 ```
