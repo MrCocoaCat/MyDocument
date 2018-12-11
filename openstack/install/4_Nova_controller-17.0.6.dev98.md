@@ -300,6 +300,7 @@ yum install openstack-nova-api openstack-nova-conductor \
 # ...
 enabled_apis = osapi_compute,metadata
 ```
+
 * 在 [api_database]及[database]字段设置数据库接入许可
 
 ```
