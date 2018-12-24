@@ -82,8 +82,8 @@ $ openstack subnet create \
 
 ```
 openstack subnet create --network selfservice \
-  --dns-nameserver 8.8.4.4 --gateway 172.16.1.1 \
-  --subnet-range 172.16.1.0/24 selfservice
+  --dns-nameserver 8.8.4.4 --gateway 172.19.1.1 \
+  --subnet-range 172.19.1.0/24 selfservice
 
   Created a new subnet:
 +-------------------+--------------------------------------+

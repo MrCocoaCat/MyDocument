@@ -314,8 +314,6 @@ connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
 
 ```
 
-
-
 Replace NOVA_DBPASS with the password you chose for the Compute databases.
 
 * 在[DEFAULT]字段, 设置RabbitMQ消息队列接入权限
@@ -475,7 +473,7 @@ su -s /bin/sh -c "nova-manage db sync" nova
   openstack-nova-consoleauth.service openstack-nova-scheduler.service \
   openstack-nova-conductor.service openstack-nova-novncproxy.service
 
-# systemctl start openstack-nova-api.service \
+# systemctl restart openstack-nova-api.service \
   openstack-nova-consoleauth.service openstack-nova-scheduler.service \
   openstack-nova-conductor.service openstack-nova-novncproxy.service
 ```
