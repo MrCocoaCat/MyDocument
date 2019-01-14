@@ -1,3 +1,4 @@
+https://docs.openstack.org/pbr/latest/user/features.html
 ### pbr - Python Build Reasonableness
 
 用于以一致的方式管理setuptools打包需求的库。
@@ -73,3 +74,8 @@ license = BSD
 * 自动生成元数据文件（AUTHOR，ChangeLog，MANIFEST.in，RELEASENOTES.txt）
 此外，还有其他一些你在这里看不到的东西，但是pbr会帮助你完成的功能：
 * setuptools命令的有用扩展
+
+#### setup.cfg
+distutils2的一个主要特性是使用了setup.cfg INI风格的配置文件。 这用于定义包的元数据和通常提供给setup（）函数的其他选项。
+
+#### Package Metadata
