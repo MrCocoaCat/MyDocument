@@ -192,13 +192,12 @@ port 4: p2 (internal)
 
 ```
 $ ovs-ofctl add-flow ovs-switch "table=0, dl_src=01:00:00:00:00:00/01:00:00:00:00:00, actions=drop"
-
 ```
+
 屏蔽 STP 协议的广播数据包
 
 ```
 $ ovs-ofctl add-flow ovs-switch "table=0, dl_dst=01:80:c2:00:00:00/ff:ff:ff:ff:ff:f0, actions=drop"
-
 ```
 
 3. 修改数据包
