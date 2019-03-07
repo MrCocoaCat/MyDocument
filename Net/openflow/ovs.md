@@ -1,7 +1,10 @@
-local network 不会与宿主机的任何物理网卡连接，流量只被限制在宿主机内，同时也不关联任何的 VLAN ID。
 
-flat network 是不带 tag 的网络，宿主机的物理网卡通过网桥与 flat network 连接，每个 flat network 都会占用一个物理网卡
-vlan network 是带 tag 的网络。
+1. local network
+ 不会与宿主机的任何物理网卡连接，流量只被限制在宿主机内，同时也不关联任何的 VLAN ID。
+2. flat network
+是不带 tag 的网络，宿主机的物理网卡通过网桥与 flat network 连接，每个 flat network 都会占用一个物理网卡
+3. vlan network
+是带 tag 的网络。
 
 
 ovs-dpctl 用来配置switch内核模块。
@@ -17,10 +20,13 @@ ovs-ofctl 查询和控制OpenFlow交换机和控制器。
 ### [open vSwitch]查看OVS端口ofport编号及对应虚拟机MAC
 [参考](https://www.cnblogs.com/azyet/p/3580255.html)
 
+
 在用open vSwitch做实验时，我们经常需要知道OVS port对应的ofport编号，这个比较容易，用
+
 ```
 ovs-ofctl show [bridge]
 ```
+
 就能得到。如
 
 ```
@@ -65,5 +71,30 @@ LOCAL     0  da:91:42:cd:fb:44   18
 可以看到18号ofport连接的是MAC为52:54:00:a9:b8:b0的虚拟网卡。可结合上一个命令，知18号ofport的port name为tap0。
 需要注意的是，该网卡必须要有数据的收发，才能够得到上述的结果，所以使用该命令之前不妨先执行一下类似ping的动作。
 
-# 为网桥设置控制器
-ovs-vsctl set-controller br0 tcp:192.168.6.246:6653
+
+
+
+
+
+### 删除内部端口VLAN配置
+
+ovs-vsctl remove port tap100 tag 100
+
+### 设置peer
+ovs-vsctl add-port br-eth patch-eth -- set interface patch-eth type=patch options:peer=patch-tap
+
+ ovs-vsctl add-port br-tap patch-tap -- set interface patch-tap type=patch options:peer=patch-eth
+
+#### 添加vxlan
+
+ovs-vsctl del-port gre0
+ovs-vsctl add-port br0 vxlan0 -- set interface vxlan0 type=vxlan options:remote_ip=10.0.2.12 options:key=100 
+
+
+#### tag
+
+ VLAN Configuration
+Port的一个重要的方面就是VLAN Configuration，有两种模式：
+
+trunk port，这个port不配置tag，配置trunks，如果trunks为空，则所有的VLAN都trunk，也就意味着对于所有的VLAN的包，本身带什么VLAN ID，就是携带者什么VLAN ID，如果没有设置VLAN，就属于VLAN 0，全部允许通过。如果trunks不为空，则仅仅带着这些VLAN ID的包通过。
+access port，这个port配置tag，从这个port进来的包会被打上这个tag，如果从其他的trunk port中进来的本身就带有VLAN ID的包，如果VLAN ID等于tag，则会从这个port发出，从其他的access port上来的包，如果tag相同，也会被forward到这个port。从access port发出的包不带VLAN ID。如果一个本身带VLAN ID的包到达access port，即便VLAN ID等于tag，也会被抛弃。

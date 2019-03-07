@@ -53,7 +53,7 @@ OpenFlow 是用于管理交换机流表的协议，ovs-ofctl 则是 OVS 提供�
 
 | 字段名称  |  说明  |
 |:--------:|:---------:|
-|n_port=port|	传递数据包的端口的 OpenFlow 端口编号\
+|in_port=port|	传递数据包的端口的 OpenFlow 端口编号\
 |dl_vlan=vlan|	数据包的 VLAN Tag 值，范围是 0-4095，0xffff 代表不包含 VLAN Tag 的数据包|
 |dl_src= <MAC\> dl_dst=<MAC\>|匹配源或者目标的 MAC 地址 01:00:00:00:00:00/01:00:00:00:00:00 代表广播地址 00:00:00:00:00:00/01:00:00:00:00:00 代表单播地址|
 |dl_type=ethertype|	匹配以太网协议类型，其中： dl_type=0x0800 代表 IPv4 协议 dl_type=0x086dd 代表 IPv6 协议 dl_type=0x0806 代表 ARP 协议|
@@ -68,19 +68,20 @@ OpenFlow 是用于管理交换机流表的协议，ovs-ofctl 则是 OVS 提供�
 
 一个流规则中可能有多个动作，按照指定的先后顺序执行。
 
-**output:port: 输出数据包到指定的端口。port 是指端口的 OpenFlow 端口编号**
 
-**mod_vlan_vid: 修改数据包中的 VLAN tag**
+1. output:port: 输出数据包到指定的端口。port 是指端口的 OpenFlow 端口编号
 
-**strip_vlan: 移除数据包中的 VLAN tag**
+2. mod_vlan_vid: 修改数据包中的 VLAN tag
 
-mod_dl_src/ mod_dl_dest: 修改源或者目标的 MAC 地址信息
+3. strip_vlan: 移除数据包中的 VLAN tag
 
-mod_nw_src/mod_nw_dst: 修改源或者目标的 IPv4 地址信息
+4. mod_dl_src/ mod_dl_dest: 修改源或者目标的 MAC 地址信息
 
-resubmit:port: 替换流表的 in_port 字段，并重新进行匹配
+5. mod_nw_src/mod_nw_dst: 修改源或者目标的 IPv4 地址信息
 
-load:value−>dst[start..end]: 写数据到指定的字段
+6. resubmit:port: 替换流表的 in_port 字段，并重新进行匹配
+
+7. load:value−>dst[start..end]: 写数据到指定的字段
 
 
 ### 实践操作 OpenFlow 命令
@@ -103,6 +104,7 @@ ovs-vsctl: Error detected while setting up 'p1'.  See ovs-vswitchd log for detai
 ```
 $ ovs-vsctl set Interface p0 type=internal
 ```
+
 ```
 $ ethtool -i p0
 driver: openvswitch
@@ -141,7 +143,7 @@ $ ip netns exec ns0 ifconfig p0 promisc up
 1. 查看 Open vSwitch 中的端口信息。从输出结果中，可以获得交换机对应的 datapath ID （dpid），以及每个端口的 OpenFlow 端口编号，端口名称，当前状态等等。
 
 ```
-$ ovs-ofctl s1
+$ ovs-ofctl show s1
 
 OFPT_FEATURES_REPLY (xid=0x2): dpid:00001232a237ea45
 n_tables:254, n_buffers:256
@@ -167,6 +169,7 @@ SET_NW_SRC SET_NW_DST SET_NW_TOS SET_TP_SRC SET_TP_DST ENQUEUE
 OFPT_GET_CONFIG_REPLY (xid=0x4): frags=normal miss_send_len=0
 ```
 如果想获得网络接口的 OpenFlow 编号，也可以在 OVS 的数据库中查询
+
 ```
 $ ovs-vsctl get Interface p0 ofport
 100
@@ -192,12 +195,13 @@ port 4: p2 (internal)
 
 ```
 $ ovs-ofctl add-flow ovs-switch "table=0, dl_src=01:00:00:00:00:00/01:00:00:00:00:00, actions=drop"
-```
 
+```
 屏蔽 STP 协议的广播数据包
 
 ```
 $ ovs-ofctl add-flow ovs-switch "table=0, dl_dst=01:80:c2:00:00:00/ff:ff:ff:ff:ff:f0, actions=drop"
+
 ```
 
 3. 修改数据包
@@ -225,10 +229,12 @@ listening on p1, link-type EN10MB (Ethernet), capture size 65535 bytes
 
 4. 重定向数据包
 添加新的 OpenFlow 条目，重定向所有的 ICMP 数据包到端口 p2
+
 ```
 $ ovs-ofctl add-flow ovs-switch idle_timeout=0,dl_type=0x0800,nw_proto=1,actions=output:102
 
 ```
+
 从端口 p0 （192.168.1.100）发送数据到端口 p1（192.168.1.101）
 ```
 $ ip netns exec ns0 ping 192.168.1.101
