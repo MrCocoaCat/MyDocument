@@ -261,7 +261,8 @@ $ ovs-vsctl set Port p1 tag=101
 现在由于端口 p0 和 p1 属于不同的 VLAN，它们之间无法进行数据交换。我们使用 ovs-appctl ofproto/trace 生成一个从端口 p0 发送到端口 p1 的数据包，这个数据包不包含任何 VLAN tag，并观察 OVS 的处理过程
 
 ```
-$ ovs-appctl ofproto/trace ovs-switch in_port=100,dl_src=66:4e:cc:ae:4d:20,dl_dst=46:54:8a:95:dd:f8 -generate
+$ ovs-appctl ofproto/trace ovs-switch
+ in_port=100,dl_src=66:4e:cc:ae:4d:20,dl_dst=46:54:8a:95:dd:f8 -generate
 
 Flow:metadata=0,in_port=100,vlan_tci=0x0000,dl_src=66:4e:cc:ae:4d:20,
  dl_dst=46:54:8a:95:dd:f8,dl_type=0x0000

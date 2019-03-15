@@ -76,6 +76,6 @@ license = BSD
 * setuptools命令的有用扩展
 
 #### setup.cfg
-distutils2的一个主要特性是使用了setup.cfg INI风格的配置文件。 这用于定义包的元数据和通常提供给setup（）函数的其他选项。
+distutils2的一个主要特性是使用了setup.cfg INI风格的配置文件。这用于定义包的元数据和通常提供给setup（）函数的其他选项。
 
 #### Package Metadata
