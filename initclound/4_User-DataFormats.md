@@ -59,7 +59,7 @@ $ euca-run-instances --key mykey --user-data-file myscript.sh ami-a07d95c9
 以 #include 或者 Content-Type: text/x-include-url 开头，when using a MIME archive.
 
 ### Cloud Config Data
-
+**重要**
 Cloud-config是通过用户数据完成某些事情的最简单方法。 使用cloud-config语法，用户可以以人性化的格式指定某些内容。
 这些东西包括：
 * apt升级应该在首次启动时运行
