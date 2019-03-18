@@ -155,13 +155,13 @@ custom-i-0e91f69987f37ec74.us-east-2.aws.com
 
 ### cloud-init init
 
-通常由OS init系统运行，以执行cloud-init的阶段init和init-local。有关详细信息，请参阅引导阶段。可以在命令行上运行，但由于/ var / lib / cloud / instance / sem /和/ var / lib / cloud / sem中的信号量，通常只能运行一次。
+通常由OS init系统运行，以执行cloud-init的阶段init和init-local。有关详细信息，请参阅引导阶段。可以在命令行上运行，但由于/ var / lib / cloud / instance / sem /和/ var/lib/cloud/sem中的信号量，通常只能运行一次。
 
 * –local: Run init-local stage instead of init.
 
 ### cloud-init modules
 通常由OS init系统运行以执行模块：配置和模块：最终启动阶段。
-这将执行配置为在init，config和final阶段运行的云配置模块。声明模块在文件/etc/cloud/cloud.cfg中的各个引导阶段运行，密钥为cloud_init_modules，cloud_init_modules和cloud_init_modules。可以在命令行上运行，但由于/ var / lib / cloud /中的信号量，每个模块只能运行一次。
+这将执行配置为在init，config和final阶段运行的云配置模块。声明模块在文件/etc/cloud/cloud.cfg中的各个引导阶段运行，密钥为cloud_init_modules，cloud_init_modules和cloud_init_modules。可以在命令行上运行，但由于/var/lib/cloud/中的信号量，每个模块只能运行一次。
 
 ### cloud-init single
 Attempt to run a single named cloud config module. The following example re-runs the cc_set_hostname module ignoring the module default frequency of once-per-instance:

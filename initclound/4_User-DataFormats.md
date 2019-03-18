@@ -14,6 +14,7 @@
 * text/part-handler
 * text/x-shellscript
 * text/cloud-boothook
+
 #### Helper script to generate mime messages
 ```
 #!/usr/bin/python
@@ -73,14 +74,14 @@ https://cloudinit.readthedocs.io/en/latest/topics/examples.html#yaml-examples
 以 #cloud-config 或者 Content-Type: text/cloud-config开头， when using a MIME archive.
 
 ### Upstart Job
-内容被放入/ etc / init中的文件中，并且将被upstart用作任何其他upstart作业。
+内容被放入/etc/init中的文件中，并且将被upstart用作任何其他upstart作业。
 
 以 #upstart-job 或 Content-Type: text/upstart-job 开头，when using a MIME archive.
 
 
 ### Cloud Boothook
 这个内容是boothook数据。
-它存储在/ var / lib / cloud下的文件中，然后立即执行。
+它存储在/var/lib/cloud下的文件中，然后立即执行。
 这是最早的钩子。 请注意，没有提供仅运行一次的机制。
 展位必须自己处理。 它在环境变量INSTANCE_ID中提供了实例id。
 这可以用于提供“每实例一次”类型的功能。
@@ -90,7 +91,7 @@ https://cloudinit.readthedocs.io/en/latest/topics/examples.html#yaml-examples
 ### Part Handler
 
 这是一个部分处理程序：它包含自定义代码，用于支持多部分用户数据中的新mime类型，或覆盖支持的mime类型的现有处理程序。
-它将根据其文件名（生成）写入/ var / lib / cloud / data中的文件。
+它将根据其文件名（生成）写入/var/lib/cloud/data中的文件。
 这必须是包含list_types函数和handle_part函数的python代码。
 读取该部分后，将调用list_types方法。 它必须返回此部分处理程序处理的mime类型列表。
 因为mime部分是按顺序处理的，所以部分处理程序部分必须位于任何部分之前，并且mime类型应该在相同的用户数据中处理。
