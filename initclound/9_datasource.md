@@ -1,21 +1,27 @@
-https://cloudinit.readthedocs.io/en/latest/
-
-1. yum install –y cloud-utils-growpart
-
-
-2. https://blog.51cto.com/3646344/2110424
-
-
-
-### Datasources
-
+## Datasources
 ### What is a datasource?
 数据源是cloud-init的配置数据源，通常来自用户（也称为userdata）或来自创建配置驱动器的堆栈（也称为元数据）。典型的用户数据包括文件，yaml和shell脚本，而典型的元数据包括服务器名称，实例ID，显示名称和其他特定于云的详细信息。 由于提供此数据的方式有多种（每个云解决方案似乎更喜欢自己的方式），因此在内部创建了一个数据源抽象类，以允许单一方式访问不同的云系统方法，通过子类的典型用法提供此数据。
 
 由cloud-init的数据源处理的任何元数据都保存为/run/cloud-init/instance-data.json。 Cloud-init提供工具以快速内省部分数据。 有关更多信息，请参阅实例元数据。
 
 ### Adding a new Datasource
-数据源对象与cloud-init有一些接触点。 如果您有兴趣为云平台添加新数据源，则需要注意以下事项：
+数据源对象与cloud-init有一些touch point。 如果您有兴趣为您的云平台添加新数据源，则需要注意以下事项：
+
+* 确定一种积极识别平台的机制：云平台向客户肯定地识别自己是一种很好的做法。
+这允许访客根据其运行的平台做出明智的决策。 在x86和arm64架构上，许多云通过DMI数据识别自己。 例如，Oracle的公共云在DMI机箱资产字段中提供字符串“OracleCloud.com”。
+
+cloud-init的镜像会生成一个包含平台详细信息的日志文件。/run/cloud-init/ds-identify.log日志文件也可能会提供唯一识别平台的标识。如果没有日志，可以通过 source ./tools/ds-identify 生成，或安装/usr/lib/cloud-init/ds-identify
+
+下面的ds-identify和datasource模块部分将需要用于标识平台的机制。
+
+* Add datasource module ：``cloudinit/sources/DataSource<CloudPlatform>.py``建议您首先复制一个更简单的数据源，如DataSource Hetzner。
+
+* Add tests for datasource module： Add a new file with some tests for the module to cloudinit/sources/test_<yourplatform>.py. For example see cloudinit/sources/tests/test_oracle.py
+
+* Update ds-identify: 在systemd系统中，ds-identify用于检测应该启用哪个数据源，或者是否应该运行cloud-init。您需要对tools/ds-identify进行更改
+
+* Add tests for ds-identify：将新类中的相关测试添加到tests/unittests/test_ds_identify.py中。 您可以使用TestOracle作为示例。
+
 
 ### Datasource Documentation
 以下是已实现的数据源列表。 请关注以获取更多信息

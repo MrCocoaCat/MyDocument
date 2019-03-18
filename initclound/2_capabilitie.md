@@ -150,12 +150,12 @@ custom-i-0e91f69987f37ec74.us-east-2.aws.com
 
 ### cloud-init devel
 正在积极开发的开发工具集合，这些工具在稳定时可能会升级为顶级子命令。
-* -logs：可选择删除/ var / log / cloud-init \*日志文件。
+* -logs：可选择删除/var/log/cloud-init \*日志文件。
 * -reboot：删除工件后重新启动系统。
 
 ### cloud-init init
 
-通常由OS init系统运行，以执行cloud-init的阶段init和init-local。有关详细信息，请参阅引导阶段。可以在命令行上运行，但由于/ var / lib / cloud / instance / sem /和/ var/lib/cloud/sem中的信号量，通常只能运行一次。
+通常由OS init系统运行，以执行cloud-init的阶段init和init-local。有关详细信息，请参阅引导阶段。可以在命令行上运行，但由于/var/lib/cloud/instance/sem/和/var/lib/cloud/sem中的信号量，通常只能运行一次。
 
 * –local: Run init-local stage instead of init.
 

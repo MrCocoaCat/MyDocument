@@ -43,7 +43,17 @@ instance-data.json和instance-data-sensitive.json文件是格式良好的JSON，
 
 存在标准化密钥
 
-***
+| Key path | Description | Examples |
+| ------ | ------ | ------ |
+| v1._beta_keys | 标准密钥列表仍在'beta'中。 这些密钥的格式，意图或存在可能会发生变化。 不要认为它们是生产就绪的。 | [subplatform] |
+| v1.cloud_name | 在可能的情况下，这将指示此系统正在运行的云的“名称”。 这与下面的“平台”明显不同。 例如，Amazon Web Services的名称为'aws'，而平台为'ec2'。如果在元数据中没有确定或提供特定名称，则此字段可能包含与“平台”相同的内容。 | aws, openstack, azure, configdrive, nocloud, ovf, etc. |
+|v1.instance_id|云分配的唯一instance_id|	i-<somehash>|
+|v1.local_hostname|系统的内部或本地主机名|ip-10-41-41-70, <user-provided-hostname>|
+|v1.platform|尝试识别实例正在运行的云平台。|ec2, openstack, lxd, gce nocloud, ovf|
+|v1.subplatform|其他平台详细信息描述了所使用的元数据的特定来源或类型 子平台的格式为：<subplatform_type>（<url_file_or_dev_path>）|metadata (http://168.254.169.254), seed-dir (/path/to/seed-dir/), config-disk (/dev/cd0), configdrive (/dev/sr0)|
+|v1.public_ssh_keys|由数据源元数据提供给实例的ssh密钥列表。|[‘ssh-rsa AA…’, …]|
+|v1.region|部署实例的物理区域/数据中心|us-east-2|
+|v1.availability_zone|部署实例的物理可用区域|us-east-2b, nova, null|
 
 ### Using instance-data
 
@@ -53,7 +63,7 @@ instance-data.json和instance-data-sensitive.json文件是格式良好的JSON，
 * 云配置数据
 * 命令行界面通过cloud-init查询或cloud-init devel渲染
 
-许多云允许用户在实例启动时向实例提供用户数据。 Cloud-init支持许多用户数据格式。用户数据脚本和＃cloud-config数据都支持jinja模板渲染。
+许多云允许用户在实例启动时向实例提供用户数据。 Cloud-init支持许多用户数据格式。用户数据脚本和 ＃cloud-config数据都支持jinja模板渲染。
 当提供的用户数据的第一行开头时，## template：jinja cloud-init将使用jinja呈现该文件。 任何instance-data-sensitive.json变量都表示为点分隔的jinja模板变量，因为cloud-config模块作为“root”用户运行。
 
 以下是提供这些类型的用户数据的一些示例
@@ -61,6 +71,7 @@ instance-data.json和instance-data-sensitive.json文件是格式良好的JSON，
 * 云配置使用ec2公共主机名和可用区调
 ```
 ## template: jinja
+
 #cloud-config
 runcmd:
     - echo 'EC2 public hostname allocated to instance: {{
