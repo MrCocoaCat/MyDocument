@@ -8,7 +8,7 @@
 数据源对象与cloud-init有一些touch point。 如果您有兴趣为您的云平台添加新数据源，则需要注意以下事项：
 
 * 确定一种积极识别平台的机制：云平台向客户肯定地识别自己是一种很好的做法。
-这允许访客根据其运行的平台做出明智的决策。 在x86和arm64架构上，许多云通过DMI数据识别自己。 例如，Oracle的公共云在DMI机箱资产字段中提供字符串“OracleCloud.com”。
+这允许访客根据其运行的平台做出明智的决策。在x86和arm64架构上，许多云通过DMI数据识别自己。 例如，Oracle的公共云在DMI机箱资产字段中提供字符串“OracleCloud.com”。
 
 cloud-init的镜像会生成一个包含平台详细信息的日志文件。/run/cloud-init/ds-identify.log日志文件也可能会提供唯一识别平台的标识。如果没有日志，可以通过 source ./tools/ds-identify 生成，或安装/usr/lib/cloud-init/ds-identify
 
@@ -22,6 +22,10 @@ cloud-init的镜像会生成一个包含平台详细信息的日志文件。/run
 
 * Add tests for ds-identify：将新类中的相关测试添加到tests/unittests/test_ds_identify.py中。 您可以使用TestOracle作为示例。
 
+* Add your datasource name to the builtin list of datasources：将数据源模块名称添加到cloudinit/ settings.py中datasource_list条目的末尾。
+
+* 将您的云平台添加到 apport集合提示：更新cloudinit / apport.py中的云平台列表。
+此列表将提供给调用ubuntu-bug cloud-init的用户。
 
 ### Datasource Documentation
 以下是已实现的数据源列表。 请关注以获取更多信息

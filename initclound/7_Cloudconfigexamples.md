@@ -1,4 +1,5 @@
 ### Including users and groups
+
 ```
 # Add groups to the system
 # The following example adds the ubuntu group with members 'root' and 'sys'
@@ -140,3 +141,5 @@ users:
 #    gecos: Ubuntu
 #    groups: [adm, audio, cdrom, dialout, floppy, video, plugdev, dip, netdev]
 ```
+
+ virsh console
