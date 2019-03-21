@@ -1,0 +1,11 @@
+10:38:19.066514 IP static.vnpt.vn.openmath > static.vnpt.vn.4789: VXLAN, flags [I] (0x08), vni 1101
+ARP, Request who-has 101.1.1.41 tell 101.1.1.101, length 46
+
+10:38:19.066643 IP static.vnpt.vn.55623 > static.vnpt.vn.4789: VXLAN, flags [I] (0x08), vni 1101
+ARP, Reply 101.1.1.41 is-at 52:54:00:68:46:03 (oui Unknown), length 28
+
+
+
+
+kvm虚拟化之virt-install
+http://www.361way.com/virt-install/2721.html
