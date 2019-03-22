@@ -80,7 +80,8 @@ growpart:
 **summary**:设置用户密码
 设置系统密码并启用或禁用ssh密码验证chpasswd配置密钥接受包含两个密钥中的一个密钥的字典，可以是expire或list。如果指定了expire并将其设置为false，则密码全局配置密钥将用作所有用户帐户的密码。如果指定了expire键并将其设置为true，则用户密码将过期，从而阻止使用默认系统密码。
 
-如果提供了列表键，则可以指定用户名：密码对的列表。指定的用户名必须已存在于系统上，或者已使用cc_users_groups模块创建。可以使 用用户名：RANDOM或 用户名：R随机生成密码。可以使用用户名：$6$salt$ hash指定哈希密码。用户使用密码认证登陆ssh,可以使用ssh_pwauth启用，禁用 或 设置系统默认值。
+如果提供了列表键，则可以指定用户名：密码对的列表。指定的用户名必须已存在于系统上，或者已使用cc_users_groups模块创建。可以使 用用户名：RANDOM或 用户名：R随机生成密码。可以使用用户名：$6$salt$ hash指定哈希密码。
+用户使用密码认证登陆ssh,可以使用ssh_pwauth启用，禁用 或 设置系统默认值。
 **Internal name**:cc_set_passwords
 **Module frequency**:一直
 **支持的发行版**:所有
