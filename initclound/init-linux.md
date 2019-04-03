@@ -49,10 +49,16 @@ growpart:
 
 2. 生成镜像
 将my-user-data及my-meta-data文件生成为my-seed.img 数据
+cloud-localds 为生成镜像的工具，即生成lable 为 cidata 的镜像
 ```
 cloud-localds my-seed.img my-user-data my-meta-data
 ```
 
+等同于
+```
+genisoimage  -output seed.iso -volid cidata -joliet -rock user-data meta-data
+
+```
 ### 启动虚拟机
 在虚拟机启动xml文件中挂载/my-seed.img镜像
 ```
