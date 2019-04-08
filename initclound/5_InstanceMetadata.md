@@ -3,9 +3,9 @@
 此配置通常来自任意数量的来源：
 
 * 云提供的元数据服务（又称元数据）
-* 附加到实例的自定义配置驱动器
-* 启动的云映像或分发中的cloud-config种子文件
-* 文件或云元数据服务提供的vendordata
+* 附加到实例的config-drive
+* 已启动的云镜像或分发中的cloud-config seed文件
+* 文件或cloud metadata services提供的vendordata
 * 在实例创建时提供的userdata
 
 每个云提供商都以不同的格式向实例提供唯一的配置元数据。Cloud-init provides a cache of any crawled metadata as well as a versioned set of standardized instance data keys which it makes available on all platforms.
@@ -59,8 +59,8 @@ instance-data.json和instance-data-sensitive.json文件是格式良好的JSON，
 
 从cloud-init v.18.4开始，/run/cloud_init/instance-data.json中的任何变量都可用于：
 
-* 用户数据脚本
-* 云配置数据
+* User-data scripts 用户数据脚本
+* Cloud config data 云配置数据
 * 命令行界面通过cloud-init查询或cloud-init devel渲染
 
 许多云允许用户在实例启动时向实例提供用户数据。 Cloud-init支持许多用户数据格式。用户数据脚本和 ＃cloud-config数据都支持jinja模板渲染。
