@@ -308,7 +308,7 @@ images_rbd_pool = vms
 images_rbd_ceph_conf = /etc/ceph/ceph.conf
 rbd_user = cinder
 rbd_secret_uuid = 9191d801-4d57-476e-acfb-84bf55d0bd54
-disk_cachemodes="network=writeback"
+、="network=writeback"
 ```
 禁用文件注入也是一个好习惯。启动一个实例时， Nova 通常试图打开虚拟机的根文件系统。然后， Nova 会把比如密码、 ssh 密钥等值注入到文件系统中。然而，最好依赖元数据服务和 cloud-init 。
 

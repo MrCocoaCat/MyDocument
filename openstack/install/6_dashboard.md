@@ -20,7 +20,7 @@ OPENSTACK_HOST = "controller"
 ```
 ALLOWED_HOSTS = ['one.example.com', 'two.example.com']
 ```
->设置中[ ‘ * ’ ] 使所用均可以访问
+>设置中[ ‘\*’ ] 使所用均可以访问
 
 * 配置 **memcached** session storage service
 

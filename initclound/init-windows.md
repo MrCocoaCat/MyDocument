@@ -58,7 +58,7 @@ $ vim seed/openstack/latest/meta_data.json
 genisoimage -output seed.iso -volid config-2 -joliet -rock seed/
 ```
 ###  启动虚拟机
-
+挂载制作好的磁盘为
 ```
 <disk type='file' device='cdrom'>
     <driver name='qemu' type='raw' cache='none'/>
