@@ -35,6 +35,8 @@ CACHES = {
 }
 
 ```
+> 出现服务器崩溃错误，更改SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+
 * 开启Identity API version 3
 ```
 OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST

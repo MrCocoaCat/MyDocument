@@ -110,7 +110,7 @@ mysql -u root -p
 ```
 * 创建neutron数据库
 ```
-MariaDB [(none)] CREATE DATABASE neutron;
+MariaDB [(none)]>  CREATE DATABASE neutron;
 ```
 
 * 设置登录数据库的权限
