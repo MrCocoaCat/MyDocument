@@ -1,7 +1,7 @@
 ### 安装init-cloud
 使用 apt-get 即可进行安装
 ```
-sudo apt-get install init-cloud
+sudo apt-get install cloud-init
 ```
 官方文档：https://cloudinit.readthedocs.io/en/latest/
 
