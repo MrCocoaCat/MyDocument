@@ -3,25 +3,20 @@ ovs-ofctl(8)                  Open vSwitch Manual                 ovs-ofctl(8)
 
 
 NAME
-       ovs-ofctl - administer OpenFlow switches
+       ovs-ofctl - 管理OpenFlow交换机
 
 SYNOPSIS
        ovs-ofctl [options] command [switch] [args...]
 
 DESCRIPTION
-       The  ovs-ofctl program is a command line tool for monitoring and admin‐
-       istering OpenFlow switches.  It can also show the current state  of  an
-       OpenFlow  switch, including features, configuration, and table entries.
-       It should work with any OpenFlow switch, not just Open vSwitch.
+       ovs-ofctl程序是一个用于监视和管理OpenFlow交换机的命令行工具。 它还可以显示OpenFlow交换机的当前状态，包括功能，配置和表条目。
+       它应该适用于任何OpenFlow交换机，而不仅仅是Open vSwitch。
 
    OpenFlow Switch Management Commands
-       These commands allow ovs-ofctl to monitor and  administer  an  OpenFlow
-       switch.   It  is  able to show the current state of a switch, including
-       features, configuration, and table entries.
+       这些命令允许ovs-ofctl监视和管理OpenFlow交换机。 它能够显示交换机的当前状态，包括功能，配置和表条目。
 
-       Most of these commands take an argument that specifies the  method  for
-       connecting to an OpenFlow switch.  The following connection methods are
-       supported:
+       这些命令中的大多数都采用一个参数来指定连接OpenFlow交换机的方法。
+       支持以下连接方法：
 
               ssl:host[:port]
               tcp:host[:port]
@@ -56,16 +51,13 @@ DESCRIPTION
                      tem is assumed.
 
        show switch
-              Prints to the console information on switch, including  informa‐
-              tion on its flow tables and ports.
+              显示交换机上的控制台信息，包括有关其流表和端口的信息。
 
        dump-tables switch
-              Prints  to  the  console  statistics for each of the flow tables
-              used by switch.
+              显示switch所使用的每个流表信息。
 
        dump-table-features switch
-              Prints to the console features for each of the flow tables  used
-              by switch.
+              显示switch所使用的每个流表特性。
 
        dump-table-desc switch
               Prints  to the console configuration for each of the flow tables
@@ -76,13 +68,12 @@ DESCRIPTION
               Flow  table table, which may be expressed as a number or (unless
               --no-names is specified) a name.
 
-              The available settings depend on the OpenFlow  version  in  use.
-              In  OpenFlow  1.1 and 1.2 (which must be enabled with the -O op‐
-              tion) only, mod-table configures behavior when no flow is  found
-              when  a packet is looked up in a flow table.  The following set‐
-              ting values are available:
+              可用设置取决于正在使用的OpenFlow版本。，
+              仅在  OpenFlow  1.1 and 1.2中 (which must be enabled with the -O op‐
+              tion) , mod-table 可以配置默认行为，当包在流表中未能匹配到任何规则
+              可用以下配置:
 
-              drop   Drop the packet.
+              drop   将包丢弃.
 
               continue
                      Continue to the next table in the pipeline.  (This is how
@@ -90,13 +81,13 @@ DESCRIPTION
                      match any flow, in tables other than the last one.)
 
               controller
-                     Send to controller.  (This is how an OpenFlow 1.0  switch
+                     发送至controller  (This is how an OpenFlow 1.0  switch
                      always  handles packets that do not match any flow in the
                      last table.)
 
-              In OpenFlow 1.3 and later (which must be enabled with the -O op‐
-              tion) and Open vSwitch 2.11 and later only, mod-table can change
-              the name of a table:
+              在 OpenFlow 1.3 及之后版本 (which must be enabled with the -O op‐
+              tion) and Open vSwitch 2.11 and later only, mod-table 可以更改表的
+              名称:
 
               name:new-name
                      Changes the name of the table to new-name.  Use an  empty

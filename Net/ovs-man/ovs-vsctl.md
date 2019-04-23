@@ -14,7 +14,7 @@ DESCRIPTION
        文档，请参阅ovs-vswitchd.conf.db。
 
        ovs-vsctl连接到维护Open vSwxitch配置数据库的ovsdb-server进程。
-        Using this connection, it queries  and
+      Using this connection, it queries  and
        possibly  applies  changes  to  the database, depending on the supplied
        commands.  Then, if it applied any changes, by default it  waits  until
        ovs-vswitchd  has  finished  reconfiguring itself before it exits.  (If
