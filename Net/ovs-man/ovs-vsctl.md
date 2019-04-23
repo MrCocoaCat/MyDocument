@@ -3,20 +3,18 @@ ovs-vsctl(8)                  Open vSwitch Manual                 ovs-vsctl(8)
 
 
 NAME
-       ovs-vsctl - utility for querying and configuring ovs-vswitchd
+       ovs-vsctl - 用于查询和配置ovs-vswitchd的实用程序
 
 SYNOPSIS
        ovs-vsctl  [options]  -- [options] command [args] [-- [options] command
        [args]]...
 
 DESCRIPTION
-       The  ovs-vsctl  program  configures  ovs-vswitchd(8)  by  providing   a
-       high-level    interface    to    its   configuration   database.    See
-       ovs-vswitchd.conf.db(5) for comprehensive documentation of the database
-       schema.
+       ovs-vsctl程序通过提供数据库的高级接口来配置ovs-vswitchd. 有关数据库模式的全面
+       文档，请参阅ovs-vswitchd.conf.db。
 
-       ovs-vsctl  connects  to  an ovsdb-server process that maintains an Open
-       vSwitch configuration database.  Using this connection, it queries  and
+       ovs-vsctl连接到维护Open vSwxitch配置数据库的ovsdb-server进程。
+        Using this connection, it queries  and
        possibly  applies  changes  to  the database, depending on the supplied
        commands.  Then, if it applied any changes, by default it  waits  until
        ovs-vswitchd  has  finished  reconfiguring itself before it exits.  (If
