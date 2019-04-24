@@ -1,19 +1,21 @@
-Open vSwitch on Linux, FreeBSD and NetBSD¶
+### Open vSwitch on Linux, FreeBSD and NetBSD
 This document describes how to build and install Open vSwitch on a generic Linux, FreeBSD, or NetBSD host. For specifics around installation on a specific platform, refer to one of the other installation guides listed in Installing Open vSwitch.
 
-Obtaining Open vSwitch Sources¶
+### Obtaining Open vSwitch Sources
 The canonical location for Open vSwitch source code is its Git repository, which you can clone into a directory named “ovs” with:
-
+```
 $ git clone https://github.com/openvswitch/ovs.git
+```
 Cloning the repository leaves the “master” branch initially checked out. This is the right branch for general development. If, on the other hand, if you want to build a particular released version, you can check it out by running a command such as the following from the “ovs” directory:
-
+```
 $ git checkout v2.7.0
+```
 The repository also has a branch for each release series. For example, to obtain the latest fixes in the Open vSwitch 2.7.x release series, which might include bug fixes that have not yet been in any released version, you can check it out from the “ovs” directory with:
 
 $ git checkout origin/branch-2.7
 If you do not want to use Git, you can also obtain tarballs for Open vSwitch release versions via http://openvswitch.org/download/, or download a ZIP file for any snapshot from the web interface at https://github.com/openvswitch/ovs.
 
-Build Requirements¶
+Build Requirements
 To compile the userspace programs in the Open vSwitch distribution, you will need the following software:
 
 GNU make
@@ -154,8 +156,10 @@ The configure script accepts a number of other options and honors additional env
 $ ./configure --help
 You can also run configure from a separate build directory. This is helpful if you want to build Open vSwitch in more than one way from a single source directory, e.g. to try out both GCC and Clang builds, or to build kernel modules for more than one Linux version. For example:
 
+```
 $ mkdir _gcc && (cd _gcc && ./configure CC=gcc)
 $ mkdir _clang && (cd _clang && ./configure CC=clang)
+```
 Under certain loads the ovsdb-server and other components perform better when using the jemalloc memory allocator, instead of the glibc memory allocator. If you wish to link with jemalloc add it to LIBS:
 
 $ ./configure LIBS=-ljemalloc
@@ -167,9 +171,10 @@ or if GNU make is installed as “gmake”:
 
 $ gmake
 If you used a separate build directory, run make or gmake from that directory, e.g.:
-
+```
 $ make -C _gcc
 $ make -C _clang
+```
 Note
 
 Some versions of Clang and ccache are not completely compatible. If you see unusual warnings when you use both together, consider disabling ccache.
@@ -183,7 +188,7 @@ If you built kernel modules, you may install them, e.g.:
 
 $ make modules_install
 It is possible that you already had a Open vSwitch kernel module installed on your machine that came from upstream Linux (in a different directory). To make sure that you load the Open vSwitch kernel module you built from this repository, you should create a depmod.d file that prefers your newly installed kernel modules over the kernel modules from upstream Linux. The following snippet of code achieves the same:
-
+```
 $ config_file="/etc/depmod.d/openvswitch.conf"
 $ for module in datapath/linux/*.ko; do
   modname="$(basename ${module})"
@@ -198,7 +203,7 @@ To verify that the modules have been loaded, run /sbin/lsmod and check that open
 
 $ /sbin/lsmod | grep openvswitch
 Note
-
+```
 If the modprobe operation fails, look at the last few kernel log messages (e.g. with dmesg | tail). Generally, issues like this occur when Open vSwitch is built for a kernel different from the one into which you are trying to load it. Run modinfo on openvswitch.ko and on a module built for the running kernel, e.g.:
 
 $ /sbin/modinfo openvswitch.ko
@@ -207,7 +212,7 @@ Compare the “vermagic” lines output by the two commands. If they differ, the
 
 If you decide to report a bug or ask a question related to module loading, include the output from the dmesg and modinfo commands mentioned above.
 
-Starting¶
+### Starting
 On Unix-alike systems, such as BSDs and Linux, starting the Open vSwitch suite of daemons is a simple process. Open vSwitch includes a shell script, and helpers, called ovs-ctl which automates much of the tasks for starting and stopping ovsdb-server, and ovs-vswitchd. After installation, the daemons can be started by using the ovs-ctl utility. This will take care to setup initial conditions, and start the daemons in the correct order. The ovs-ctl utility is located in ‘$(pkgdatadir)/scripts’, and defaults to ‘/usr/local/share/openvswitch/scripts’. An example after install might be:
 
 $ export PATH=$PATH:/usr/local/share/openvswitch/scripts
@@ -223,12 +228,13 @@ $ ovs-ctl --no-ovsdb-server start
 Refer to ovs-ctl(8) for more information on ovs-ctl.
 
 In addition to using the automated script to start Open vSwitch, you may wish to manually start the various daemons. Before starting ovs-vswitchd itself, you need to start its configuration database, ovsdb-server. Each machine on which Open vSwitch is installed should run its own copy of ovsdb-server. Before ovsdb-server itself can be started, configure a database that it can use:
-
+```
 $ mkdir -p /usr/local/etc/openvswitch
 $ ovsdb-tool create /usr/local/etc/openvswitch/conf.db \
     vswitchd/vswitch.ovsschema
+```
 Configure ovsdb-server to use database created above, to listen on a Unix domain socket, to connect to any managers specified in the database itself, and to use the SSL configuration in the database:
-
+```
 $ mkdir -p /usr/local/var/run/openvswitch
 $ ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
     --remote=db:Open_vSwitch,Open_vSwitch,manager_options \
@@ -236,25 +242,30 @@ $ ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
     --certificate=db:Open_vSwitch,SSL,certificate \
     --bootstrap-ca-cert=db:Open_vSwitch,SSL,ca_cert \
     --pidfile --detach --log-file
+```
 Note
 
 If you built Open vSwitch without SSL support, then omit --private-key, --certificate, and --bootstrap-ca-cert.)
 
 Initialize the database using ovs-vsctl. This is only necessary the first time after you create the database with ovsdb-tool, though running it at any time is harmless:
-
+```
 $ ovs-vsctl --no-wait init
+```
 Start the main Open vSwitch daemon, telling it to connect to the same Unix domain socket:
-
+```
 $ ovs-vswitchd --pidfile --detach --log-file
-Validating¶
-At this point you can use ovs-vsctl to set up bridges and other Open vSwitch features. For example, to create a bridge named br0 and add ports eth0 and vif1.0 to it:
+```
 
+### Validating
+At this point you can use ovs-vsctl to set up bridges and other Open vSwitch features. For example, to create a bridge named br0 and add ports eth0 and vif1.0 to it:
+```
 $ ovs-vsctl add-br br0
 $ ovs-vsctl add-port br0 eth0
 $ ovs-vsctl add-port br0 vif1.0
+```
 Refer to ovs-vsctl(8) for more details. You may also wish to refer to Testing for information on more generic testing of OVS.
 
-Upgrading¶
+### Upgrading
 When you upgrade Open vSwitch from one version to another you should also upgrade the database schema:
 
 Note
