@@ -12,7 +12,7 @@ DESCRIPTION
        ovs-ofctl程序是一个用于监视和管理OpenFlow交换机的命令行工具。 它还可以显示OpenFlow交换机的当前状态，包括功能，配置和表条目。
        它应该适用于任何OpenFlow交换机，而不仅仅是Open vSwitch。
 
-   OpenFlow Switch Management Commands
+   * OpenFlow Switch Management Commands
        这些命令允许ovs-ofctl监视和管理OpenFlow交换机。 它能够显示交换机的当前状态，包括功能，配置和表条目。
 
        这些命令中的大多数都采用一个参数来指定连接OpenFlow交换机的方法。
@@ -90,14 +90,14 @@ DESCRIPTION
               名称:
 
               name:new-name
-                     Changes the name of the table to new-name.  Use an  empty
-                     new-name to clear the name.  (This will be ineffective if
+                     改变表的名称。使用一个空名字去清空名称
+                     (This will be ineffective if
                      the name is set via the name column in the Flow_Table ta‐
                      ble   in   the  Open_vSwitch  database  as  described  in
                      ovs-vswitchd.conf.db(5).)
 
-              In OpenFlow 1.4 and later (which must be enabled with the -O op‐
-              tion)  only, mod-table configures the behavior when a controller
+              在 OpenFlow 1.4 及之后版本r (which must be enabled with the -O op‐
+              tion)   , mod-table configures the behavior when a controller
               attempts to add a flow to a flow table that is full.   The  fol‐
               lowing setting values are available:
 
@@ -119,14 +119,12 @@ DESCRIPTION
                      Disables vacancy events.
 
        dump-ports switch [netdev]
-              Prints  to the console statistics for network devices associated
-              with switch.  If netdev is specified, only the statistics  asso‐
-              ciated with that device will be printed.  netdev can be an Open‐
-              Flow assigned port number or device name, e.g. eth0.
+              打印与交换机关联的网络设备的统计信息 如果指定了netdev，
+              则仅打印与该设备关联的统计信息。netdev can be an OpenFlow assigned port number or device name, e.g. eth0.
 
        dump-ports-desc switch [port]
-              Prints to the console detailed information about network devices
-              associated  with  switch.  To dump only a specific port, specify
+              向控制台打印有关与交换机关联的网络设备的详细信息。
+              To dump only a specific port, specify
               its number as port.  Otherwise, if port is omitted, or if it  is
               specified  as ANY, then all ports are printed.  This is a subset
               of the information provided by the show command.
@@ -139,49 +137,41 @@ DESCRIPTION
               Earlier versions of OpenFlow always dump all ports.
 
        mod-port switch port action
-              Modify  characteristics  of port port in switch.  port may be an
+              修改交换机端口的特性  port may be an
               OpenFlow port number or name (unless --no-names is specified) or
               the  keyword  LOCAL  (the preferred way to refer to the OpenFlow
               local port).  The action may be any one of the following:
+
               up
-              down   Enable or disable the interface.  This is  equivalent  to
-                     ip link set up or ip link set down on a Unix system.
+              down   开启或关闭interface.  与Unix system中的 ip link set up
+                     或 ip link set down相同
 
               stp
-              no-stp Enable  or disable 802.1D spanning tree protocol (STP) on
-                     the interface.  OpenFlow implementations that don't  sup‐
-                     port STP will refuse to enable it.
+              no-stp 在interface上开启或关闭生成树协议 802.1D  (STP) .  
+                     不支持STP的OpenFlow实现将拒绝启用它。
 
               receive
               no-receive
               receive-stp
               no-receive-stp
-                     Enable or disable OpenFlow processing of packets received
-                     on this interface.  When packet processing  is  disabled,
-                     packets  will  be  dropped  instead  of  being  processed
-                     through the OpenFlow table.  The  receive  or  no-receive
-                     setting  applies  to  all  packets except 802.1D spanning
-                     tree packets, which  are  separately  controlled  by  re‐
-                     ceive-stp or no-receive-stp.
+                     处理时，将丢弃数据包而不是通过OpenFlow表进行处理。 receive或no-receive设置适用于除802.1D生成树数据包之外的所有数据包，stp数据
+                     包由receive-stp或no-receive-stp分别控制。
 
               forward
               no-forward
-                     Allow  or  disallow  forwarding of traffic to this inter‐
-                     face.  By default, forwarding is enabled.
+                     允许或禁止将流量转发到此接口。默认情况, 转发开启.
 
               flood
               no-flood
-                     Controls whether an OpenFlow flood action will send traf‐
-                     fic out this interface.  By default, flooding is enabled.
-                     Disabling flooding is primarily useful to  prevent  loops
-                     when a spanning tree protocol is not in use.
+                     控制是否将 OpenFlow flood action转发至此接口。默认情况下开启。
+                     禁用泛洪主要用于在未使用生成树协议时防止环路。
 
               packet-in
               no-packet-in
                      Controls  whether packets received on this interface that
-                     do not match a flow table entry generate a ``packet  in''
-                     message to the OpenFlow controller.  By default, ``packet
-                     in'' messages are enabled.
+                     do not match a flow table entry generate a "packet  in"
+                     message to the OpenFlow controller. 默认情况下, "packet
+                     in" 消息开启。
 
               The show command displays (among other information) the configu‐
               ration that mod-port changes.
@@ -224,16 +214,15 @@ DESCRIPTION
               set.
 
        dump-flows switch [flows]
-              Prints to the console all flow entries in switch's  tables  that
-              match  flows.   If flows is omitted, all flows in the switch are
-              retrieved.  See Flow Syntax, below, for  the  syntax  of  flows.
+              打印switch表中与flows匹配的所有table。
+              如果省略flow，则检索交换机中的所有流。
+              See Flow Syntax, below, for  the  syntax  of  flows.
               The output format is described in Table Entry Output.
 
-              By default, ovs-ofctl prints flow entries in the same order that
-              the switch sends them, which is unlikely to be intuitive or con‐
-              sistent.   Use --sort and --rsort to control display order.  The
-              --names/--no-names and --stats/--no-stats  options  also  affect
-              output formatting.  See the descriptions of these options, under
+              默认情况下，ovs-ofctl按照交换机发送的顺序打印流条目，这不太直观或不一致.  
+              使用 --sort 和 --rsort 来控制显示顺序。The --names/--no-names and
+              --stats/--no-stats  options  also  affect output formatting.
+               See the descriptions of these options, under
               OPTIONS below, for more information
 
        dump-aggregate switch [flows]
@@ -292,12 +281,12 @@ DESCRIPTION
               This command uses an Open vSwitch extension that is only in Open
               vSwitch 2.6 and later.
 
-   OpenFlow Switch Flow Table Commands
-       These commands manage the flow table in an OpenFlow  switch.   In  each
-       case,  flow specifies a flow entry in the format described in Flow Syn‐
-       tax, below, file is a text file that contains zero or more flows in the
-       same  syntax,  one  per line, and the optional --bundle option operates
-       the command as a single atomic transation, see option --bundle, below.
+   * OpenFlow Switch Flow Table Commands
+       这些命令管理OpenFlow  switch中的流表信息。In  each case,  flow specifies a
+       flow entry in the format described in Flow Syntax, below, file is a text
+       file that contains zero or more flows in the same  syntax,  one  per line,
+       and
+       可选的--bundle选项将命令作为单个原子事务进行操作，see option --bundle, below.
 
        [--bundle] add-flow switch flow
        [--bundle] add-flow switch - file
@@ -360,7 +349,7 @@ DESCRIPTION
               OpenFlow message, specified as defined in Packet-Out Syntax sec‐
               tion.
 
-   Group Table Commands
+   * Group Table Commands
        These commands manage the group table in an OpenFlow switch.   In  each
        case,  group  specifies  a group entry in the format described in Group
        Syntax, below, and file is a text  file  that  contains  zero  or  more
@@ -372,8 +361,8 @@ DESCRIPTION
        later or the Open vSwitch group extensions to OpenFlow  1.0  (added  in
        Open  vSwitch  2.9.90).   For OpenFlow 1.1 or later, it is necessary to
        explicitly enable these protocol versions in ovs-ofctl (using -O).  For
-       more  information, see ``Q: What versions of OpenFlow does Open vSwitch
-       support?'' in the Open vSwitch FAQ.
+       more  information, see "Q: What versions of OpenFlow does Open vSwitch
+       support? in the Open vSwitch FAQ.
 
        [--bundle] add-group switch group
        [--bundle] add-group switch - file
@@ -432,8 +421,8 @@ DESCRIPTION
               switch's  tables.   If  group is omitted then statistics for all
               groups are printed.
 
-   OpenFlow 1.3+ Switch Meter Table Commands
-       These commands manage the meter table in an OpenFlow switch.   In  each
+   * OpenFlow 1.3+ Switch Meter Table Commands
+       这些命令管理OpenFlow交换机中的meter table。 In  each
        case,  meter  specifies  a meter entry in the format described in Meter
        Syntax, below.
 
@@ -441,8 +430,8 @@ DESCRIPTION
        with  switches  that support OpenFlow 1.3 or later.  It is necessary to
        explicitly enable these protocol versions in ovs-ofctl (using  -O)  and
        in  the  switch itself (with the protocols column in the Bridge table).
-       For more information, see ``Q: What  versions  of  OpenFlow  does  Open
-       vSwitch support?'' in the Open vSwitch FAQ.
+       For more information, see "Q: What  versions  of  OpenFlow  does  Open
+       vSwitch support?" in the Open vSwitch FAQ.
 
        add-meter switch meter
               Add  a  meter  entry to switch's tables. The meter syntax is de‐
@@ -470,7 +459,7 @@ DESCRIPTION
        meter-features switch
               Print meter features.
 
-   OpenFlow Switch Bundle Command
+   * OpenFlow Switch Bundle Command
        Transactional  updates  to  both flow and group tables can be made with
        the bundle command.  file is a text file that  contains  zero  or  more
        flow  mods, group mods, or packet-outs in Flow Syntax, Group Syntax, or
@@ -487,7 +476,7 @@ DESCRIPTION
               transaction  against switch's tables.  All bundled mods are exe‐
               cuted in the order specified.
 
-   OpenFlow Switch Tunnel TLV Table Commands
+   * OpenFlow Switch Tunnel TLV Table Commands
        Open vSwitch maintains a mapping table between tunnel option TLVs  (de‐
        fined  by  gt;) and NXM fields tun_metadatan, where n
        ranges from 0 to 63, that can  be  operated  on  for  the  purposes  of
@@ -526,7 +515,7 @@ DESCRIPTION
               Show the currently mapped fields in the switch's option table as
               well as switch capabilities.
 
-   OpenFlow Switch Monitoring Commands
+   * OpenFlow Switch Monitoring Commands
        snoop switch
               Connects to switch and prints to the console all  OpenFlow  mes‐
               sages  received.   Unlike other ovs-ofctl commands, if switch is
@@ -558,22 +547,22 @@ DESCRIPTION
               sages received.  Usually, switch should specify the  name  of  a
               bridge in the ovs-vswitchd database.
 
-              If  miss-len is provided, ovs-ofctl sends an OpenFlow ``set con‐
-              figuration'' message at  connection  setup  time  that  requests
+              If  miss-len is provided, ovs-ofctl sends an OpenFlow "set con‐
+              figuration" message at  connection  setup  time  that  requests
               miss-len  bytes of each packet that misses the flow table.  Open
               vSwitch does not send these and other asynchronous  messages  to
               an ovs-ofctl monitor client connection unless a nonzero value is
               specified on this argument.  (Thus, if miss-len  is  not  speci‐
               fied, very little traffic will ordinarily be printed.)
 
-              If invalid_ttl is passed, ovs-ofctl sends an OpenFlow ``set con‐
-              figuration'' message at connection setup time that requests  IN‐
+              If invalid_ttl is passed, ovs-ofctl sends an OpenFlow "set con‐
+              figuration" message at connection setup time that requests  IN‐
               VALID_TTL_TO_CONTROLLER,  so  that ovs-ofctl monitor can receive
-              ``packet-in'' messages when TTL reaches zero on dec_ttl  action.
+              "packet-in" messages when TTL reaches zero on dec_ttl  action.
               Only OpenFlow 1.1 and 1.2 support invalid_ttl; Open vSwitch also
               implements it for OpenFlow 1.0 as an extension.
 
-              watch:[spec...] causes ovs-ofctl to send a  ``monitor  request''
+              watch:[spec...] causes ovs-ofctl to send a  "monitor  request"
               Nicira extension message to the switch at connection setup time.
               This message causes the switch to send  information  about  flow
               table changes as they occur.  The following comma-separated spec
@@ -618,7 +607,7 @@ DESCRIPTION
               implementations.  With watch:, it is particularly useful for ob‐
               serving how a controller updates flow tables.
 
-   OpenFlow Switch and Controller Commands
+   * OpenFlow Switch and Controller Commands
        The following commands, like those in the previous section, may be  ap‐
        plied  to  OpenFlow  switches,  using any of the connection methods de‐
        scribed in that section.  Unlike those commands, these may also be  ap‐
@@ -642,7 +631,7 @@ DESCRIPTION
               Reports the total time required.  This is a measure of the maxi‐
               mum bandwidth to target for round-trips of n-byte messages.
 
-   Other Commands
+   * Other Commands
        ofp-parse file
               Reads file (or stdin if file is -) as a series of OpenFlow  mes‐
               sages  in  the binary format used on an OpenFlow connection, and
@@ -663,7 +652,7 @@ DESCRIPTION
               This  command  cannot  usefully print SSL encrypted traffic.  It
               does not understand IPv6.
 
-   Flow Syntax
+   * Flow Syntax
        Some ovs-ofctl commands accept an argument that  describes  a  flow  or
        flows.  Such flow descriptions comprise a series of field=value assign‐
        ments, separated by commas or white space.  (Embedding  spaces  into  a
@@ -744,7 +733,7 @@ DESCRIPTION
        duration=...
        n_packet=...
        n_bytes=...
-              ovs-ofctl ignores assignments to these ``fields'' to allow  out‐
+              ovs-ofctl ignores assignments to these "fields" to allow  out‐
               put  from  the  dump-flows command to be used as input for other
               commands that parse flows.
 
@@ -800,16 +789,14 @@ DESCRIPTION
 
        priority=value
               The  priority at which a wildcarded entry will match in compari‐
-              son to others.  value is a number between 0  and  65535,  inclu‐
-              sive.   A higher value will match before a lower one.  An exact-
-              match entry will always have priority over an  entry  containing
-              wildcards,  so it has an implicit priority value of 65535.  When
-              adding a flow, if the field is not specified, the flow's  prior‐
-              ity will default to 32768.
+              son to others.value是0到65535之间的数字，包括0和65535。
+              较高的值将在较低的值之前匹配。  
+              完全匹配条目始终优先于包含通配符的条目，因此它具有隐含的优先级值65535。
+              添加flow时，如果未指定该字段，则流的优先级将默认为32768。
 
               OpenFlow  leaves  behavior undefined when two or more flows with
               the same priority can match a single packet.  Some users  expect
-              ``sensible'' behavior, such as more specific flows taking prece‐
+              "sensible" behavior, such as more specific flows taking prece‐
               dence over less specific flows, but OpenFlow  does  not  specify
               this  and  Open  vSwitch  does  not  implement it.  Users should
               therefore take care to use priorities  to  ensure  the  behavior
@@ -822,14 +809,13 @@ DESCRIPTION
        that is, their values do not update or affect existing flows.
 
        idle_timeout=seconds
-              Causes  the  flow to expire after the given number of seconds of
-              inactivity.  A value of 0 (the default) prevents a flow from ex‐
-              piring due to inactivity.
+              在给定的不活动秒数后使流程到期。 A value of 0 (the default) prevents
+               a flow from expiring due to inactivity.
 
        hard_timeout=seconds
-              Causes the flow to expire after the given number of seconds, re‐
-              gardless of activity.  A value of 0 (the default) gives the flow
-              no hard expiration deadline.
+              导致流量在给定的秒数后过期，无论活动如何
+              A value of 0 (the default) gives the flow no hard expiration
+              deadline.
 
        importance=value
               Sets  the  importance of a flow.  The flow entry eviction mecha‐
@@ -842,7 +828,7 @@ DESCRIPTION
 
        send_flow_rem
               Marks  the flow with a flag that causes the switch to generate a
-              ``flow removed'' message and send it to  interested  controllers
+              "flow removed" message and send it to  interested  controllers
               when the flow later expires or is removed.
 
        check_overlap
@@ -889,7 +875,7 @@ DESCRIPTION
               supported in Open vSwitch 2.5 and later  and  requires  OpenFlow
               1.1 or later.
 
-   Table Entry Output
+   * Table Entry Output
        The dump-tables and dump-aggregate commands print information about the
        entries in a datapath's tables.  Each line of output is a flow entry as
        described in Flow Syntax, above, plus some additional fields:
@@ -923,7 +909,7 @@ DESCRIPTION
               The integer number of seconds that have passed without any pack‐
               ets passing through the flow.
 
-   Packet-Out Syntax
+   * Packet-Out Syntax
        ovs-ofctl  bundle  command  accepts  packet-outs to be specified in the
        bundle file.  Each packet-out comprises of a series of field=value  as‐
        signments,  separated by commas or white space.  (Embedding spaces into
@@ -956,7 +942,7 @@ DESCRIPTION
               will  not  be  sent  anywhere  from the switch.  actions must be
               specified at the end of each line, like for flow mods.
 
-   Group Syntax
+   * Group Syntax
        Some ovs-ofctl commands accept an argument that describes  a  group  or
        groups.   Such  flow descriptions comprise a series field=value assign‐
        ments, separated by commas or white space.  (Embedding  spaces  into  a
@@ -982,7 +968,7 @@ DESCRIPTION
                      buckets according to their weights.  To select a  bucket,
                      for  each live bucket, Open vSwitch hashes flow data with
                      the bucket ID and multiplies by the bucket weight to  ob‐
-                     tain  a  ``score,''  and then selects the bucket with the
+                     tain  a “ score,”  and then selects the bucket with the
                      highest score.  Use selection_method to control the  flow
                      data used for selection.
 
@@ -1116,7 +1102,7 @@ DESCRIPTION
               any  flows  that  output to the group.  The use of the fields is
               defined by the lower-layer that implements the selection_method.
               They  are optional if the selection_method field is specified as
-              ``hash', prohibited otherwise.  The default is no fields.
+              "hash", prohibited otherwise.  The default is no fields.
 
               This option will use a Netronome  OpenFlow  extension  which  is
               only  supported when using Open vSwitch 2.4 and later with Open‐
@@ -1391,19 +1377,19 @@ OPTIONS
 
        -P format
        --packet-in-format=format
-              ovs-ofctl supports the following ``packet-in'' formats, in order
+              ovs-ofctl supports the following "packet-in" formats, in order
               of increasing capability:
 
               standard
                      This  uses  the  OFPT_PACKET_IN  message,  the   standard
-                     ``packet-in''  message  for  any  given OpenFlow version.
+                     "packet-in"  message  for  any  given OpenFlow version.
                      Every OpenFlow switch that supports a given OpenFlow ver‐
                      sion supports this format.
 
               nxt_packet_in
                      This  uses  the NXT_PACKET_IN message, which adds many of
-                     the capabilities of the OpenFlow 1.1 and later  ``packet-
-                     in''  messages before those OpenFlow versions were avail‐
+                     the capabilities of the OpenFlow 1.1 and later  "packet-
+                     in"  messages before those OpenFlow versions were avail‐
                      able in Open vSwitch.  Open vSwitch 1.1 and later support
                      this  format.   Only Open vSwitch 2.6 and later, however,
                      support it for OpenFlow 1.1 and later (but there is  lit‐
