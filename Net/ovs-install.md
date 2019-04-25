@@ -86,19 +86,23 @@ For optional support of ingress policing on Linux, the “tc” program from ipr
 Python 2.7. You must also have the Python six library version 1.4.0 or later.
 On Linux you should ensure that /dev/urandom exists. To support TAP devices, you must also ensure that /dev/net/tun exists.
 
-Bootstrapping¶
+### Bootstrapping
 This step is not needed if you have downloaded a released tarball. If you pulled the sources directly from an Open vSwitch Git tree or got a Git tree snapshot, then run boot.sh in the top source directory to build the “configure” script:
-
+```
 $ ./boot.sh
-Configuring¶
+```
+### Configuring
 Configure the package by running the configure script. You can usually invoke configure without any arguments. For example:
 
+```
 $ ./configure
+```
 By default all files are installed under /usr/local. Open vSwitch also expects to find its database in /usr/local/etc/openvswitch by default. If you want to install all files into, e.g., /usr and /var instead of /usr/local and /usr/local/var and expect to use /etc/openvswitch as the default database directory, add options as shown here:
 
+```
 $ ./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc
-Note
-
+```
+>Note
 Open vSwitch installed with packages like .rpm (e.g. via yum install or rpm -ivh) and .deb (e.g. via apt-get install or dpkg -i) use the above configure options.
 
 By default, static libraries are built and linked against. If you want to use shared libraries instead:
@@ -128,15 +132,23 @@ Note
 
 CFLAGS are not applied when building the Linux kernel module. Custom CFLAGS for the kernel module are supplied using the EXTRA_CFLAGS variable when running make. For example:
 
+```
 $ make EXTRA_CFLAGS="-Wno-error=date-time"
+```
+
 If you are a developer and want to enable Address Sanitizer for debugging purposes, at about a 2x runtime cost, you can add -fsanitize=address -fno-omit-frame-pointer -fno-common to CFLAGS. For example:
 
+```
 $ ./configure CFLAGS="-g -O2 -fsanitize=address -fno-omit-frame-pointer -fno-common"
-To build the Linux kernel module, so that you can run the kernel-based switch, pass the location of the kernel build directory on --with-linux. For example, to build for a running instance of Linux:
+```
 
+**构建Linux kernel module**, so that you can run the kernel-based switch, pass the location of the kernel build directory on --with-linux. For example, to build for a running instance of Linux:
+
+```
 $ ./configure --with-linux=/lib/modules/$(uname -r)/build
-Note
+```
 
+>Note
 If --with-linux requests building for an unsupported version of Linux, then configure will fail with an error message. Refer to the Open vSwitch FAQ for advice in that case.
 
 If you wish to build the kernel module for an architecture other than the architecture of the machine used for the build, you may specify the kernel architecture string using the KARCH variable when invoking the configure script. For example, to build for MIPS with Linux:
@@ -166,10 +178,13 @@ $ ./configure LIBS=-ljemalloc
 Building¶
 Run GNU make in the build directory, e.g.:
 
+```
 $ make
+```
 or if GNU make is installed as “gmake”:
 
 $ gmake
+
 If you used a separate build directory, run make or gmake from that directory, e.g.:
 ```
 $ make -C _gcc
@@ -182,12 +197,16 @@ Some versions of Clang and ccache are not completely compatible. If you see unus
 Consider running the testsuite. Refer to Testing for instructions.
 
 Run make install to install the executables and manpages into the running system, by default under /usr/local:
-
+```
 $ make install
-If you built kernel modules, you may install them, e.g.:
+```
 
+If you built kernel modules, you may install them, e.g.:
+```
 $ make modules_install
+```
 It is possible that you already had a Open vSwitch kernel module installed on your machine that came from upstream Linux (in a different directory). To make sure that you load the Open vSwitch kernel module you built from this repository, you should create a depmod.d file that prefers your newly installed kernel modules over the kernel modules from upstream Linux. The following snippet of code achieves the same:
+
 ```
 $ config_file="/etc/depmod.d/openvswitch.conf"
 $ for module in datapath/linux/*.ko; do
@@ -196,38 +215,50 @@ $ for module in datapath/linux/*.ko; do
   echo "override ${modname%.ko} * weak-updates" >> "$config_file"
   done
 $ depmod -a
+```
+
 Finally, load the kernel modules that you need. e.g.:
 
-$ /sbin/modprobe openvswitch
-To verify that the modules have been loaded, run /sbin/lsmod and check that openvswitch is listed:
-
-$ /sbin/lsmod | grep openvswitch
-Note
 ```
+$ /sbin/modprobe openvswitch
+```
+To verify that the modules have been loaded, run /sbin/lsmod and check that openvswitch is listed:
+```
+$ /sbin/lsmod | grep openvswitch
+```
+>Note
 If the modprobe operation fails, look at the last few kernel log messages (e.g. with dmesg | tail). Generally, issues like this occur when Open vSwitch is built for a kernel different from the one into which you are trying to load it. Run modinfo on openvswitch.ko and on a module built for the running kernel, e.g.:
-
 $ /sbin/modinfo openvswitch.ko
 $ /sbin/modinfo /lib/modules/$(uname -r)/kernel/net/bridge/bridge.ko
+
+
 Compare the “vermagic” lines output by the two commands. If they differ, then Open vSwitch was built for the wrong kernel.
 
 If you decide to report a bug or ask a question related to module loading, include the output from the dmesg and modinfo commands mentioned above.
 
 ### Starting
 On Unix-alike systems, such as BSDs and Linux, starting the Open vSwitch suite of daemons is a simple process. Open vSwitch includes a shell script, and helpers, called ovs-ctl which automates much of the tasks for starting and stopping ovsdb-server, and ovs-vswitchd. After installation, the daemons can be started by using the ovs-ctl utility. This will take care to setup initial conditions, and start the daemons in the correct order. The ovs-ctl utility is located in ‘$(pkgdatadir)/scripts’, and defaults to ‘/usr/local/share/openvswitch/scripts’. An example after install might be:
-
+```
 $ export PATH=$PATH:/usr/local/share/openvswitch/scripts
 $ ovs-ctl start
+```
 Additionally, the ovs-ctl script allows starting / stopping the daemons individually using specific options. To start just the ovsdb-server:
-
+```
 $ export PATH=$PATH:/usr/local/share/openvswitch/scripts
 $ ovs-ctl --no-ovs-vswitchd start
-Likewise, to start just the ovs-vswitchd:
+```
 
+Likewise, to start just the ovs-vswitchd:
+```
 $ export PATH=$PATH:/usr/local/share/openvswitch/scripts
 $ ovs-ctl --no-ovsdb-server start
+```
+
 Refer to ovs-ctl(8) for more information on ovs-ctl.
 
-In addition to using the automated script to start Open vSwitch, you may wish to manually start the various daemons. Before starting ovs-vswitchd itself, you need to start its configuration database, ovsdb-server. Each machine on which Open vSwitch is installed should run its own copy of ovsdb-server. Before ovsdb-server itself can be started, configure a database that it can use:
+In addition to using the automated script to start Open vSwitch, you may wish to manually start the various daemons. Before starting ovs-vswitchd itself, you need to start its configuration database, ovsdb-server. Each machine on which Open vSwitch is installed should run its own copy of ovsdb-server.
+Before ovsdb-server itself can be started, configure a database that it can use:
+
 ```
 $ mkdir -p /usr/local/etc/openvswitch
 $ ovsdb-tool create /usr/local/etc/openvswitch/conf.db \
@@ -243,8 +274,7 @@ $ ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
     --bootstrap-ca-cert=db:Open_vSwitch,SSL,ca_cert \
     --pidfile --detach --log-file
 ```
-Note
-
+>Note
 If you built Open vSwitch without SSL support, then omit --private-key, --certificate, and --bootstrap-ca-cert.)
 
 Initialize the database using ovs-vsctl. This is only necessary the first time after you create the database with ovsdb-tool, though running it at any time is harmless:
@@ -295,3 +325,69 @@ An upgrade of userspace daemons means that they have to be restarted. Restarting
 When the new userspace daemons get restarted, they automatically flush the old flows setup in the kernel. This can be expensive if there are hundreds of new flows that are entering the kernel but userspace daemons are busy setting up new userspace flows from either the controller or an utility like ovs-ofctl. Open vSwitch database provides an option to solve this problem through the other_config:flow-restore-wait column of the Open_vSwitch table. Refer to the ovs-vswitchd.conf.db(5) manpage for details.
 If the upgrade also involves upgrading the kernel module, the old kernel module needs to be unloaded and the new kernel module should be loaded. This means that the kernel network devices belonging to Open vSwitch is recreated and the kernel flows are lost. The downtime of the traffic can be reduced if the userspace daemons are restarted immediately and the userspace flows are restored as soon as possible.
 The ovs-ctl utility’s restart function only restarts the userspace daemons, makes sure that the ‘ofport’ values remain consistent across restarts, restores userspace flows using the ovs-ofctl utility and also uses the other_config:flow-restore-wait column to keep the traffic downtime to the minimum. The ovs-ctl utility’s force-reload-kmod function does all of the above, but also replaces the old kernel module with the new one. Open vSwitch startup scripts for Debian, XenServer and RHEL use ovs-ctl’s functions and it is recommended that these functions be used for other software platforms too.
+
+
+
+
+***
+https://www.cnblogs.com/gaozhengwei/p/7100140.html
+
+OVN 作为OpenVSwitch的功能模块，每次OVN与OpenVSwitch一起发布，OVN与OpenVSwitch源代码放在ovs代码库：https://github.com/openvswitch/ovs.git
+
+Build OpenVSwitch and OVN
+复制代码
+ 1 # *Linux Environment： CentOS 7 （3.10.0-327.18.2.el7.x86_64）
+ 2   
+ 3 # Install depen package
+ 4 yum install gcc make python-devel openssl-devel kernel-devel graphviz \
+ 5     kernel-debug-devel autoconf automake rpm-build redhat-rpm-config \
+ 6     libtool checkpolicy selinux-policy-devel
+ 7   
+ 8 # Download code
+ 9 git clone https://github.com/openvswitch/ovs.git
+10   
+11 # Start build
+12 cd $OVS_DIR
+13 # Bootstrapping
+14 ./boot.sh
+15 # Configuring (special --prefix and --with-linux  e.g  ./configure  --with-linux=/lib/modules/$(uname -r)/build)
+16 ./configure
+17 #Build
+18 make
+19   
+20 # 安装方式一 源代码安装
+21  make install
+22 ## Install kernel modules
+23  make modules_install
+24 ## Start service
+25 ### Start openvswitch service
+26 /usr/local/share/openvswitch/scripts/ovs-ctl start --system-id=random
+27 ### Start ovn-northd
+28 /usr/local/share/openvswitch/scripts/ovn-ctl start_northd
+29 ### Start ovn-controller
+30 /usr/local/share/openvswitch/scripts/ovn-ctl start_controller
+31   
+32 # 安装方式二 RPM包安装
+33 ## Package RPM openvswitch and ovn
+34 make rpm-fedora RPMBUILD_OPT="--without check"
+35 ## Build kernel OVS Tree Datapath (specila kernal version, e.g  make rpm-fedora-kmod RPMBUILD_OPT='-D "kversion 4.3.4-300.fc23.x86_64"')
+36 make rpm-fedora-kmod
+37 ## Look for rpm from $OVS_DIR/rpm/rpmbuild/RPMS/x86_64
+38 ### Install kernel OVS Tree Datapath
+39 yum localinstall openvswitch-kmod-2.6.90-1.el7.centos.x86_64.rpm
+40 ### Install OVS
+41 yum localinstall openvswitch-2.6.90-1.el7.centos.x86_64.rpm
+42 ### Install OVN
+43 #### Install ovn common package
+44 yum localinstall openvswitch-ovn-common-2.6.90-1.el7.centos.x86_64.rpm
+45 #### Install ovn northd service
+46 yum localinstall openvswitch-ovn-central-2.6.90-1.el7.centos.x86_64.rpm
+47 #### Install ovn controller service
+48 yum localinstall openvswitch-ovn-host-2.6.90-1.el7.centos.x86_64.rpm
+49 ## Start service
+50 ### Start openvswitch service
+51 systemctl start openvswitch.service
+52 ### Start ovn-northd
+53 systemctl start ovn-northd
+54 ### Start ovn-controller
+55 systemctl start ovn-controller

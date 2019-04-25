@@ -44,12 +44,11 @@ DESCRIPTION
                      Hypervisors and gateways are  together  called  transport
                      node or chassis.
 
-       The  diagram  below  shows  how the major components of OVN and related
-       software interact. Starting at the top of the diagram, we have:
+       下图显示了OVN和相关软件的主要组件如何相互作用. 从图的顶部开始，我们有：
 
-              •      The Cloud Management System, as defined above.
+                  *  The Cloud Management System, as defined above.
 
-              •      The OVN/CMS Plugin is the component of the CMS  that  in‐
+                  *  The OVN/CMS Plugin is the component of the CMS  that  in‐
                      terfaces  to OVN. In OpenStack, this is a Neutron plugin.
                      The plugin’s main purpose is to translate the  CMS’s  no‐
                      tion  of  logical  network  configuration,  stored in the
@@ -61,10 +60,10 @@ DESCRIPTION
                      grated  with OVN. All of the components below this one in
                      the diagram are CMS-independent.
 
-              •      The OVN Northbound  Database  receives  the  intermediate
+                  *  The OVN Northbound  Database  receives  the  intermediate
                      representation  of  logical  network configuration passed
                      down by the OVN/CMS Plugin. The database schema is  meant
-                     to  be  ``impedance matched’’ with the concepts used in a
+                     to  be  "impedance matched" with the concepts used in a
                      CMS, so that it  directly  supports  notions  of  logical
                      switches, routers, ACLs, and so on. See ovn-nb(5) for de‐
                      tails.
@@ -72,22 +71,21 @@ DESCRIPTION
                      The OVN Northbound Database has  only  two  clients:  the
                      OVN/CMS Plugin above it and ovn-northd below it.
 
-              •      ovn-northd(8)  connects  to  the  OVN Northbound Database
-                     above it and the OVN Southbound  Database  below  it.  It
-                     translates  the logical network configuration in terms of
-                     conventional network concepts, taken from the OVN  North‐
+                  *  ovn-northd连接到它上面的OVN Northbound数据库和它下面的
+                     OVN Southbound数据库。
+                     It translates  the logical network configuration in terms
+                     of conventional network concepts, taken from the OVN  North‐
                      bound  Database,  into  logical datapath flows in the OVN
                      Southbound Database below it.
 
-              •      The OVN Southbound Database is the center of the  system.
-                     Its  clients  are  ovn-northd(8)  above  it  and ovn-con‐
-                     troller(8) on every transport node below it.
+                  *  OVN南向数据库是系统的核心。它的客户端在它上面的ovn-northd（8）、
+                     和它下面的每个传输节点上的ovn-controller（8）。
 
                      The OVN Southbound Database contains three kinds of data:
                      Physical  Network  (PN)  tables that specify how to reach
                      hypervisor and other nodes, Logical Network  (LN)  tables
-                     that  describe  the logical network in terms of ``logical
-                     datapath flows,’’ and Binding tables  that  link  logical
+                     that  describe  the logical network in terms of "logical
+                     datapath flows", and Binding tables  that  link  logical
                      network  components’  locations  to the physical network.
                      The hypervisors populate the PN and Port_Binding  tables,
                      whereas ovn-northd(8) populates the LN tables.

@@ -42,10 +42,10 @@ DESCRIPTION
        For  compatibility  with  software  designed  for  the  Linux   bridge,
        ovs-vsctl  also  supports  a  model  in which traffic associated with a
        given 802.1Q VLAN is segregated into a separate bridge.  A special form
-       of  the  add-br command (see below) creates a ``fake bridge'' within an
-       Open vSwitch bridge to simulate this  behavior.   When  such  a  ``fake
-       bridge'' is active, ovs-vsctl will treat it much like a bridge separate
-       from its ``parent bridge,''  but  the  actual  implementation  in  Open
+       of  the  add-br command (see below) creates a "fake bridge" within an
+       Open vSwitch bridge to simulate this  behavior.   When  such  a  "fake
+       bridge" is active, ovs-vsctl will treat it much like a bridge separate
+       from its "parent bridge,"  but  the  actual  implementation  in  Open
        vSwitch  uses  only  a single bridge, with ports on the fake bridge as‐
        signed the implicit VLAN of the fake bridge of which they are  members.
        (A fake bridge for VLAN 0 receives packets that have no 802.1Q tag or a
@@ -400,7 +400,7 @@ COMMANDS
               bridge already exists as a real bridge.
 
        [--may-exist] add-br bridge parent vlan
-              Creates  a ``fake bridge'' named bridge within the existing Open
+              Creates  a "fake bridge" named bridge within the existing Open
               vSwitch bridge parent, which must already exist and must not it‐
               self  be  a  fake bridge.  The new fake bridge will be on 802.1Q
               VLAN vlan, which must be an integer between  0  and  4095.   The
@@ -439,7 +439,7 @@ COMMANDS
               bridge.  If bridge is a real bridge, print bridge.
 
        br-set-external-id bridge key [value]
-              Sets or clears an ``external ID'' value on bridge.  These values
+              Sets or clears an "external ID'' value on bridge.  These values
               are  intended to identify entities external to Open vSwitch with
               which bridge is associated, e.g. the bridge's  identifier  in  a
               virtualization  management  platform.  The Open vSwitch database
@@ -514,7 +514,7 @@ COMMANDS
 
    Bond Commands
        These commands work with ports that have more than one interface, which
-       Open vSwitch calls ``bonds.''
+       Open vSwitch calls "bonds".
 
        [--fake-iface] add-bond bridge port iface... [column[:key]=value]...
               Creates  on bridge a new port named port that bonds together the

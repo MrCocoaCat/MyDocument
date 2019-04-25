@@ -1,7 +1,6 @@
 ovn-nbctl(8)                  Open vSwitch Manual                 ovn-nbctl(8)
 
 
-
 NAME
        ovn-nbctl - Open Virtual Network northbound db management utility
 
@@ -21,7 +20,7 @@ GENERAL COMMANDS
               If router is provided, only  records  related  to  that  logical
               router are shown.
 
-LOGICAL SWITCH COMMANDS
+### LOGICAL SWITCH COMMANDS
        ls-add 创建一个新的未命名的逻辑交换机，该交换机最初没有端口。
               交换机没有名称，其他命令必须通过其UUID引用此交换机。
 
@@ -143,9 +142,9 @@ METER COMMANDS
        meter-list
               Lists all meters.
 
-LOGICAL SWITCH PORT COMMANDS
+### LOGICAL SWITCH PORT COMMANDS
        [--may-exist] lsp-add switch port
-              Creates on lswitch a new logical switch port named port.
+              在lswitch上创建一个新的逻辑switch port 名为port
 
               It  is an error if a logical port named port already exists, un‐
               less --may-exist is specified. Regardless of --may-exist, it  is
@@ -172,18 +171,16 @@ LOGICAL SWITCH PORT COMMANDS
               --if-exists is specified.
 
        lsp-list switch
-              Lists  all  the  logical  switch ports within switch on standard
-              output, one per line.
+              列举switch中所有的logical switch ports在标准输出中，每一行
 
        lsp-get-parent port
-              If set, get the parent port of port. If not set, print nothing.
+              如果设置了parent port ，则显示。否则不显示
 
        lsp-get-tag port
               If set, get the tag for port traffic. If not set, print nothing.
 
        lsp-set-addresses port [address]...
-              Sets the addresses associated with port to address. Each address
-              should be one of the following:
+              设置与端口地址关联的地址。每个地址应为以下之一 
 
               an  Ethernet  address, optionally followed by a space and one or
               more IP addresses
@@ -279,6 +276,7 @@ LOGICAL SWITCH PORT COMMANDS
               Get the type-specific options for the logical port.
 
        lsp-set-dhcpv4-options port dhcp_options
+              为logical port 设置DHCPv4 options。
               Set the DHCPv4 options for the logical port. The dhcp_options is
               a UUID referring to a set of DHCP options  in  the  DHCP_Options
               table.
@@ -294,7 +292,7 @@ LOGICAL SWITCH PORT COMMANDS
        lsp-get-dhcpv6-optoins port
               Get the configured DHCPv6 options for the logical port.
 
-LOGICAL ROUTER COMMANDS
+### LOGICAL ROUTER COMMANDS
        lr-add Creates  a  new,  unnamed logical router, which initially has no
               ports. The router does not have a name, other commands must  re‐
               fer to this router by its UUID.
@@ -322,7 +320,7 @@ LOGICAL ROUTER COMMANDS
        lr-list
               Lists all existing routers on standard output, one per line.
 
-LOGICAL ROUTER PORT COMMANDS
+### LOGICAL ROUTER PORT COMMANDS
        [--may-exist] lrp-add router port mac network... [peer=peer]
               Creates on router a new logical router port named port with Eth‐
               ernet address mac and one or more IP  address/netmask  for  each
@@ -372,7 +370,7 @@ LOGICAL ROUTER PORT COMMANDS
               Lists all the gateway chassis with priority within port on stan‐
               dard output, one per line, ordered based on priority.
 
-LOGICAL ROUTER STATIC ROUTE COMMANDS
+### LOGICAL ROUTER STATIC ROUTE COMMANDS
        [--may-exist]  [--policy=POLICY]  lr-route-add  router  prefix  nexthop
        [port]
               Adds  the specified route to router. prefix describes an IPv4 or
@@ -402,7 +400,7 @@ LOGICAL ROUTER STATIC ROUTE COMMANDS
        lr-route-list router
               Lists the routes on router.
 
-NAT COMMANDS
+### NAT COMMANDS
        [--may-exist] lr-nat-add  router  type  external_ip  logical_ip  [logi‐
        cal_port external_mac]
               Adds  the specified NAT to router. The type must be one of snat,
@@ -456,7 +454,7 @@ NAT COMMANDS
        lr-nat-list router
               Lists the NATs on router.
 
-LOAD BALANCER COMMANDS
+### LOAD BALANCER COMMANDS
        [--may-exist | --add-duplicate] lb-add lb vip ips [protocol]
               Creates a new load balancer named lb with the provided  vip  and
               ips  or  adds the vip to an existing lb. vip should be a virtual
@@ -522,7 +520,7 @@ LOAD BALANCER COMMANDS
        lr-lb-list router
               Lists the LBs for the given router.
 
-DHCP OPTIONS COMMANDS
+### DHCP OPTIONS COMMANDS
        dhcp-options-create cidr [key=value]
               Creates a new DHCP Options entry in the DHCP_Options table  with
               the specified cidr and optional external-ids.
@@ -552,7 +550,7 @@ PORT GROUP COMMANDS
               Deletes  port  group group. It is an error if group does not ex‐
               ist.
 
-DATABASE COMMANDS
+### DATABASE COMMANDS
        These commands query and modify the contents of ovsdb tables. They  are
        a slight abstraction of the ovsdb interface and as such they operate at
        a lower level than other ovn-nbctl commands.
@@ -871,7 +869,7 @@ SYNCHRONIZATION COMMANDS
               base  to propagate down to the southbound database or all of the
               OVN chassis, according to the argument to --wait.
 
-REMOTE CONNECTIVITY COMMANDS
+### REMOTE CONNECTIVITY COMMANDS
        get-connection
               Prints the configured connection(s).
 
@@ -883,7 +881,7 @@ REMOTE CONNECTIVITY COMMANDS
               ity-probe=msecs to override the default idle connection inactiv‐
               ity probe time. Use 0 to disable inactivity probes.
 
-SSL CONFIGURATION COMMANDS
+### SSL CONFIGURATION COMMANDS
        get-ssl
               Prints the SSL configuration.
 
@@ -894,7 +892,7 @@ SSL CONFIGURATION COMMANDS
        list [ssl-cipher-list]]
               Sets the SSL configuration.
 
-DAEMON MODE
+### DAEMON MODE
        When  it  is invoked in the most ordinary way, ovn-nbctl connects to an
        OVSDB server that hosts the northbound database,  retrieves  a  partial
        copy  of  the  database that is complete enough to do its work, sends a
@@ -947,7 +945,7 @@ DAEMON MODE
 
               exit   Causes ovn-nbctl to gracefully terminate.
 
-OPTIONS
+### OPTIONS
        --no-wait | --wait=none
        --wait=sb
        --wait=hv
@@ -1074,7 +1072,7 @@ OPTIONS
               reasons,  specifying  this  option will cause the daemon process
               not to start.
 
-LOGGING OPTIONS
+### LOGGING OPTIONS
        -v[spec]
        --verbose=[spec]
             Sets logging levels. Without any spec, sets the log level for  ev‐
@@ -1172,7 +1170,7 @@ LOGGING OPTIONS
             The  default is taken from the OVS_SYSLOG_METHOD environment vari‐
             able; if it is unset, the default is libc.
 
-TABLE FORMATTING OPTIONS
+### TABLE FORMATTING OPTIONS
        These options control the format of output from the list and find  com‐
        mands.
 
