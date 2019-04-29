@@ -1,16 +1,16 @@
 ovn-nbctl(8)                  Open vSwitch Manual                 ovn-nbctl(8)
 
 
-NAME
+## NAME
        ovn-nbctl - Open Virtual Network northbound db management utility
 
-SYNOPSIS
+## SYNOPSIS
        ovn-nbctl [options] command [arg...]
 
-DESCRIPTION
+## DESCRIPTION
        This utility can be used to manage the OVN northbound database.
 
-GENERAL COMMANDS
+## GENERAL COMMANDS
        init   Initializes  the  database,  if it is empty. If the database has
               already been initialized, this command has no effect.
 
@@ -46,7 +46,7 @@ GENERAL COMMANDS
        ls-list
               Lists all existing switches on standard output, one per line.
 
-ACL COMMANDS
+## ACL COMMANDS
        These  commands  operates on ACL objects for a given entity. The entity
        can be either a logical switch or a port group. The entity can be spec‐
        ified  as  uuid  or  name. The --type option can be used to specify the
@@ -86,7 +86,7 @@ ACL COMMANDS
               [--type={switch | port-group}] acl-list entity
                      Lists the ACLs on entity.
 
-LOGICAL SWITCH QOS RULE COMMANDS
+## LOGICAL SWITCH QOS RULE COMMANDS
        [--may-exist]  qos-add  switch  direction  priority  match  [dscp=dscp]
        [rate=rate [burst=burst]]
               Adds QoS marking and metering rules to switch. direction must be
@@ -115,7 +115,7 @@ LOGICAL SWITCH QOS RULE COMMANDS
        qos-list switch
               Lists the QoS rules on switch.
 
-METER COMMANDS
+## METER COMMANDS
        meter-add name action rate unit [burst]
               Adds the specified meter. name must be a unique name to identify
               this  meter.  The  action  argument specifies what should happen
@@ -180,31 +180,33 @@ METER COMMANDS
               If set, get the tag for port traffic. If not set, print nothing.
 
        lsp-set-addresses port [address]...
-              设置与端口地址关联的地址。每个地址应为以下之一 
+              设置与端口地址关联的地址。每个地址应为以下之一
 
-              an  Ethernet  address, optionally followed by a space and one or
+              * an  Ethernet  address, optionally followed by a space and one or
               more IP addresses
                      OVN delivers packets for the  Ethernet  address  to  this
-                     port.
+                     port.OVN将以太网地址的数据包传送到此端口。
 
-              unknown
+              * unknown
                      OVN  delivers  unicast Ethernet packets whose destination
                      MAC address is not in any logical port’s addresses column
                      to ports with address unknown.
+                     OVN将目的MAC地址不在任何逻辑端口地址列中的单播以太网数据包
+                     传送到unknown端口。
 
-              dynamic
+              * dynamic
                      Use  this  keyword to make ovn-northd generate a globally
                      unique MAC address and choose an unused IPv4 address with
                      the  logical  port’s  subnet and store them in the port’s
                      dynamic_addresses column.
 
-              router Accepted only when the type of the logical switch port is
+              * router Accepted only when the type of the logical switch port is
                      router.  This indicates that the Ethernet, IPv4, and IPv6
                      addresses for this logical switch port should be obtained
                      from  the  connected logical router port, as specified by
                      router-port in lsp-set-options.
 
-              Multiple addresses may be set. If no address argument is  given,
+              Multiple addresses may be set. If no address argument is given,
               port will have no addresses associated with it.
 
        lsp-get-addresses port
@@ -239,21 +241,22 @@ METER COMMANDS
               abled.
 
        lsp-set-type port type
-              Set the type for the logical port. The type must be one  of  the
-              following:
+              设置逻辑端口的类型。 类型必须是以下之一:
 
-              (empty string)
+              * (empty string)
                      A VM (or VIF) interface.
 
-              router A connection to a logical router.
+              * router A connection to a logical router.
 
-              localnet
+              * localnet
                      A  connection  to  a locally accessible network from each
                      ovn-controller instance. A logical switch can only have a
                      single  localnet port attached. This is used to model di‐
                      rect connectivity to an existing network.
+                     从每个ovn控制器实例连接到本地可访问的网络。
+                     逻辑交换机只能连接一个localnet端口。 这用于建模与现有网络的直接连接。
 
-              localport
+              * localport
                      A connection to a local VIF. Traffic that  arrives  on  a
                      localport  is  never  forwarded  over a tunnel to another
                      chassis. These ports are present  on  every  chassis  and
@@ -261,10 +264,10 @@ METER COMMANDS
                      model connectivity to local services that  run  on  every
                      hypervisor.
 
-              l2gateway
+              * l2gateway
                      A connection to a physical network.
 
-              vtep   A port to a logical switch on a VTEP gateway.
+              * vtep  A port to a logical switch on a VTEP gateway.
 
        lsp-get-type port
               Get the type for the logical port.
@@ -537,7 +540,7 @@ METER COMMANDS
        dhcp-options-get-options dhcp-option
               Lists the DHCP Options for the dhcp-option UUID.
 
-PORT GROUP COMMANDS
+### PORT GROUP COMMANDS
        pg-add group [port]...
               Creates  a  new  port  group in the Port_Group table named group
               with optional ports added to the group.
@@ -860,7 +863,7 @@ PORT GROUP COMMANDS
                      log  record  created by the command will include the com‐
                      mand and its arguments.
 
-SYNCHRONIZATION COMMANDS
+### SYNCHRONIZATION COMMANDS
        sync   Ordinarily, --wait=sb or --wait=hv only waits for changes by the
               current ovn-nbctl invocation to take effect. This means that, if
               none of the commands supplied to ovn-nbctl change the  database,

@@ -51,7 +51,7 @@ DESCRIPTION
                      tem is assumed.
 
        show switch
-              显示交换机上的控制台信息，包括有关其流表和端口的信息。
+              显示交换机上的信息，包括有关其流表和端口的信息。
 
        dump-tables switch
               显示switch所使用的每个流表信息。

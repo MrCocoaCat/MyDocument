@@ -11,7 +11,7 @@ NAME
        tors the database contents, transforms  it,  and  stores  it  into  the
        OVN_Southbound database.
 
-       We  generally  speak  of  ``the’’ CMS, but one can imagine scenarios in
+       We  generally  speak  of  ”the’’ CMS, but one can imagine scenarios in
        which multiple CMSes manage different parts of an OVN deployment.
 
    External IDs

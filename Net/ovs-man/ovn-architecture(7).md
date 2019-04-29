@@ -1,7 +1,5 @@
 ovn-architecture(7)           Open vSwitch Manual          ovn-architecture(7)
 
-
-
 NAME
        ovn-architecture - Open Virtual Network architecture
 
@@ -548,13 +546,13 @@ DESCRIPTION
                      nel,  it attaches extra data to it to allow the receiving
                      OVN instance to process it correctly. This takes  differ‐
                      ent  forms depending on the particular encapsulation, but
-                     in each case we refer to it here as the  ``tunnel  key.’’
+                     in each case we refer to it here as the  “tunnel  key.’’
                      See Tunnel Encapsulations, below, for details.
 
               logical datapath field
                      A field that denotes the logical datapath through which a
                      packet is being processed. OVN uses the field that  Open‐
-                     Flow  1.1+ simply (and confusingly) calls ``metadata’’ to
+                     Flow  1.1+ simply (and confusingly) calls ”metadata’’ to
                      store the logical datapath. (This field is passed  across
                      tunnels as part of the tunnel key.)
 
@@ -666,7 +664,7 @@ DESCRIPTION
                   flows. (This is not necessarily unique, since the  first  32
                   bits of a logical flow’s UUID is not necessarily unique.)
 
-                  Some logical flows can map to the Open vSwitch ``conjunctive
+                  Some logical flows can map to the Open vSwitch “conjunctive
                   match’’ extension (see ovs-fields(7)). Flows with a conjunc‐
                   tion  action  use  an OpenFlow cookie of 0, because they can
                   correspond to multiple logical flows. The OpenFlow flow  for
