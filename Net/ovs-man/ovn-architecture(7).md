@@ -150,15 +150,12 @@ DESCRIPTION
        chassis via the southbound database.
 
        Status information in OVN flows from south to north. OVN currently pro‐
-       vides only a few forms of status information. First,  ovn-northd  popu‐
-       lates  the  up column in the northbound Logical_Switch_Port table: if a
-       logical port’s chassis column in the southbound Port_Binding  table  is
-       nonempty,  it  sets up to true, otherwise to false. This allows the CMS
-       to detect when a VM’s networking has come up.
+       vides only a few forms of status information. 首先，ovn-northd填充北向
+       Logical_Switch_Port表中的up列：: 如果南向Port_Binding表中的逻辑端口的机
+      table 为非空，则设置为true，否则设置为false。 这允许CMS检测VM的网络何时出现。
 
-       Second, OVN provides feedback to the CMS on the realization of its con‐
-       figuration,  that is, whether the configuration provided by the CMS has
-       taken effect. This feature requires the CMS to  participate  in  a  se‐
+      其次，OVN向CMS提供有关其配置实现的反馈，即CMS提供的配置是否已生效。
+      This feature requires the CMS to  participate  in  a  se‐
        quence number protocol, which works the following way:
 
               1.  When  the  CMS  updates  the configuration in the northbound
@@ -181,7 +178,7 @@ DESCRIPTION
                   server can determine when the southbound database is  caught
                   up without a connection to the southbound database.)
 
-              4.  The  ovn-controller process on each chassis receives the up‐
+              4.  The ovn-controller process on each chassis receives the up‐
                   dated southbound database, with  the  updated  nb_cfg.  This
                   process  in turn updates the physical flows installed in the
                   chassis’s Open vSwitch instances. When it receives confirma‐
@@ -279,11 +276,10 @@ DESCRIPTION
                      out of logical switches and logical routers. Some  common
                      types of logical ports are:
 
-                     •      Logical ports representing VIFs.
+                     •      代表VIF的逻辑端口（Logical ports representing VIFs）.
 
-                     •      Localnet  ports represent the points of connectiv‐
-                            ity between logical switches and the physical net‐
-                            work.  They are implemented as OVS patch ports be‐
+                     •      Localnet端口表示逻辑交换机与物理网络之间的连接点。
+                            They are implemented as OVS patch ports be‐
                             tween the integration bridge and the separate Open
                             vSwitch bridge that underlay physical ports attach
                             to.

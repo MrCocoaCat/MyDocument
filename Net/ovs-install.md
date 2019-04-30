@@ -77,7 +77,7 @@ clang, version 3.4 or later
 flake8 along with the hacking flake8 plugin (for Python code). The automatic flake8 check that runs against Python code has some warnings enabled that come from the “hacking” flake8 plugin. If it’s not installed, the warnings just won’t occur until it’s run on a system with “hacking” installed.
 You may find the ovs-dev script found in utilities/ovs-dev.py useful.
 
-Installation Requirements¶
+### Installation Requirements
 The machine you build Open vSwitch on may not be the one you run it on. To simply install and run Open vSwitch you require the following software:
 
 Shared libraries compatible with those used for the build.
@@ -128,9 +128,10 @@ If you are on a different processor and don’t know what flags to choose, it is
 $ ./configure CFLAGS="-g -O2 -march=native"
 With this, GCC will detect the processor and automatically set appropriate flags for it. This should not be used if you are compiling OVS outside the target machine.
 
-Note
+>Note
+CFLAGS are not applied when building the Linux kernel module.
 
-CFLAGS are not applied when building the Linux kernel module. Custom CFLAGS for the kernel module are supplied using the EXTRA_CFLAGS variable when running make. For example:
+Custom CFLAGS for the kernel module are supplied using the EXTRA_CFLAGS variable when running make. For example:
 
 ```
 $ make EXTRA_CFLAGS="-Wno-error=date-time"
@@ -175,7 +176,8 @@ $ mkdir _clang && (cd _clang && ./configure CC=clang)
 Under certain loads the ovsdb-server and other components perform better when using the jemalloc memory allocator, instead of the glibc memory allocator. If you wish to link with jemalloc add it to LIBS:
 
 $ ./configure LIBS=-ljemalloc
-Building¶
+
+### Building
 Run GNU make in the build directory, e.g.:
 
 ```

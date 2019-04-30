@@ -9,3 +9,7 @@ ARP, Reply 101.1.1.41 is-at 52:54:00:68:46:03 (oui Unknown), length 28
 
 kvm虚拟化之virt-install
 http://www.361way.com/virt-install/2721.html
+
+
+
+sudo ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock --remote=db:Open_vSwitch,Open_vSwitch,manager_options --pidfile --detach
