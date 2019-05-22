@@ -3,269 +3,254 @@ ovs-actions(7)                Open vSwitch Manual               ovs-actions(7)
 
 
 ## NAME
-       ovs-actions  -  OpenFlow actions and instructions with Open vSwitch ex‐
-       tensions
+ ovs-actions  -  OpenFlow actions and instructions with Open vSwitch extensions
 
 ## INTRODUCTION
-       This document aims to comprehensively document all of the OpenFlow  ac‐
-       tions  and  instructions,  both standard and non-standard, supported by
-       Open vSwitch, regardless of origin. The document  includes  information
-       of  interest  to Open vSwitch users, such as the semantics of each sup‐
-       ported action and the syntax used by Open vSwitch tools, and to  devel‐
-       opers  seeking  to  build controllers and switches compatible with Open
-       vSwitch, such as the wire format for each supported message.
+This document aims to comprehensively document all of the OpenFlow  actions  and  instructions,  both standard and non-standard, supported by Open vSwitch, regardless of origin. The document  includes  information of  interest  to Open vSwitch users, such as the semantics of each supported action and the syntax used by Open vSwitch tools, and to  developers  seeking  to  build controllers and switches compatible with OpenvSwitch, such as the wire format for each supported message.
 
 ###   Actions
-       In this document, we define an action as an OpenFlow action, which is a
-       kind  of  command  that specifies what to do with a packet. Actions are
-       used in OpenFlow flows to describe what to do when the flow  matches  a
-       packet,  and  in  a  few  other places in OpenFlow. Each version of the
-       OpenFlow specification defines standard actions, and beyond  that  many
-       OpenFlow  switches, including Open vSwitch, implement extensions to the
-       standard.
-
-       OpenFlow groups actions in two ways: as an action  list  or  an  action
-       set, described below.
+In this document, we define an action as an OpenFlow action, which is a kind  of  command  that specifies what to do with a packet. Actions are used in OpenFlow flows to describe what to do when the flow  matches  a
+packet,  and  in  a  few  other places in OpenFlow. Each version of the OpenFlow specification defines standard actions, and beyond  that  many OpenFlow  switches, including Open vSwitch, implement extensions to the standard.OpenFlow groups actions in two ways: as an action list or an action set, described below.
 
 ####     Action Lists
 
-       An action list, a concept present in every version of OpenFlow, is sim‐
-       ply an ordered sequence of actions. The OpenFlow specifications require
-       a  switch  to execute actions within an action list in the order speci‐
-       fied, and to refuse to execute an action list entirely if it cannot im‐
-       plement the actions in that order [OpenFlow 1.0, section 3.3], with one
-       exception: when an action list outputs multiple packets, the switch may
-       output  the packets in an order different from that specified. Usually,
-       this exception is not important, especially in the common case when the
-       packets are output to different ports.
+An action list, a concept present in every version of OpenFlow, is sim‐
+ply an ordered sequence of actions. The OpenFlow specifications require
+a  switch  to execute actions within an action list in the order speci‐
+fied, and to refuse to execute an action list entirely if it cannot im‐
+plement the actions in that order [OpenFlow 1.0, section 3.3], with one
+exception: when an action list outputs multiple packets, the switch may
+output  the packets in an order different from that specified. Usually,
+this exception is not important, especially in the common case when the
+packets are output to different ports.
 
 ####     Action Sets
 
-       OpenFlow 1.1引入了动作集的概念。 操作集也是一系列操作，
-       但交换机根据OpenFlow规范中指定的规则重新排序操作并删除重复项。
-       因为这些语法，一些标准的 OpenFlow  actions 可能在action set 中无效。
+OpenFlow 1.1引入了动作集的概念。 操作集也是一系列操作，
+但交换机根据OpenFlow规范中指定的规则重新排序操作并删除重复项。
+因为这些语法，一些标准的 OpenFlow  actions 可能在action set 中无效。
 
-      对于一部分Open vSwitch扩展的actions，Open vSwitch定义了自己的操作集语义和排序。
+对于一部分Open vSwitch扩展的actions，Open vSwitch定义了自己的操作集语义和排序。
 
-       The  OpenFlow pipeline has an action set associated with it as a packet
-       is processed. After pipeline  processing  is  otherwise  complete,  the
-       switch executes the actions in the action set.
+The  OpenFlow pipeline has an action set associated with it as a packet
+is processed. After pipeline  processing  is  otherwise  complete,  the
+switch executes the actions in the action set.
 
-       Open vSwitch按以下顺序在操作集中应用操作:
+Open vSwitch按以下顺序在操作集中应用操作:
 
-       除非下面另有说明，否则动作集最多只执行每种类型的单个动作，并且当存在多个给定类型的动作时，添加到该集合中的动作稍后将替换先前的动作。:
+除非下面另有说明，否则动作集最多只执行每种类型的单个动作，并且当存在多个给定类型的动作时，添加到该集合中的动作稍后将替换先前的动作。:
 
-              1.  strip_vlan
+1.  strip_vlan
 
-              2.  pop_mpls
+2.  pop_mpls
 
-              3.  decap
+3.  decap
 
-              4.  encap
+4.  encap
 
-              5.  push_mpls
+5.  push_mpls
 
-              6.  push_vlan
+6.  push_vlan
 
-              7.  dec_ttl
+7.  dec_ttl
 
-              8.  dec_mpls_ttl
+8.  dec_mpls_ttl
 
-              9.  dec_nsh_ttl
+9.  dec_nsh_ttl
 
-              10. All of the following actions are executed in the order added
-                  to the action set, with cumulative  effect.  That  is,  when
-                  multiple  actions modify the same part of a field, the later
-                  modification takes effect, and when  they  modify  different
-                  parts  of a field (or different fields), then both modifica‐
-                  tions are applied:
+10. All of the following actions are executed in the order added
+to the action set, with cumulative  effect.  That  is,  when
+multiple  actions modify the same part of a field, the later
+modification takes effect, and when  they  modify  different
+parts  of a field (or different fields), then both modifica‐
+tions are applied:
 
-                  •      load
+* load
 
-                  •      move
+* move
 
-                  •      mod_dl_dst
+* mod_dl_dst
 
-                  •      mod_dl_src
+* mod_dl_src
 
-                  •      mod_nw_dst
+*  mod_nw_dst
 
-                  •      mod_nw_src
+* mod_nw_src
 
-                  •      mod_nw_tos
+* mod_nw_tos
 
-                  •      mod_nw_ecn
+* mod_nw_ecn
 
-                  •      mod_nw_ttl
+* mod_nw_ttl
 
-                  •      mod_tp_dst
+* mod_tp_dst
 
-                  •      mod_tp_src
+* mod_tp_src
 
-                  •      mod_vlan_pcp
+* mod_vlan_pcp
 
-                  •      mod_vlan_vid
+* mod_vlan_vid
 
-                  •      set_field
+* set_field
 
-                  •      set_tunnel
+* set_tunnel
 
-                  •      set_tunnel64
+* set_tunnel64
 
-              11. set_queue
+11. set_queue
 
-              12. group, output, resubmit, ct_clear, or ct. If more  than  one
-                  of  these  actions  is present, then the one listed earliest
-                  above is executed and the others are ignored, regardless  of
-                  the  order  in  which they were added to the action set. (If
-                  none of these actions is present, the action set has no real
-                  effect, because the modified packet is not sent anywhere and
-                  thus the modifications are not visible.)
+12. group, output, resubmit, ct_clear, or ct. If more  than  one
+of  these  actions  is present, then the one listed earliest
+above is executed and the others are ignored, regardless  of
+the  order  in  which they were added to the action set. (If
+none of these actions is present, the action set has no real
+effect, because the modified packet is not sent anywhere and
+thus the modifications are not visible.)
 
-      操作集可能只包含上面列出的操作。
+操作集可能只包含上面列出的操作。
 
 ###   Error Handling
-       Packet processing can encounter a variety of errors:
+Packet processing can encounter a variety of errors:
 
-              Bridge not found
-                     Open vSwitch supports an extension to the standard  Open‐
-                     Flow  controller  action called a "continuation," which
-                     allows the controller to interrupt and later  resume  the
-                     processing  of a packet through the switch pipeline. This
-                     error occurs when such a packet’s  processing  cannot  be
-                     resumed,  e.g.  because the bridge processing it has been
-                     destroyed. Open vSwitch reports this error  to  the  con‐
-                     troller as Open vSwitch extension error NXR_STALE.
+Bridge not found
+Open vSwitch supports an extension to the standard  Open‐
+Flow  controller  action called a "continuation," which
+allows the controller to interrupt and later  resume  the
+processing  of a packet through the switch pipeline. This
+error occurs when such a packet’s  processing  cannot  be
+resumed,  e.g.  because the bridge processing it has been
+destroyed. Open vSwitch reports this error  to  the  con‐
+troller as Open vSwitch extension error NXR_STALE.
 
-                     This error prevents packet processing entirely.
+This error prevents packet processing entirely.
 
-              Recursion too deep
-                     While  processing a given packet, Open vSwitch limits the
-                     flow table recursion depth to 64, to ensure  that  packet
-                     processing  uses  a  finite amount of time and space. Ac‐
-                     tions that count against the recursion limit include  re‐
-                     submit from a given OpenFlow table to the same or an ear‐
-                     lier table, group, and output to patch ports.
+Recursion too deep
+While  processing a given packet, Open vSwitch limits the
+flow table recursion depth to 64, to ensure  that  packet
+processing  uses  a  finite amount of time and space. Ac‐
+tions that count against the recursion limit include  re‐
+submit from a given OpenFlow table to the same or an ear‐
+lier table, group, and output to patch ports.
 
-                     A resubmit from one table to a  later  one  (or,  equiva‐
-                     lently.  a goto_table instruction) does not count against
-                     the depth limit because resubmits to  strictly  monotoni‐
-                     cally  increasing tables will eventually terminate. Open‐
-                     Flow tables are most commonly  traversed  in  numerically
-                     increasing order, so this limit has little effect on con‐
-                     ventionally designed OpenFlow pipelines.
+A resubmit from one table to a  later  one  (or,  equiva‐
+lently.  a goto_table instruction) does not count against
+the depth limit because resubmits to  strictly  monotoni‐
+cally  increasing tables will eventually terminate. Open‐
+Flow tables are most commonly  traversed  in  numerically
+increasing order, so this limit has little effect on con‐
+ventionally designed OpenFlow pipelines.
 
-                     This error terminates  packet  processing.  Any  previous
-                     side effects (e.g. output actions) are retained.
+This error terminates  packet  processing.  Any  previous
+side effects (e.g. output actions) are retained.
 
-                     Usually  this  error indicates a loop or other bug in the
-                     OpenFlow flow tables. To assist debugging, when this  er‐
-                     ror  occurs,  Open vSwitch 2.10 and later logs a trace of
-                     the packet execution, as if by ovs-appctl  ofproto/trace,
-                     rate-limited to one per minute to reduce the log volume.
+Usually  this  error indicates a loop or other bug in the
+OpenFlow flow tables. To assist debugging, when this  er‐
+ror  occurs,  Open vSwitch 2.10 and later logs a trace of
+the packet execution, as if by ovs-appctl  ofproto/trace,
+rate-limited to one per minute to reduce the log volume.
 
-              Too many resubmits
-                     Open  vSwitch limits the total number of resubmit actions
-                     that a given packet can execute to 4,096. For  this  pur‐
-                     pose,  goto_table  instructions  and  output to the table
-                     port are treated like resubmit. This limits the amount of
-                     time to process a single packet.
+Too many resubmits
+Open  vSwitch limits the total number of resubmit actions
+that a given packet can execute to 4,096. For  this  pur‐
+pose,  goto_table  instructions  and  output to the table
+port are treated like resubmit. This limits the amount of
+time to process a single packet.
 
-                     Unlike  the limit on recursion depth, the limit on resub‐
-                     mits counts all resubmits, regardless of direction.
+Unlike  the limit on recursion depth, the limit on resub‐
+mits counts all resubmits, regardless of direction.
 
-                     This error has the same effect, including logging, as ex‐
-                     ceeding the recursion depth limit.
+This error has the same effect, including logging, as ex‐
+ceeding the recursion depth limit.
 
-              Stack too deep
-                     Open  vSwitch limits the amount of data that the push ac‐
-                     tion can put onto the stack at one time to 64 kB of data.
+Stack too deep
+Open  vSwitch limits the amount of data that the push ac‐
+tion can put onto the stack at one time to 64 kB of data.
 
-                     This error terminates  packet  processing.  Any  previous
-                     side effects (e.g. output actions) are retained.
+This error terminates  packet  processing.  Any  previous
+side effects (e.g. output actions) are retained.
 
-              No recirculation context
-              Recirculation conflict
-                   These  errors  indicate internal errors inside Open vSwitch
-                   and should generally not occur. If you notice recurring log
-                   messages about these errors, please report a bug.
+No recirculation context
+Recirculation conflict
+These  errors  indicate internal errors inside Open vSwitch
+and should generally not occur. If you notice recurring log
+messages about these errors, please report a bug.
 
-              Too many MPLS labels
-                   Open  vSwitch  can  process packets with any number of MPLS
-                   labels, but its ability to push and pop MPLS labels is lim‐
-                   ited,  currently  to 3 labels. Attempting to push more than
-                   the supported number of labels onto a packet, or to pop any
-                   number of labels from a packet with more than the supported
-                   number, raises this error.
+Too many MPLS labels
+Open  vSwitch  can  process packets with any number of MPLS
+labels, but its ability to push and pop MPLS labels is lim‐
+ited,  currently  to 3 labels. Attempting to push more than
+the supported number of labels onto a packet, or to pop any
+number of labels from a packet with more than the supported
+number, raises this error.
 
-                   This error terminates packet processing, retaining any pre‐
-                   vious  side  effects (e.g. output actions). When this error
-                   arises within the execution of a group bucket, it only ter‐
-                   minates  that  bucket’s  execution,  not  packet processing
-                   overall.
+This error terminates packet processing, retaining any pre‐
+vious  side  effects (e.g. output actions). When this error
+arises within the execution of a group bucket, it only ter‐
+minates  that  bucket’s  execution,  not  packet processing
+overall.
 
-              Invalid tunnel metadata
-                   Open vSwitch raises this error when it processes  a  Geneve
-                   packet  that  has  TLV  options  with an invalid form, e.g.
-                   where the length in a TLV would extend past the end of  the
-                   options.
+Invalid tunnel metadata
+Open vSwitch raises this error when it processes  a  Geneve
+packet  that  has  TLV  options  with an invalid form, e.g.
+where the length in a TLV would extend past the end of  the
+options.
 
-                   This error prevents packet processing entirely.
+This error prevents packet processing entirely.
 
-              Unsupported packet type
-                   When  a  encap  action  encapsulates a packet, Open vSwitch
-                   raises this error if it does not support the combination of
-                   the new encapsulation with the current packet. encap(ether‐
-                   net) raises this error if the current packet is not  an  L3
-                   packet,  and  encap(nsh)  raises  this error if the current
-                   packet is not Ethernet, IPv4, IPv6, or NSH.
+Unsupported packet type
+When  a  encap  action  encapsulates a packet, Open vSwitch
+raises this error if it does not support the combination of
+the new encapsulation with the current packet. encap(ether‐
+net) raises this error if the current packet is not  an  L3
+packet,  and  encap(nsh)  raises  this error if the current
+packet is not Ethernet, IPv4, IPv6, or NSH.
 
-                   When a decap action decapsulates  a  packet,  Open  vSwitch
-                   raises  this error if it does not support the type of inner
-                   packet. decap of an Ethernet header raises this error if  a
-                   VLAN  header  is present, decap of a NSH packet raises this
-                   error if the NSH inner packet is not Ethernet, IPv4,  IPv6,
-                   or  NSH, and decap of other types of packets is unsupported
-                   and also raises this error.
+When a decap action decapsulates  a  packet,  Open  vSwitch
+raises  this error if it does not support the type of inner
+packet. decap of an Ethernet header raises this error if  a
+VLAN  header  is present, decap of a NSH packet raises this
+error if the NSH inner packet is not Ethernet, IPv4,  IPv6,
+or  NSH, and decap of other types of packets is unsupported
+and also raises this error.
 
-                   This error terminates packet processing, retaining any pre‐
-                   vious  side  effects (e.g. output actions). When this error
-                   arises within the execution of a group bucket, it only ter‐
-                   minates  that  bucket’s  execution,  not  packet processing
-                   overall.
+This error terminates packet processing, retaining any pre‐
+vious  side  effects (e.g. output actions). When this error
+arises within the execution of a group bucket, it only ter‐
+minates  that  bucket’s  execution,  not  packet processing
+overall.
 
 ###   Inconsistencies
-       OpenFlow 1.0 allows any action to be part of any  flow,  regardless  of
-       the  flow’s  match.  Some  combinations  do  not  make  sense,  e.g. an
-       set_nw_tos action in a flow that matches only ARP packets or strip_vlan
-       in  a  flow  that matches packets without VLAN tags. Other combinations
-       have varying results depending on the kind of packet that the flow pro‐
-       cesses,  e.g.  a  set_nw_src  action  in  a flow that does not match on
-       Ethertype will be treated as a  no-op  when  it  processes  a  non-IPv4
-       packet.  Nevertheless  OVS  allows all of the above in conformance with
-       OpenFlow 1.0, that is, the following will succeed:
+OpenFlow 1.0 allows any action to be part of any  flow,  regardless  of
+the  flow’s  match.  Some  combinations  do  not  make  sense,  e.g. an
+set_nw_tos action in a flow that matches only ARP packets or strip_vlan
+in  a  flow  that matches packets without VLAN tags. Other combinations
+have varying results depending on the kind of packet that the flow pro‐
+cesses,  e.g.  a  set_nw_src  action  in  a flow that does not match on
+Ethertype will be treated as a  no-op  when  it  processes  a  non-IPv4
+packet.  Nevertheless  OVS  allows all of the above in conformance with
+OpenFlow 1.0, that is, the following will succeed:
 
-       $ ovs-ofctl -O OpenFlow10 add-flow br0 arp,actions=mod_nw_tos:12
-       $ ovs-ofctl -O OpenFlow10 add-flow br0 dl_vlan=0xffff,actions=strip_vlan
-       $ ovs-ofctl -O OpenFlow10 add-flow br0 actions=mod_nw_src:1.2.3.4
+$ ovs-ofctl -O OpenFlow10 add-flow br0 arp,actions=mod_nw_tos:12
+$ ovs-ofctl -O OpenFlow10 add-flow br0 dl_vlan=0xffff,actions=strip_vlan
+$ ovs-ofctl -O OpenFlow10 add-flow br0 actions=mod_nw_src:1.2.3.4
 
 
-       Open vSwitch calls these kinds of combinations inconsistencies  between
-       match  and  actions. OpenFlow 1.1 and later forbid inconsistencies, and
-       disallow the examples described above by preventing such flows from be‐
-       ing  added. All of the above, for example, will fail with an error mes‐
-       sage if one replaces OpenFlow10 by OpenFlow11.
+Open vSwitch calls these kinds of combinations inconsistencies  between
+match  and  actions. OpenFlow 1.1 and later forbid inconsistencies, and
+disallow the examples described above by preventing such flows from be‐
+ing  added. All of the above, for example, will fail with an error mes‐
+sage if one replaces OpenFlow10 by OpenFlow11.
 
-       OpenFlow 1.1 and later cannot detect and disallow all  inconsistencies.
-       For example, the write_actions instruction arbitrarily delays execution
-       of the actions inside it, which can even  be  canceled  with  clear_ac‐
-       tions,  so  that there is no way to ensure that its actions are consis‐
-       tent with the packet at the  time  they  execute.  Thus,  actions  with
-       write_actions  and  some other contexts are exempt from consistency re‐
-       quirements.
+OpenFlow 1.1 and later cannot detect and disallow all  inconsistencies.
+For example, the write_actions instruction arbitrarily delays execution
+of the actions inside it, which can even  be  canceled  with  clear_ac‐
+tions,  so  that there is no way to ensure that its actions are consis‐
+tent with the packet at the  time  they  execute.  Thus,  actions  with
+write_actions  and  some other contexts are exempt from consistency re‐
+quirements.
 
-       When OVS executes an action inconsistent with the packet, it treats  it
-       as a no-op.
+When OVS executes an action inconsistent with the packet, it treats  it
+as a no-op.
 
 ###   Inter-Version Compatibility
        Open vSwitch在单个交换机上同时支持多个OpenFlow版本。
