@@ -1,100 +1,58 @@
-ovs-actions(7)                Open vSwitch Manual               ovs-actions(7)
-
-
-
+ovs-actions(7)
 ## NAME
- ovs-actions  -  OpenFlow actions and instructions with Open vSwitch extensions
+ ovs-actions ：Open vSwitch 扩展的OpenFlow 动作（actions）及指令（instructions）
 
 ## INTRODUCTION
-This document aims to comprehensively document all of the OpenFlow  actions  and  instructions,  both standard and non-standard, supported by Open vSwitch, regardless of origin. The document  includes  information of  interest  to Open vSwitch users, such as the semantics of each supported action and the syntax used by Open vSwitch tools, and to  developers  seeking  to  build controllers and switches compatible with OpenvSwitch, such as the wire format for each supported message.
+本文档旨在全面记录Open vSwitch支持的所有OpenFlow动作（actions）和指令动作（actions）及指令（instructions），包括标准和非标准，无论其来源如何。
+该文档包含Open vSwitch用户感兴趣的信息，例如每个支持的操作的语义和Open vSwitch工具使用的语法，以及寻求构建与OpenvSwitch兼容的控制器和交换机的开发人员，例如每个支持的消息的wire格式。
+###   动作（Actions）
 
-###   Actions
-In this document, we define an action as an OpenFlow action, which is a kind  of  command  that specifies what to do with a packet. Actions are used in OpenFlow flows to describe what to do when the flow  matches  a
-packet,  and  in  a  few  other places in OpenFlow. Each version of the OpenFlow specification defines standard actions, and beyond  that  many OpenFlow  switches, including Open vSwitch, implement extensions to the standard.OpenFlow groups actions in two ways: as an action list or an action set, described below.
+在本文档中，我们将动作（action）定义为OpenFlow操作，这是一种指定如何处理数据包的命令。 Actions are used in OpenFlow flows to describe what to do when the flow  matches  a packet,  and in a few other places in OpenFlow. 每个版本的OpenFlow规范都定义了标准操作，除此之外，许多OpenFlow交换机（包括Open vSwitch）都实现了标准的扩展。OpenFlow以两种方式对动作进行分组：作为动作列表（action list）或动作集（action set），如下所述。
 
-####     Action Lists
 
-An action list, a concept present in every version of OpenFlow, is sim‐
-ply an ordered sequence of actions. The OpenFlow specifications require
-a  switch  to execute actions within an action list in the order speci‐
-fied, and to refuse to execute an action list entirely if it cannot im‐
-plement the actions in that order [OpenFlow 1.0, section 3.3], with one
-exception: when an action list outputs multiple packets, the switch may
-output  the packets in an order different from that specified. Usually,
-this exception is not important, especially in the common case when the
-packets are output to different ports.
+####  动作列表（Action Lists）
 
-####     Action Sets
+An action list, a concept present in every version of OpenFlow, is simply an ordered sequence of actions. The OpenFlow specifications require a  switch  to execute actions within an action list in the order specified, and to refuse to execute an action list entirely if it cannot implement the actions in that order [OpenFlow 1.0, section 3.3], with one
+exception: when an action list outputs multiple packets, the switch may output  the packets in an order different from that specified. Usually,
+this exception is not important, especially in the common case when the packets are output to different ports.
+
+####  动作集（Action Sets）
 
 OpenFlow 1.1引入了动作集的概念。 操作集也是一系列操作，
-但交换机根据OpenFlow规范中指定的规则重新排序操作并删除重复项。
-因为这些语法，一些标准的 OpenFlow  actions 可能在action set 中无效。
-
-对于一部分Open vSwitch扩展的actions，Open vSwitch定义了自己的操作集语义和排序。
-
-The  OpenFlow pipeline has an action set associated with it as a packet
-is processed. After pipeline  processing  is  otherwise  complete,  the
-switch executes the actions in the action set.
+但交换机根据OpenFlow规范中指定的规则重新排序操作并删除重复项。因为这些语法，一些标准的 OpenFlow actions 可在action set 中无效。对于一部分Open vSwitch扩展的actions，Open vSwitch定义了自己的操作集语义和排序。The  OpenFlow pipeline has an action set associated with it as a packet is processed. After pipeline  processing  is  otherwise  complete,  the switch executes the actions in the action set.
 
 Open vSwitch按以下顺序在操作集中应用操作:
 
 除非下面另有说明，否则动作集最多只执行每种类型的单个动作，并且当存在多个给定类型的动作时，添加到该集合中的动作稍后将替换先前的动作。:
 
 1.  strip_vlan
-
 2.  pop_mpls
-
 3.  decap
-
 4.  encap
-
 5.  push_mpls
-
 6.  push_vlan
-
 7.  dec_ttl
-
 8.  dec_mpls_ttl
-
 9.  dec_nsh_ttl
-
-10. All of the following actions are executed in the order added
-to the action set, with cumulative  effect.  That  is,  when
-multiple  actions modify the same part of a field, the later
-modification takes effect, and when  they  modify  different
+10. All of the following actions are executed in the order added to the action set, with cumulative  effect.  That  is,  when multiple  actions modify the same part of a field, the later modification takes effect, and when  they  modify  different
 parts  of a field (or different fields), then both modifica‐
 tions are applied:
 
 * load
-
 * move
-
 * mod_dl_dst
-
 * mod_dl_src
-
 *  mod_nw_dst
-
 * mod_nw_src
-
 * mod_nw_tos
-
 * mod_nw_ecn
-
 * mod_nw_ttl
-
 * mod_tp_dst
-
 * mod_tp_src
-
 * mod_vlan_pcp
-
 * mod_vlan_vid
-
 * set_field
-
 * set_tunnel
-
 * set_tunnel64
 
 11. set_queue
