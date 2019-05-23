@@ -56,7 +56,6 @@ tions are applied:
 * set_tunnel64
 
 11. set_queue
-
 12. group, output, resubmit, ct_clear, or ct. If more  than  one
 of  these  actions  is present, then the one listed earliest
 above is executed and the others are ignored, regardless  of
