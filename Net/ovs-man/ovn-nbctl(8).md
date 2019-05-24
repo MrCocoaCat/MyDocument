@@ -1,58 +1,46 @@
-ovn-nbctl(8)                  Open vSwitch Manual                 ovn-nbctl(8)
-
+ovn-nbctl(8)                  Open vSwitch
 
 ## NAME
-       ovn-nbctl - Open Virtual Network northbound db management utility
+ovn-nbctl - Open Virtual Network的北向数据库管理程序
 
 ## SYNOPSIS
-       ovn-nbctl [options] command [arg...]
+ovn-nbctl [options] command [arg...]
 
 ## DESCRIPTION
-       This utility can be used to manage the OVN northbound database.
+这个程序可以用来管理OVN 的北向数据库
+
 
 ## GENERAL COMMANDS
-       init   Initializes  the  database,  if it is empty. If the database has
-              already been initialized, this command has no effect.
+* init   
+如果数据库为空，则初始化数据库。 如果数据库已初始化，则此命令无效。
 
-       show [switch | router]
-              Prints a brief overview of the database contents. If  switch  is
-              provided, only records related to that logical switch are shown.
-              If router is provided, only  records  related  to  that  logical
-              router are shown.
+* show [switch | router]
+打印数据库内容的简要概述。如果提供了switch，则仅显示与该逻辑交换机相关的记录。如提供router，则仅显示与该逻辑路由器相关的记录。
 
 ### LOGICAL SWITCH COMMANDS
-       ls-add 创建一个新的未命名的逻辑交换机，该交换机最初没有端口。
-              交换机没有名称，其他命令必须通过其UUID引用此交换机。
+* ls-add
+创建一个新的未命名的逻辑交换机，该交换机最初没有端口。
+交换机没有名称，其他命令必须通过其UUID引用此交换机。
 
-       [--may-exist | --add-duplicate] ls-add switch
-              创建一个名为switch的新逻辑交换机，该交换机最初没有端口。
+* [--may-exist | --add-duplicate] ls-add switch
+创建一个名为switch的新逻辑交换机，该交换机最初没有端口。
+The OVN northbound database  schema  does  not  require  logical  switch  names  to be unique, but the whole point to the names is to provide an easy way for humans to refer to the switches, making  duplicate  names unhelpful. Thus, without any options, this command regards it as an error if switch is  a  duplicate  name.
+With  --may-exist, adding a duplicate name succeeds but does not create a new logical switch. With --add-duplicate,  the  command really creates a new logical switch with a duplicate name. It is
+an error to specify both options. If there are multiple  logical switches  with  a duplicate name, configure the logical switches using the UUID instead of the switch name.
 
-              The OVN northbound database  schema  does  not  require  logical
-              switch  names  to be unique, but the whole point to the names is
-              to provide an easy way for humans to refer to the switches, mak‐
-              ing  duplicate  names unhelpful. Thus, without any options, this
-              command regards it as an error if switch is  a  duplicate  name.
-              With  --may-exist, adding a duplicate name succeeds but does not
-              create a new logical switch. With --add-duplicate,  the  command
-              really creates a new logical switch with a duplicate name. It is
-              an error to specify both options. If there are multiple  logical
-              switches  with  a duplicate name, configure the logical switches
-              using the UUID instead of the switch name.
+* [--if-exists] ls-del switch
+删除switch。如果switch不存在，则报错,unless --if-exists is specified.
 
-       [--if-exists] ls-del switch
-              删除switch。如果switch不存在，则报错,unless
-              --if-exists is specified.
-
-       ls-list
-              Lists all existing switches on standard output, one per line.
+* ls-list
+在标准输出中列出所有存在的switches，每个一行.
 
 ## ACL COMMANDS
-       These  commands  operates on ACL objects for a given entity. The entity
-       can be either a logical switch or a port group. The entity can be spec‐
-       ified  as  uuid  or  name. The --type option can be used to specify the
-       type of the entity, in case both a logical switch and a port groups ex‐
-       ist with the same name specified for entity. type must be either switch
-       or port-group.
+These  commands  operates on ACL objects for a given entity. The entity
+can be either a logical switch or a port group. The entity can be spec‐
+ified  as  uuid  or  name. The --type option can be used to specify the
+type of the entity, in case both a logical switch and a port groups ex‐
+ist with the same name specified for entity. type must be either switch
+or port-group.
 
               [--type={switch | port-group}] [--log] [--meter=meter] [--sever‐
               ity=severity]  [--name=name] [--may-exist] acl-add entity direc‐
@@ -143,157 +131,136 @@ ovn-nbctl(8)                  Open vSwitch Manual                 ovn-nbctl(8)
               Lists all meters.
 
 ### LOGICAL SWITCH PORT COMMANDS
-       [--may-exist] lsp-add switch port
-              在lswitch上创建一个新的逻辑switch port 名为port
+* [--may-exist] lsp-add switch port
+在lswitch上创建一个新的逻辑switch port名为port
 
-              It  is an error if a logical port named port already exists, un‐
-              less --may-exist is specified. Regardless of --may-exist, it  is
-              an  error  if  the existing port is in some logical switch other
-              than switch or if it has a parent port.
+It  is an error if a logical port named port already exists, unless --may-exist is specified. Regardless of --may-exist, it  is an  error  if  the existing port is in some logical switch other than switch or if it has a parent port.
 
-       [--may-exist] lsp-add switch port parent tag_request
-              Creates on switch a logical switch port named  port  that  is  a
-              child  of  parent  that  is identified with VLAN ID tag_request,
-              which must be between 0 and 4095, inclusive. If  tag_request  is
-              0,  ovn-northd  generates  a  tag that is unique in the scope of
-              parent. This is useful in cases such  as  virtualized  container
-              environments  where  Open vSwitch does not have a direct connec‐
-              tion to the container’s port and it must be shared with the vir‐
-              tual machine’s port.
+* [--may-exist] lsp-add switch port parent tag_request
+Creates on switch a logical switch port named  port  that  is  a child  of  parent  that  is identified with VLAN ID tag_request,which must be between 0 and 4095, inclusive. If  tag_request  is 0,  ovn-northd  generates  a  tag that is unique in the scope of parent. This is useful in cases such  as  virtualized  container environments  where  Open vSwitch does not have a direct connection to the container’s port and it must be shared with the virtual machine’s port.
 
-              It  is an error if a logical port named port already exists, un‐
-              less --may-exist is specified. Regardless of --may-exist, it  is
-              an error if the existing port is not in switch or if it does not
-              have the specified parent and tag_request.
+It  is an error if a logical port named port already exists, unless --may-exist is specified. Regardless of --may-exist, it  is an error if the existing port is not in switch or if it does not have the specified parent and tag_request.
 
-       [--if-exists] lsp-del port
-              Deletes port. It is an error if  port  does  not  exist,  unless
-              --if-exists is specified.
+* [--if-exists] lsp-del port
+删除端口.当端口不存在时则报错,unless --if-exists is specified.
 
-       lsp-list switch
-              列举switch中所有的logical switch ports在标准输出中，每一行
+* lsp-list switch
+列举switch中所有的logical switch ports在标准输出中，每一行
 
-       lsp-get-parent port
-              如果设置了parent port ，则显示。否则不显示
+* lsp-get-parent port
+      如果设置了parent port ，则显示。否则不显示
 
-       lsp-get-tag port
-              If set, get the tag for port traffic. If not set, print nothing.
+* lsp-get-tag port
+If set, get the tag for port traffic. If not set, print nothing.
 
-       lsp-set-addresses port [address]...
-              设置与端口地址关联的地址。每个地址应为以下之一
+lsp-set-addresses port [address]...
+      设置与端口地址关联的地址。每个地址应为以下之一
 
-              * an  Ethernet  address, optionally followed by a space and one or
-              more IP addresses
-                     OVN delivers packets for the  Ethernet  address  to  this
-                     port.OVN将以太网地址的数据包传送到此端口。
+      * an  Ethernet  address, optionally followed by a space and one or
+      more IP addresses
+             OVN delivers packets for the  Ethernet  address  to  this
+             port.OVN将以太网地址的数据包传送到此端口。
 
-              * unknown
-                     OVN  delivers  unicast Ethernet packets whose destination
-                     MAC address is not in any logical port’s addresses column
-                     to ports with address unknown.
-                     OVN将目的MAC地址不在任何逻辑端口地址列中的单播以太网数据包
-                     传送到unknown端口。
+      * unknown
+             OVN  delivers  unicast Ethernet packets whose destination
+             MAC address is not in any logical port’s addresses column
+             to ports with address unknown.
+             OVN将目的MAC地址不在任何逻辑端口地址列中的单播以太网数据包
+             传送到unknown端口。
 
-              * dynamic
-                     Use  this  keyword to make ovn-northd generate a globally
-                     unique MAC address and choose an unused IPv4 address with
-                     the  logical  port’s  subnet and store them in the port’s
-                     dynamic_addresses column.
+      * dynamic
+             Use  this  keyword to make ovn-northd generate a globally
+             unique MAC address and choose an unused IPv4 address with
+             the  logical  port’s  subnet and store them in the port’s
+             dynamic_addresses column.
 
-              * router Accepted only when the type of the logical switch port is
-                     router.  This indicates that the Ethernet, IPv4, and IPv6
-                     addresses for this logical switch port should be obtained
-                     from  the  connected logical router port, as specified by
-                     router-port in lsp-set-options.
+      * router Accepted only when the type of the logical switch port is
+             router.  This indicates that the Ethernet, IPv4, and IPv6
+             addresses for this logical switch port should be obtained
+             from  the  connected logical router port, as specified by
+             router-port in lsp-set-options.
 
-              Multiple addresses may be set. If no address argument is given,
-              port will have no addresses associated with it.
+      Multiple addresses may be set. If no address argument is given,
+      port will have no addresses associated with it.
 
-       lsp-get-addresses port
-              Lists all the addresses associated with port on standard output,
-              one per line.
+lsp-get-addresses port
+      Lists all the addresses associated with port on standard output,
+      one per line.
 
-       lsp-set-port-security port [addrs]...
-              Sets the port security addresses associated with port to  addrs.
-              Multiple  sets  of  addresses may be set by using multiple addrs
-              arguments. If no addrs argument is given,  port  will  not  have
-              port security enabled.
+lsp-set-port-security port [addrs]...
+      Sets the port security addresses associated with port to  addrs.
+      Multiple  sets  of  addresses may be set by using multiple addrs
+      arguments. If no addrs argument is given,  port  will  not  have
+      port security enabled.
 
-              Port security limits the addresses from which a logical port may
-              send packets and to  which  it  may  receive  packets.  See  the
-              ovn-nb(5) documentation for the port_security column in the Log‐
-              ical_Switch_Port table for details.
+      Port security limits the addresses from which a logical port may
+      send packets and to  which  it  may  receive  packets.  See  the
+      ovn-nb(5) documentation for the port_security column in the Log‐
+      ical_Switch_Port table for details.
 
-       lsp-get-port-security port
-              Lists all the port security addresses associated  with  port  on
-              standard output, one per line.
+lsp-get-port-security port
+      Lists all the port security addresses associated  with  port  on
+      standard output, one per line.
 
-       lsp-get-up port
-              Prints the state of port, either up or down.
+lsp-get-up port
+      Prints the state of port, either up or down.
 
-       lsp-set-enabled port state
-              Set  the  administrative  state  of port, either enabled or dis‐
-              abled. When a port is disabled, no traffic is  allowed  into  or
-              out of the port.
+lsp-set-enabled port state
+      Set  the  administrative  state  of port, either enabled or dis‐
+      abled. When a port is disabled, no traffic is  allowed  into  or
+      out of the port.
 
-       lsp-get-enabled port
-              Prints  the administrative state of port, either enabled or dis‐
-              abled.
+lsp-get-enabled port
+      Prints  the administrative state of port, either enabled or dis‐
+      abled.
 
-       lsp-set-type port type
-              设置逻辑端口的类型。 类型必须是以下之一:
+* lsp-set-type port type
+      设置逻辑端口的类型。 类型必须是以下之一:
+      * (empty string)
+             A VM (or VIF) interface.
+      * router A connection to a logical router.
+      * localnet
+             A  connection  to  a locally accessible network from each
+             ovn-controller instance. A logical switch can only have a
+             single  localnet port attached. This is used to model di‐
+             rect connectivity to an existing network.
+             从每个ovn控制器实例连接到本地可访问的网络。
+             逻辑交换机只能连接一个localnet端口。 这用于建模与现有网络的直接连接。
+      * localport
+             A connection to a local VIF. Traffic that  arrives  on  a
+             localport  is  never  forwarded  over a tunnel to another
+             chassis. These ports are present  on  every  chassis  and
+             have  the  same  address  in all of them. This is used to
+             model connectivity to local services that  run  on  every
+             hypervisor.
+      * l2gateway
+             A connection to a physical network.
+      * vtep  A port to a logical switch on a VTEP gateway.
 
-              * (empty string)
-                     A VM (or VIF) interface.
+* lsp-get-type port
+Get the type for the logical port.
 
-              * router A connection to a logical router.
+* lsp-set-options port [key=value]...
+Set type-specific key-value options for the logical port.
 
-              * localnet
-                     A  connection  to  a locally accessible network from each
-                     ovn-controller instance. A logical switch can only have a
-                     single  localnet port attached. This is used to model di‐
-                     rect connectivity to an existing network.
-                     从每个ovn控制器实例连接到本地可访问的网络。
-                     逻辑交换机只能连接一个localnet端口。 这用于建模与现有网络的直接连接。
+* lsp-get-options port
+Get the type-specific options for the logical port.
 
-              * localport
-                     A connection to a local VIF. Traffic that  arrives  on  a
-                     localport  is  never  forwarded  over a tunnel to another
-                     chassis. These ports are present  on  every  chassis  and
-                     have  the  same  address  in all of them. This is used to
-                     model connectivity to local services that  run  on  every
-                     hypervisor.
+* lsp-set-dhcpv4-options port dhcp_options
+为logical port 设置DHCPv4 options。
+Set the DHCPv4 options for the logical port. The dhcp_options is
+a UUID referring to a set of DHCP options  in  the  DHCP_Options
+table.
 
-              * l2gateway
-                     A connection to a physical network.
+* lsp-get-dhcpv4-optoins port
+Get the configured DHCPv4 options for the logical port.
 
-              * vtep  A port to a logical switch on a VTEP gateway.
+* Set the DHCPv6 options for the logical port. The dhcp_options is
+a UUID referring to a set of DHCP options  in  the  DHCP_Options
+table.
 
-       lsp-get-type port
-              Get the type for the logical port.
-
-       lsp-set-options port [key=value]...
-              Set type-specific key-value options for the logical port.
-
-       lsp-get-options port
-              Get the type-specific options for the logical port.
-
-       lsp-set-dhcpv4-options port dhcp_options
-              为logical port 设置DHCPv4 options。
-              Set the DHCPv4 options for the logical port. The dhcp_options is
-              a UUID referring to a set of DHCP options  in  the  DHCP_Options
-              table.
-
-       lsp-get-dhcpv4-optoins port
-              Get the configured DHCPv4 options for the logical port.
-
-       lsp-set-dhcpv6-options port dhcp_options
-              Set the DHCPv6 options for the logical port. The dhcp_options is
-              a UUID referring to a set of DHCP options  in  the  DHCP_Options
-              table.
-
-       lsp-get-dhcpv6-optoins port
-              Get the configured DHCPv6 options for the logical port.
+* lsp-get-dhcpv6-optoins port
+Get the configured DHCPv6 options for the logical port.
 
 ### LOGICAL ROUTER COMMANDS
        lr-add Creates  a  new,  unnamed logical router, which initially has no
