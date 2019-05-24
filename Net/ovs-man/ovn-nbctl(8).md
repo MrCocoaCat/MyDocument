@@ -23,16 +23,16 @@ ovn-nbctl [options] command [arg...]
 交换机没有名称，其他命令必须通过其UUID引用此交换机。
 
 * [--may-exist | --add-duplicate] ls-add switch
-创建一个名为switch的新逻辑交换机，该交换机最初没有端口。
-The OVN northbound database  schema  does  not  require  logical  switch  names  to be unique, but the whole point to the names is to provide an easy way for humans to refer to the switches, making  duplicate  names unhelpful. Thus, without any options, this command regards it as an error if switch is  a  duplicate  name.
-With  --may-exist, adding a duplicate name succeeds but does not create a new logical switch. With --add-duplicate,  the  command really creates a new logical switch with a duplicate name. It is
-an error to specify both options. If there are multiple  logical switches  with  a duplicate name, configure the logical switches using the UUID instead of the switch name.
+创建一个名为switch的新逻辑交换机，该交换机最初没有端口。OVN北向数据库模式（schema）不要求逻辑交换机名称是唯一的, 但是，名称的重点是为人们提供一种简单的方式来引用交换机，使用重复的名称对此无益。因此，在没有任何选项的情况下，如果switch是重复名称，则此命令将其视为错误。
+使用--may-exist选项, 添加重复名称会成功，但不会创建新的逻辑交换机。
+使用--add-duplicate选项,  该命令实际上创建了一个具有重复名称的新逻辑交换机。
+指定两个选项都是错误的。 如果有多个具有重复名称的逻辑交换机，应使用UUID配置逻辑交换机，而不是交换机名称。
 
 * [--if-exists] ls-del switch
-删除switch。如果switch不存在，则报错,unless --if-exists is specified.
+删除switch。如果switch不存在，则报错,除非指定了--if-exists 选项。
 
 * ls-list
-在标准输出中列出所有存在的switches，每个一行.
+在标准输出中列出所有存在的switches，每条一行.
 
 ## ACL COMMANDS
 These  commands  operates on ACL objects for a given entity. The entity
@@ -42,37 +42,37 @@ type of the entity, in case both a logical switch and a port groups ex‐
 ist with the same name specified for entity. type must be either switch
 or port-group.
 
-              [--type={switch | port-group}] [--log] [--meter=meter] [--sever‐
-              ity=severity]  [--name=name] [--may-exist] acl-add entity direc‐
-              tion priority match verdict
-                     Adds the specified ACL to entity. direction must  be  ei‐
-                     ther  from-lport  or to-lport. priority must be between 0
-                     and 32767, inclusive. A full description  of  the  fields
-                     are  in  ovn-nb(5). If --may-exist is specified, adding a
-                     duplicated ACL succeeds but the ACL is  not  really  cre‐
-                     ated.  Without  --may-exist,  adding a duplicated ACL re‐
-                     sults in error.
+  [--type={switch | port-group}] [--log] [--meter=meter] [--sever‐
+  ity=severity]  [--name=name] [--may-exist] acl-add entity direc‐
+  tion priority match verdict
+         Adds the specified ACL to entity. direction must  be  ei‐
+         ther  from-lport  or to-lport. priority must be between 0
+         and 32767, inclusive. A full description  of  the  fields
+         are  in  ovn-nb(5). If --may-exist is specified, adding a
+         duplicated ACL succeeds but the ACL is  not  really  cre‐
+         ated.  Without  --may-exist,  adding a duplicated ACL re‐
+         sults in error.
 
-                     The --log option enables packet logging for the ACL.  The
-                     options  --severity  and  --name  specify  a severity and
-                     name, respectively, for log entries (and also enable log‐
-                     ging).  The  severity  must be one of alert, warning, no‐
-                     tice, info, or debug. If a severity is not specified, the
-                     default  is  info.  The  --meter=meter  option is used to
-                     rate-limit packet logging. The meter argument names a me‐
-                     ter configured by meter-add.
+         The --log option enables packet logging for the ACL.  The
+         options  --severity  and  --name  specify  a severity and
+         name, respectively, for log entries (and also enable log‐
+         ging).  The  severity  must be one of alert, warning, no‐
+         tice, info, or debug. If a severity is not specified, the
+         default  is  info.  The  --meter=meter  option is used to
+         rate-limit packet logging. The meter argument names a me‐
+         ter configured by meter-add.
 
-              [--type={switch | port-group}] acl-del entity [direction [prior‐
-              ity match]]
-                     Deletes ACLs from entity. If only entity is supplied, all
-                     the  ACLs  from  the  entity are deleted. If direction is
-                     also specified, then all the flows in that direction will
-                     be  deleted from the entity. If all the fields are given,
-                     then a single flow that matches all the  fields  will  be
-                     deleted.
+  [--type={switch | port-group}] acl-del entity [direction [prior‐
+  ity match]]
+         Deletes ACLs from entity. If only entity is supplied, all
+         the  ACLs  from  the  entity are deleted. If direction is
+         also specified, then all the flows in that direction will
+         be  deleted from the entity. If all the fields are given,
+         then a single flow that matches all the  fields  will  be
+         deleted.
 
-              [--type={switch | port-group}] acl-list entity
-                     Lists the ACLs on entity.
+  [--type={switch | port-group}] acl-list entity
+         Lists the ACLs on entity.
 
 ## LOGICAL SWITCH QOS RULE COMMANDS
        [--may-exist]  qos-add  switch  direction  priority  match  [dscp=dscp]
@@ -132,9 +132,8 @@ or port-group.
 
 ### LOGICAL SWITCH PORT COMMANDS
 * [--may-exist] lsp-add switch port
-在lswitch上创建一个新的逻辑switch port名为port
-
-It  is an error if a logical port named port already exists, unless --may-exist is specified. Regardless of --may-exist, it  is an  error  if  the existing port is in some logical switch other than switch or if it has a parent port.
+在lswitch上创建一个新的逻辑switch port名为port。如果已存在名为port的逻辑端口，则会出错，除非指定了--may-exist选项。
+如果现有端口位于交换机以外的某个逻辑交换机中，或者如果它具有父端口，无论是否使--may-exist都会报错。
 
 * [--may-exist] lsp-add switch port parent tag_request
 Creates on switch a logical switch port named  port  that  is  a child  of  parent  that  is identified with VLAN ID tag_request,which must be between 0 and 4095, inclusive. If  tag_request  is 0,  ovn-northd  generates  a  tag that is unique in the scope of parent. This is useful in cases such  as  virtualized  container environments  where  Open vSwitch does not have a direct connection to the container’s port and it must be shared with the virtual machine’s port.
@@ -148,46 +147,30 @@ It  is an error if a logical port named port already exists, unless --may-exist 
 列举switch中所有的logical switch ports在标准输出中，每一行
 
 * lsp-get-parent port
-      如果设置了parent port ，则显示。否则不显示
+如果设置了parent port ，则显示。否则不显示
 
 * lsp-get-tag port
-If set, get the tag for port traffic. If not set, print nothing.
+如果设置了，则获取端口流量的tag。如未设置则不显示。
 
-lsp-set-addresses port [address]...
-      设置与端口地址关联的地址。每个地址应为以下之一
-
-      * an  Ethernet  address, optionally followed by a space and one or
-      more IP addresses
-             OVN delivers packets for the  Ethernet  address  to  this
-             port.OVN将以太网地址的数据包传送到此端口。
-
+* lsp-set-addresses port [address]...
+设置与端口地址关联的地址。每个地址应为以下之一
+      * 一个以太网地址, 可选地，后跟空格及一个或多个IP地址
+             OVN将该以太网地址的数据包传送到此端口。
       * unknown
-             OVN  delivers  unicast Ethernet packets whose destination
-             MAC address is not in any logical port’s addresses column
-             to ports with address unknown.
              OVN将目的MAC地址不在任何逻辑端口地址列中的单播以太网数据包
              传送到unknown端口。
-
       * dynamic
-             Use  this  keyword to make ovn-northd generate a globally
-             unique MAC address and choose an unused IPv4 address with
-             the  logical  port’s  subnet and store them in the port’s
-             dynamic_addresses column.
+            使用此关键字可使ovn-northd生成全局唯一的MAC地址，并在逻辑端口的子网中选择未使用的IPv4地址，并将其存储在端口的dynamic_addresses列中。
 
-      * router Accepted only when the type of the logical switch port is
-             router.  This indicates that the Ethernet, IPv4, and IPv6
-             addresses for this logical switch port should be obtained
-             from  the  connected logical router port, as specified by
-             router-port in lsp-set-options.
+      * router
+              仅当逻辑交换机端口的类型是路由器时，才可以设置此选项。
+              这表示此逻辑交换机端口的以太网，IPv4和IPv6地址应从连接的逻辑路由器端口获取，如lsp-set-options中的router-port所指定
+可以设置多个地址。 如果没有给出地址参数，port将没有与之关联的地址。
 
-      Multiple addresses may be set. If no address argument is given,
-      port will have no addresses associated with it.
+* lsp-get-addresses port
+      Lists all the addresses associated with port on standard output,  one per line.
 
-lsp-get-addresses port
-      Lists all the addresses associated with port on standard output,
-      one per line.
-
-lsp-set-port-security port [addrs]...
+* lsp-set-port-security port [addrs]...
       Sets the port security addresses associated with port to  addrs.
       Multiple  sets  of  addresses may be set by using multiple addrs
       arguments. If no addrs argument is given,  port  will  not  have
@@ -198,19 +181,19 @@ lsp-set-port-security port [addrs]...
       ovn-nb(5) documentation for the port_security column in the Log‐
       ical_Switch_Port table for details.
 
-lsp-get-port-security port
+* lsp-get-port-security port
       Lists all the port security addresses associated  with  port  on
       standard output, one per line.
 
-lsp-get-up port
+* lsp-get-up port
       Prints the state of port, either up or down.
 
-lsp-set-enabled port state
+* lsp-set-enabled port state
       Set  the  administrative  state  of port, either enabled or dis‐
       abled. When a port is disabled, no traffic is  allowed  into  or
       out of the port.
 
-lsp-get-enabled port
+* lsp-get-enabled port
       Prints  the administrative state of port, either enabled or dis‐
       abled.
 
@@ -247,10 +230,7 @@ Set type-specific key-value options for the logical port.
 Get the type-specific options for the logical port.
 
 * lsp-set-dhcpv4-options port dhcp_options
-为logical port 设置DHCPv4 options。
-Set the DHCPv4 options for the logical port. The dhcp_options is
-a UUID referring to a set of DHCP options  in  the  DHCP_Options
-table.
+为logical port 设置DHCPv4选项。dhcp_options是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
 
 * lsp-get-dhcpv4-optoins port
 Get the configured DHCPv4 options for the logical port.
@@ -263,32 +243,32 @@ table.
 Get the configured DHCPv6 options for the logical port.
 
 ### LOGICAL ROUTER COMMANDS
-       lr-add Creates  a  new,  unnamed logical router, which initially has no
-              ports. The router does not have a name, other commands must  re‐
-              fer to this router by its UUID.
+ lr-add Creates  a  new,  unnamed logical router, which initially has no
+        ports. The router does not have a name, other commands must  re‐
+        fer to this router by its UUID.
 
-       [--may-exist | --add-duplicate] lr-add router
-              Creates  a  new logical router named router, which initially has
-              no ports.
+ [--may-exist | --add-duplicate] lr-add router
+        Creates  a  new logical router named router, which initially has
+        no ports.
 
-              The OVN northbound database  schema  does  not  require  logical
-              router  names  to be unique, but the whole point to the names is
-              to provide an easy way for humans to refer to the routers,  mak‐
-              ing  duplicate  names unhelpful. Thus, without any options, this
-              command regards it as an error if router is  a  duplicate  name.
-              With  --may-exist, adding a duplicate name succeeds but does not
-              create a new logical router. With --add-duplicate,  the  command
-              really creates a new logical router with a duplicate name. It is
-              an error to specify both options. If there are multiple  logical
-              routers with a duplicate name, configure the logical routers us‐
-              ing the UUID instead of the router name.
+        The OVN northbound database  schema  does  not  require  logical
+        router  names  to be unique, but the whole point to the names is
+        to provide an easy way for humans to refer to the routers,  mak‐
+        ing  duplicate  names unhelpful. Thus, without any options, this
+        command regards it as an error if router is  a  duplicate  name.
+        With  --may-exist, adding a duplicate name succeeds but does not
+        create a new logical router. With --add-duplicate,  the  command
+        really creates a new logical router with a duplicate name. It is
+        an error to specify both options. If there are multiple  logical
+        routers with a duplicate name, configure the logical routers us‐
+        ing the UUID instead of the router name.
 
-       [--if-exists] lr-del router
-              Deletes router. It is an error if router does not exist,  unless
-              --if-exists is specified.
+ [--if-exists] lr-del router
+        Deletes router. It is an error if router does not exist,  unless
+        --if-exists is specified.
 
-       lr-list
-              Lists all existing routers on standard output, one per line.
+ lr-list
+        Lists all existing routers on standard output, one per line.
 
 ### LOGICAL ROUTER PORT COMMANDS
        [--may-exist] lrp-add router port mac network... [peer=peer]
