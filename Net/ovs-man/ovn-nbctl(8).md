@@ -213,8 +213,9 @@ It  is an error if a logical port named port already exists, unless --may-exist 
              model connectivity to local services that  run  on  every
              hypervisor.
       * l2gateway
-             A connection to a physical network.
-      * vtep  A port to a logical switch on a VTEP gateway.
+             与物理网络的连接
+      * vtep  
+             A port to a logical switch on a VTEP gateway.
 
 * lsp-get-type port     
   获取逻辑端口的类型
@@ -243,7 +244,7 @@ It  is an error if a logical port named port already exists, unless --may-exist 
 lr-add创建一个新的，未命名的逻辑路由器，它最初没有端口。 路由器没有名称，其他命令必须通过其UUID引用此路由器。
 
  * [--may-exist | --add-duplicate] lr-add router   
-新创建一个名为router的路由，初始化后没有端口。OVN的北向数据集模型（schema）并不要求逻辑路由名称唯一，路由的提供一个简单的
+新创建一个名为 *router* 的路由，初始化后没有端口。OVN的北向数据集模型（schema）并不要求逻辑路由名称唯一，路由的提供一个简单的
 路由器名称是唯一的，但名称的重点是为人们提供一种简单的方法来引用路由器，使用重复的名称对此无益。因此，如果没有任何选项，如果路由器是重复的名称，则此命令将其视为错误。
 使用--may-exist时，添加重复名称会成功，但不会创建新的逻辑路由器。
 使用--add-duplicate，该命令实际上会创建一个具有重复名称的新逻辑路由器。
@@ -256,22 +257,17 @@ lr-add创建一个新的，未命名的逻辑路由器，它最初没有端口�
 在标准输出中，列出所有存在的路由，每个一行
 
 #### LOGICAL ROUTER PORT COMMANDS
-[--may-exist] lrp-add router port mac network... [peer=peer]
-      Creates on router a new logical router port named port with Eth‐
-      ernet address mac and one or more IP  address/netmask  for  each
-      network.
-
-      The optional argument peer identifies a logical router port that
-      connects to this one. The following example adds a  router  port
-      with an IPv4 and IPv6 address with peer lr1:
-
-      lrp-add lr0 lrp0 00:11:22:33:44:55 192.168.0.1/24 2001:db8::1/64
-      peer=lr1
-
-      It is an error if a logical router port named port  already  ex‐
-      ists,  unless  --may-exist is specified. Regardless of --may-ex‐
-      ist, it is an error if the existing router port is in some logi‐
-      cal router other than router.
+* [--may-exist] lrp-add router port mac network... [peer=peer]
+在路由器上创建一个名为port的新逻辑路由器端口，其中包含Ethernet地址mac
+和每个网络的一个或多个IP地址/网络掩码。  
+可选参数peer标识连接到此端口的逻辑路由器端口。
+ 以下示例，添加一个路由端口，带有IPv4 地址和IPv6 地址，并含有peer lr1
+```
+lrp-add lr0 lrp0 00:11:22:33:44:55 192.168.0.1/24 2001:db8::1/64
+peer=lr1
+```
+如果指定了名为port的逻辑路由器端口，则会出错，除非指定了--may-exist。
+--may-exist，如果现有路由器端口位于路由器以外的某个逻辑路由器中，则会出错
 
  * [--if-exists] lrp-del port
  删除端口，如果端口不存在则报错，除非指定--if-exists
@@ -280,113 +276,71 @@ lr-add创建一个新的，未命名的逻辑路由器，它最初没有端口�
 在标准输出中列出逻辑路由中的所有端口，每个一行
 
 * lrp-set-enabled port state
-        Set  the  administrative  state  of port, either enabled or dis‐
-        abled. When a port is disabled, no traffic is  allowed  into  or
-        out of the port.
+Set  the  administrative  state  of port, either enabled or dis‐
+abled. When a port is disabled, no traffic is  allowed  into  or
+out of the port.
 
 * lrp-get-enabled port
-打印端口的administrative状态，开启或禁用
+  打印端口的administrative状态，开启或禁用
 
 * lrp-set-gateway-chassis port chassis [priority]
-        Set gateway chassis for port. chassis is the name of  the  chas‐
-        sis. This creates a gateway chassis entry in Gateway_Chassis ta‐
-        ble. It won’t check if chassis really exists  in  OVN_Southbound
-        database.  Priority will be set to 0 if priority is not provided
-        by user. priority must be between 0 and 32767, inclusive.
+  Set gateway chassis for port. chassis is the name of  the  chas‐
+  sis. This creates a gateway chassis entry in Gateway_Chassis ta‐
+  ble. It won’t check if chassis really exists  in  OVN_Southbound
+  database.  Priority will be set to 0 if priority is not provided
+  by user. priority must be between 0 and 32767, inclusive.
 
  * lrp-del-gateway-chassis port chassis
-        Deletes gateway chassis from port. It is  an  error  if  gateway
-        chassis with chassis for port does not exist.
+  Deletes gateway chassis from port. It is  an  error  if  gateway
+  chassis with chassis for port does not exist.
 
- *    
-
- lrp-get-gateway-chassis port
-        Lists all the gateway chassis with priority within port on stan‐
-        dard output, one per line, ordered based on priority.
+ * lrp-get-gateway-chassis port
+  Lists all the gateway chassis with priority within port on stan‐
+  dard output, one per line, ordered based on priority.
 
 #### LOGICAL ROUTER STATIC ROUTE COMMANDS
-       [--may-exist]  [--policy=POLICY]  lr-route-add  router  prefix  nexthop
-       [port]
-              Adds  the specified route to router. prefix describes an IPv4 or
-              IPv6 prefix for this route, such  as  192.168.100.0/24.  nexthop
-              specifies the gateway to use for this route, which should be the
-              IP address of one of router logical router ports or the  IP  ad‐
-              dress  of  a  logical  port.  If port is specified, packets that
-              match this route will be sent out that port. When port is  omit‐
-              ted, OVN infers the output port based on nexthop.
+ * [--may-exist]  [--policy=POLICY]  lr-route-add  router  prefix  nexthop
+ [port]
+  为路由器添加指定的路由规则。 *prefix* 描述该路由的IPv4或
+  IPv6 前缀, 例如192.168.100.0/24.  *nexthop* 指定该路由所使用的网关，该网关是逻辑路由的逻辑端口的IP 地址or 逻辑端口的IP地址。
+  如果指定了 *port*，则匹配此路由的包通过此端口发送出去，当 *port* 省略时，通过 *nexthup* 判断输出端口
+  --policy 描述用于制定路由策略的规则，这应该是“dst-ip”或“src-ip”。 如果未指定，则默认为“dst-ip”。
+  如果带有相同前缀的路由已经存在，则报错。除非指定了--may-exist is specified.
 
-              --policy  describes  the  policy used to make routing decisions.
-              This should be one of "dst-ip" or "src-ip".  If  not  specified,
-              the default is "dst-ip".
+ * [--if-exists] lr-route-del router [prefix]
+  删除路由器的路由规则。如果仅仅提供 *router*, 则逻辑路由器的所有路由规则均被删除。
+  如果 *prefix* 也被指定，则逻辑路由器中匹配 *prefix* 的所有路由规则将被删除。
+  如果指定的 *prefix* 无相应匹配的路由规则，则报错。除非制定了 --if-exists
 
-              It  is  an  error  if a route with prefix already exists, unless
-              --may-exist is specified.
+ * lr-route-list router
+   列出路由器上的路由规则
 
-       [--if-exists] lr-route-del router [prefix]
-              Deletes routes from router. If only router is supplied, all  the
-              routes  from  the  logical router are deleted. If prefix is also
-              specified, then all the routes that match  the  prefix  will  be
-              deleted from the logical router.
-
-              It  is  an error if prefix is specified and there is no matching
-              route entry, unless --if-exists is specified.
-
-       lr-route-list router
-              Lists the routes on router.
 
 #### NAT COMMANDS
-       [--may-exist] lr-nat-add  router  type  external_ip  logical_ip  [logi‐
-       cal_port external_mac]
-              Adds  the specified NAT to router. The type must be one of snat,
-              dnat, or dnat_and_snat. The external_ip is an IPv4 address.  The
-              logical_ip  is  an  IPv4 network (e.g 192.168.1.0/24) or an IPv4
-              address. The logical_port and  external_mac  are  only  accepted
-              when  router  is  a  distributed  router  (rather than a gateway
-              router) and type is dnat_and_snat. The logical_port is the  name
-              of an existing logical switch port where the logical_ip resides.
-              The external_mac is an Ethernet address.
+ * [--may-exist] lr-nat-add  router  type  external_ip  logical_ip  [logi‐
+ cal_port external_mac]   
+ 为路由器器添加特定的NAT。*type* 必须为 snat,dnat,或dnat_and_snat。The *external_ip* 是一个IPv4地址. *logical_ip* 是一个IPv4网络 (e.g 192.168.1.0/24) 或IPv4 地址。
+ 仅当路由器是分布式路由器（distributed  router），而不是网关路由器(gateway  router）且类型为dnat_and_snat时，才接受 *logical_port* 和 *external_mac*。
+ *logical_port* 是logical_ip所在的现有逻辑交换机端口名称， *external_mac* 是Ethernet地址.
+ 当type是 *dnat* 时，外部可见的IP地址 *external_ip* 被DNAT到逻辑空间中的IP地址 *logical_ip*
+ 当type为 *snat* 时，其源IP地址与 *logical_ip* 中的IP地址匹配或者在
+ *logical_ip* 提供的网络中的IP数据包被SNAT到 *external_ip* 中的IP地址。
+ 当type为 *dnat_and_snat* 时，外部可见的IP地址 *external_ip* 被DNAT化为logcal空间中的IP地址 *logical_ip*。
+ 此外，源IP地址与 *logical_ip* 匹配的IP数据包被SNAT到 *external_ip* 中的IP地址。
 
-              When type is dnat, the externally visible IP address external_ip
-              is DNATted to the IP address logical_ip in the logical space.
+ 指定logical_port和external_mac时，NAT规则将在logical_port所在的chassis上编程。
+ 这包括对 *external_ip* 的ARP回复，返回 *external_mac* 的值。
+ 使用 *external_mac* 发送源IP地址等于 *external_ip* 的所有数据包。
 
-              When  type is snat, IP packets with their source IP address that
-              either matches the IP address in logical_ip or is in the network
-              provided  by  logical_ip is SNATed into the IP address in exter‐
-              nal_ip.
+ 如果已存在具有相同值的router，type，external_ip和logical_ip的NAT，则会出错，除非指定了--may-exist。如果指定了--may-exist，logical_port和external_mac，则会覆盖logical_port和external_mac的现有值。
 
-              When type is dnat_and_snat, the externally  visible  IP  address
-              external_ip is DNATted to the IP address logical_ip in the logi‐
-              cal space. In addition, IP packets with the  source  IP  address
-              that  matches logical_ip is SNATed into the IP address in exter‐
-              nal_ip.
+ * [--if-exists] lr-nat-del router [type [ip]]
+ 从路由器删除NAT。 如果仅提供路由器，则会删除逻辑路由器中的所有NAT。 如果还指定了type，则将从逻辑路由器中删除与该类型匹配的所有NAT。 如果给出了所有字段，则将删除与所有字段匹配的单个NAT规则。
+ 当type是snat时，ip应该是logical_ip。 当type是dnat或dnat_and_snat时，ip应该是external_ip。
+ 如果指定了ip并且没有匹配的NAT条目，则会出错，除非指定了--if-exists。
 
-              When the logical_port and external_mac are  specified,  the  NAT
-              rule  will  be  programmed on the chassis where the logical_port
-              resides. This includes ARP replies for  the  external_ip,  which
-              return  the  value of external_mac. All packets transmitted with
-              source IP address equal to external_ip will be  sent  using  the
-              external_mac.
-
-              It  is  an error if a NAT already exists with the same values of
-              router, type, external_ip, and logical_ip, unless --may-exist is
-              specified.  When --may-exist, logical_port, and external_mac are
-              all specified, the existing values of  logical_port  and  exter‐
-              nal_mac are overwritten.
-
-       [--if-exists] lr-nat-del router [type [ip]]
-              Deletes  NATs  from  router. If only router is supplied, all the
-              NATs from the logical router are deleted. If type is also speci‐
-              fied, then all the NATs that match the type will be deleted from
-              the logical router. If all the fields are given, then  a  single
-              NAT  rule that matches all the fields will be deleted. When type
-              is snat, the ip should be  logical_ip.  When  type  is  dnat  or
-              dnat_and_snat, the ip shoud be external_ip.
-
-              It  is  an error if ip is specified and there is no matching NAT
-              entry, unless --if-exists is specified.
-
-       lr-nat-list router
-              Lists the NATs on router.
+ * lr-nat-list router
+ 显示路由器上的所有NATs
 
 #### LOAD BALANCER COMMANDS
        [--may-exist | --add-duplicate] lb-add lb vip ips [protocol]
