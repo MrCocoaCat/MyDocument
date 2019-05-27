@@ -2,7 +2,7 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
 
 
 
-NAME
+### NAME
        ovn-nb - OVN_Northbound database schema
 
        This  database  is  the  interface between OVN and the cloud management
@@ -14,7 +14,7 @@ NAME
        We  generally  speak  of  ”the’’ CMS, but one can imagine scenarios in
        which multiple CMSes manage different parts of an OVN deployment.
 
-   External IDs
+#### External IDs
        Each of the tables in this database contains a  special  column,  named
        external_ids.  This  column has the same form and purpose each place it
        appears.
@@ -25,47 +25,33 @@ NAME
                      own configuration that correspond to those in this  data‐
                      base.
 
-TABLE SUMMARY
-       The  following list summarizes the purpose of each of the tables in the
-       OVN_Northbound database.  Each table is described in more detail  on  a
-       later page.
+### TABLE SUMMARY
+ The  following list summarizes the purpose of each of the tables in the
+ OVN_Northbound database.  Each table is described in more detail  on  a
+ later page.
 
-       Table     Purpose
-       NB_Global Northbound configuration
-       Logical_Switch
-                 L2 logical switch
-       Logical_Switch_Port
-                 L2 logical switch port
-       Address_Set
-                 Address Sets
-       Port_Group
-                 Port Groups
-       Load_Balancer
-                 load balancer
-       ACL       Access Control List (ACL) rule
-       Logical_Router
-                 L3 logical router
-       QoS       QoS rule
-       Meter     Meter entry
-       Meter_Band
-                 Band for meter entries
-       Logical_Router_Port
-                 L3 logical router port
-       Logical_Router_Static_Route
-                 Logical router static routes
-       NAT       NAT rules
-       DHCP_Options
-                 DHCP options
-       Connection
-                 OVSDB client connections.
-       DNS       Native DNS resolution
-       SSL       SSL configuration.
-       Gateway_Chassis
-                 Gateway_Chassis configuration.
-
-NB_Global TABLE
-       Northbound  configuration  for  an OVN system. This table must have ex‐
-       actly one row.
+|Table              |     Purpose             |
+|:-----------------:|:-----------------------:|
+|NB_Global          | Northbound configuration|
+|Logical_Switch     |L2 logical switch        |
+|Logical_Switch_Port|L2 logical switch port   |
+|Address_Set        |Address Sets             |
+|Port_Group         |       Port Groups       |
+|Load_Balancer      |       load balancer     |
+|ACL                |Access Control List (ACL) rule|
+|Logical_Router     |  L3 logical router      |
+|QoS                |       QoS rule          |
+|Meter              |     Meter entry         |
+|   Meter_Band      | Band for meter entries  |
+|Logical_Router_Port|   L3 logical router port|
+|Logical_Router_Static_Route|Logical router static routes|
+| NAT                |   NAT rules            |
+|DHCP_Options       | DHCP options            |
+|Connection         |OVSDB client connections.|
+| DNS               | Native DNS resolution   |
+|   SSL             | SSL configuration.      |
+| Gateway_Chassis   |Gateway_Chassis configuration.|
+|NB_Global TABLE    |Northbound  configuration  for  an OVN system. This table must have exactly one row.|
 
    Summary:
        Status:
@@ -168,146 +154,146 @@ NB_Global TABLE
               Tunnel encryption configuration. If this column  is  set  to  be
               true, all OVN tunnels will be encrypted with IPsec.
 
-Logical_Switch TABLE
-       Each row represents one L2 logical switch.
+#### Logical_Switch TABLE
+  Each row represents one L2 logical switch.
 
-       There  are two kinds of logical switches, that is, ones that fully vir‐
-       tualize the network (overlay logical switches) and  ones  that  provide
-       simple  connectivity  to a physical network (bridged logical switches).
-       They work in the same way when providing connectivity  between  logical
-       ports  on  same  chasis, but differently when connecting remote logical
-       ports. Overlay logical switches connect remote logical  ports  by  tun‐
-       nels,  while  bridged  logical  switches provide connectivity to remote
-       ports by bridging the packets to directly connected physical L2 segment
-       with  the  help  of localnet ports. Each bridged logical switch has one
-       and only one localnet port, which has only one special address unknown.
+  There  are two kinds of logical switches, that is, ones that fully vir‐
+  tualize the network (overlay logical switches) and  ones  that  provide
+  simple  connectivity  to a physical network (bridged logical switches).
+  They work in the same way when providing connectivity  between  logical
+  ports  on  same  chasis, but differently when connecting remote logical
+  ports. Overlay logical switches connect remote logical  ports  by  tun‐
+  nels,  while  bridged  logical  switches provide connectivity to remote
+  ports by bridging the packets to directly connected physical L2 segment
+  with  the  help  of localnet ports. Each bridged logical switch has one
+  and only one localnet port, which has only one special address unknown.
 
-   Summary:
-       ports                         set of Logical_Switch_Ports
-       load_balancer                 set of Load_Balancers
-       acls                          set of ACLs
-       qos_rules                     set of QoSs
-       dns_records                   set of weak reference to DNSs
-       Naming:
-         name                        string
-         external_ids : neutron:network_name
-                                     optional string
-       IP Address Assignment:
-         other_config : subnet       optional string
-         other_config : exclude_ips  optional string
-         other_config : ipv6_prefix  optional string
-         other_config : mac_only     optional string, either true or false
-       Common Columns:
-         external_ids                map of string-string pairs
-
-   Details:
-       ports: set of Logical_Switch_Ports
-              The logical ports connected to the logical switch.
-
-              It is an error for multiple logical switches to include the same
-              logical port.
-
-       load_balancer: set of Load_Balancers
-              Load  balance a virtual ip address to a set of logical port end‐
-              point ip addresses.
-
-       acls: set of ACLs
-              Access control rules that apply to packets  within  the  logical
-              switch.
-
-       qos_rules: set of QoSs
-              QoS  marking and metering rules that apply to packets within the
-              logical switch.
-
-       dns_records: set of weak reference to DNSs
-              This column defines the DNS records to be used for resolving in‐
-              ternal  DNS  queries within the logical switch by the native DNS
-              resolver. Please see the DNS table.
-
+  Summary:
+     ports                         set of Logical_Switch_Ports
+     load_balancer                 set of Load_Balancers
+     acls                          set of ACLs
+     qos_rules                     set of QoSs
+     dns_records                   set of weak reference to DNSs
      Naming:
-
-       These columns provide names for the logical switch. From OVN’s perspec‐
-       tive, these names have no special meaning or purpose other than to pro‐
-       vide convenience for human interaction with the database. There  is  no
-       requirement  for  the name to be unique. (For a unique identifier for a
-       logical switch, use its row UUID.)
-
-       (Originally, name was intended to serve the purpose of a human-friendly
-       name,  but the Neutron integration used it to uniquely identify its own
-       switch object, in the format neutron-uuid. Later  on,  Neutron  started
-       propagating  the friendly name of a switch as external_ids:neutron:net‐
-       work_name. Perhaps this can be cleaned up someday.)
-
-       name: string
-              A name for the logical switch.
-
-       external_ids : neutron:network_name: optional string
-              Another name for the logical switch.
-
+       name                        string
+       external_ids : neutron:network_name
+                                   optional string
      IP Address Assignment:
-
-       These options control automatic IP address management (IPAM) for  ports
-       attached to the logical switch. To enable IPAM for IPv4, set other_con‐
-       fig:subnet and optionally other_config:exclude_ips. To enable IPAM  for
-       IPv6,  set  other_config:ipv6_prefix.  IPv4 and IPv6 may be enabled to‐
-       gether or separately.
-
-       To request dynamic address assignment for a particular  port,  use  the
-       dynamic   keyword   in   the  addresses  column  of  the  port’s  Logi‐
-       cal_Switch_Port row. This requests both an IPv4 and an IPv6 address, if
-       IPAM for IPv4 and IPv6 are both enabled.
-
-       other_config : subnet: optional string
-              Set  this  to  an  IPv4  subnet,  e.g. 192.168.0.0/24, to enable
-              ovn-northd to automatically assign IP addresses within that sub‐
-              net.
-
-       other_config : exclude_ips: optional string
-              To  exclude some addresses from automatic IP address management,
-              set this to a list of the IPv4 addresses or ..-delimited  ranges
-              to  exclude. The addresses or ranges should be a subset of those
-              in other_config:subnet.
-
-              Whether listed or not, ovn-northd will never allocate the  first
-              or   last   address   in   a  subnet,  such  as  192.168.0.0  or
-              192.168.0.255 in 192.168.0.0/24.
-
-              Examples:
-
-              •      192.168.0.2 192.168.0.10
-
-              •      192.168.0.4                    192.168.0.30..192.168.0.60
-                     192.168.0.110..192.168.0.120
-
-              •      192.168.0.110..192.168.0.120   192.168.0.25..192.168.0.30
-                     192.168.0.144
-
-       other_config : ipv6_prefix: optional string
-              Set this to an IPv6 prefix to enable ovn-northd to automatically
-              assign  IPv6  addresses using this prefix. The assigned IPv6 ad‐
-              dress will be generated using the IPv6 prefix and  the  MAC  ad‐
-              dress  (converted  to an IEEE EUI64 identifier) of the port. The
-              IPv6 prefix defined here should be a valid IPv6  address  ending
-              with ::.
-
-              Examples:
-
-              •      aef0::
-
-              •      bef0:1234:a890:5678::
-
-              •      8230:5678::
-
-       other_config : mac_only: optional string, either true or false
-              Value  used to request to assign L2 address only if neither sub‐
-              net nor ipv6_prefix are specified
-
+       other_config : subnet       optional string
+       other_config : exclude_ips  optional string
+       other_config : ipv6_prefix  optional string
+       other_config : mac_only     optional string, either true or false
      Common Columns:
+       external_ids                map of string-string pairs
 
-       external_ids: map of string-string pairs
-              See External IDs at the beginning of this document.
+  Details:
+   ports: set of Logical_Switch_Ports
+          The logical ports connected to the logical switch.
 
-Logical_Switch_Port TABLE
+          It is an error for multiple logical switches to include the same
+          logical port.
+
+   load_balancer: set of Load_Balancers
+          Load  balance a virtual ip address to a set of logical port end‐
+          point ip addresses.
+
+   acls: set of ACLs
+          Access control rules that apply to packets  within  the  logical
+          switch.
+
+   qos_rules: set of QoSs
+          QoS  marking and metering rules that apply to packets within the
+          logical switch.
+
+   dns_records: set of weak reference to DNSs
+          This column defines the DNS records to be used for resolving in‐
+          ternal  DNS  queries within the logical switch by the native DNS
+          resolver. Please see the DNS table.
+
+  Naming:
+
+   These columns provide names for the logical switch. From OVN’s perspec‐
+   tive, these names have no special meaning or purpose other than to pro‐
+   vide convenience for human interaction with the database. There  is  no
+   requirement  for  the name to be unique. (For a unique identifier for a
+   logical switch, use its row UUID.)
+
+   (Originally, name was intended to serve the purpose of a human-friendly
+   name,  but the Neutron integration used it to uniquely identify its own
+   switch object, in the format neutron-uuid. Later  on,  Neutron  started
+   propagating  the friendly name of a switch as external_ids:neutron:net‐
+   work_name. Perhaps this can be cleaned up someday.)
+
+   name: string
+          A name for the logical switch.
+
+   external_ids : neutron:network_name: optional string
+          Another name for the logical switch.
+
+  IP Address Assignment:
+
+   These options control automatic IP address management (IPAM) for  ports
+   attached to the logical switch. To enable IPAM for IPv4, set other_con‐
+   fig:subnet and optionally other_config:exclude_ips. To enable IPAM  for
+   IPv6,  set  other_config:ipv6_prefix.  IPv4 and IPv6 may be enabled to‐
+   gether or separately.
+
+   To request dynamic address assignment for a particular  port,  use  the
+   dynamic   keyword   in   the  addresses  column  of  the  port’s  Logi‐
+   cal_Switch_Port row. This requests both an IPv4 and an IPv6 address, if
+   IPAM for IPv4 and IPv6 are both enabled.
+
+   other_config : subnet: optional string
+          Set  this  to  an  IPv4  subnet,  e.g. 192.168.0.0/24, to enable
+          ovn-northd to automatically assign IP addresses within that sub‐
+          net.
+
+   other_config : exclude_ips: optional string
+          To  exclude some addresses from automatic IP address management,
+          set this to a list of the IPv4 addresses or ..-delimited  ranges
+          to  exclude. The addresses or ranges should be a subset of those
+          in other_config:subnet.
+
+          Whether listed or not, ovn-northd will never allocate the  first
+          or   last   address   in   a  subnet,  such  as  192.168.0.0  or
+          192.168.0.255 in 192.168.0.0/24.
+
+          Examples:
+
+          •      192.168.0.2 192.168.0.10
+
+          •      192.168.0.4                    192.168.0.30..192.168.0.60
+                 192.168.0.110..192.168.0.120
+
+          •      192.168.0.110..192.168.0.120   192.168.0.25..192.168.0.30
+                 192.168.0.144
+
+   other_config : ipv6_prefix: optional string
+          Set this to an IPv6 prefix to enable ovn-northd to automatically
+          assign  IPv6  addresses using this prefix. The assigned IPv6 ad‐
+          dress will be generated using the IPv6 prefix and  the  MAC  ad‐
+          dress  (converted  to an IEEE EUI64 identifier) of the port. The
+          IPv6 prefix defined here should be a valid IPv6  address  ending
+          with ::.
+
+          Examples:
+
+          •      aef0::
+
+          •      bef0:1234:a890:5678::
+
+          •      8230:5678::
+
+   other_config : mac_only: optional string, either true or false
+          Value  used to request to assign L2 address only if neither sub‐
+          net nor ipv6_prefix are specified
+
+  Common Columns:
+
+   external_ids: map of string-string pairs
+          See External IDs at the beginning of this document.
+
+#### Logical_Switch_Port TABLE
        A port within an L2 logical switch.
 
    Summary:
@@ -676,7 +662,7 @@ Logical_Switch_Port TABLE
 
        port_security: set of strings
               This column controls the addresses from which the host  attached
-              to  the  logical  port (``the host’’) is allowed to send packets
+              to  the  logical  port (“the host’’) is allowed to send packets
               and to which it is allowed to receive packets. If this column is
               empty, all addresses are permitted.
 
@@ -798,7 +784,7 @@ Logical_Switch_Port TABLE
               nal_ids column of the Port_Binding table in OVN_Southbound data‐
               base.
 
-Address_Set TABLE
+#### Address_Set TABLE
        Each row in this table represents a named set of addresses. An  address
        set may contain Ethernet, IPv4, or IPv6 addresses with optional bitwise
        or CIDR masks. Address set may ultimately be used in  ACLs  to  compare
@@ -833,7 +819,7 @@ Address_Set TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-Port_Group TABLE
+#### Port_Group TABLE
        Each  row  in  this  table  represents  a named group of logical switch
        ports.
 
@@ -879,7 +865,7 @@ Port_Group TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-Load_Balancer TABLE
+#### Load_Balancer TABLE
        Each row represents one load balancer.
 
    Summary:
@@ -931,7 +917,7 @@ Load_Balancer TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-ACL TABLE
+#### ACL TABLE
        Each  row in this table represents one ACL rule for a logical switch or
        a port group that points to it through its acls column. The action col‐
        umn  for  the  highest-priority matching row in this table determines a
@@ -1038,7 +1024,7 @@ ACL TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-Logical_Router TABLE
+#### Logical_Router TABLE
        Each row represents one L3 logical router.
 
    Summary:
@@ -1143,7 +1129,7 @@ Logical_Router TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-QoS TABLE
+#### QoS TABLE
        Each row in this table represents one QoS rule  for  a  logical  switch
        that  points  to  it through its qos_rules column. Two types of QoS are
        supported: DSCP marking and metering. A match with the highest-priority
@@ -1203,7 +1189,7 @@ QoS TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-Meter TABLE
+#### Meter TABLE
        Each row in this table represents a meter that can be used for  QoS  or
        rate-limiting.
 
@@ -1217,7 +1203,7 @@ Meter TABLE
        name: string (must be unique within table)
               A name for this meter.
 
-              Names  that  begin  with "__" (two underscores) are reserved for
+              Names  that  begin  with "\__"(two underscores) are reserved for
               OVN internal use and should not be added manually.
 
        unit: string, either kbps or pktps
@@ -1234,7 +1220,7 @@ Meter TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-Meter_Band TABLE
+#### Meter_Band TABLE
        Each row in this table represents a meter band which specifies the rate
        above which the configured action should be applied.  These  bands  are
        referenced by the bands column in the Meter table.
@@ -1265,7 +1251,7 @@ Meter_Band TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-Logical_Router_Port TABLE
+#### Logical_Router_Port TABLE
        A port within an L3 logical router.
 
        Exactly one Logical_Router row must reference a  given  logical  router
@@ -1479,7 +1465,7 @@ Logical_Router_Port TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-Logical_Router_Static_Route TABLE
+#### Logical_Router_Static_Route TABLE
        Each record represents a static route.
 
        When  multiple  routes match a packet, the longest-prefix match is cho‐
@@ -1530,7 +1516,7 @@ Logical_Router_Static_Route TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-NAT TABLE
+#### NAT TABLE
        Each record represents a NAT rule.
 
    Summary:
@@ -1598,7 +1584,7 @@ NAT TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-DHCP_Options TABLE
+#### DHCP_Options TABLE
        OVN implements native DHCPv4 support which caters  to  the  common  use
        case  of  providing  an IPv4 address to a booting instance by providing
        stateless replies to DHCPv4 requests based on statically configured ad‐
@@ -1607,8 +1593,8 @@ DHCP_Options TABLE
 
        OVN also implements native  DHCPv6  support  which  provides  stateless
        replies to DHCPv6 requests.
-
-   Summary:
+0
+   1. Summary:
        cidr                          string
        DHCPv4 options:
          Mandatory DHCPv4 options:
@@ -1665,7 +1651,7 @@ DHCP_Options TABLE
        Common Columns:
          external_ids                map of string-string pairs
 
-   Details:
+   2. Details:
        cidr: string
               The  DHCPv4/DHCPv6  options will be included if the logical port
               has its IP address in this cidr.
@@ -1684,7 +1670,7 @@ DHCP_Options TABLE
        options : server_id: optional string
               The IP address for the DHCP server to use. This should be in the
               subnet of the offered IP. This is also included in the DHCP  of‐
-              fer as option 54, ``server identifier.’’
+              fer as option 54, "server identifier.’’
 
        options : server_mac: optional string
               The Ethernet address for the DHCP server to use.
@@ -1692,7 +1678,6 @@ DHCP_Options TABLE
        options  : lease_time: optional string, containing an integer, in range
        0 to 4,294,967,295
               The offered lease time in seconds,
-
               The DHCPv4 option code for this option is 51.
 
      IPv4 DHCP Options:
@@ -1821,7 +1806,7 @@ DHCP_Options TABLE
 
        options : server_id: optional string
               The  Ethernet  address  for the DHCP server to use. This is also
-              included in the DHCPv6 reply as option 2, ``Server  Identifier’’
+              included in the DHCPv6 reply as option 2, ”Server  Identifier’’
               to  carry  a  DUID  identifying  a server between a client and a
               server. ovn-controller defines DUID based on Link-layer  Address
               [DUID-LL].
@@ -1861,7 +1846,7 @@ DHCP_Options TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-Connection TABLE
+#### Connection TABLE
        Configuration for a database connection to  an  Open  vSwitch  database
        (OVSDB) client.
 
