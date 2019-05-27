@@ -53,7 +53,7 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
 | Gateway_Chassis   |Gateway_Chassis configuration.|
 |NB_Global TABLE    |Northbound  configuration  for  an OVN system. This table must have exactly one row.|
 
-   Summary:
+   1. Summary:   
        Status:
          nb_cfg                      integer
          sb_cfg                      integer
@@ -75,7 +75,7 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
        Security Configurations:
          ipsec                       boolean
 
-   Details:
+   2. Details:
      Status:
 
        These columns allow a client to track the overall  configuration  state
@@ -809,7 +809,7 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
    Details:
        name: string (must be unique within table)
               A name for the address set.  Names  are  ASCII  and  must  match
-              [a-zA-Z_.][a-zA-Z_.0-9]*.
+              [a-zA-Z_.][a-zA-Z_.0-9]\*.
 
        addresses: set of strings
               The set of addresses in string form.
@@ -831,8 +831,8 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
        For  each  port  group, there are two address sets generated to the Ad‐
        dress_Set table of the OVN_Southbound database, containing the  IP  ad‐
        dresses  of  the  group of ports, one for IPv4, and the other for IPv6,
-       with name being the name of the Port_Group followed by  a  suffix  _ip4
-       for  IPv4  and _ip6 for IPv6. The generated address sets can be used in
+       with name being the name of the Port_Group followed by  a  suffix  \_ip4
+       for  IPv4  and \_ip6 for IPv6. The generated address sets can be used in
        the same way as regular address sets in the match column of the ACL ta‐
        ble. For syntax information, see the details of the expression language
        used for the match column in the Logical_Flow table of  the  OVN_South‐
@@ -849,7 +849,7 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
    Details:
        name: string (must be unique within table)
               A name for the port  group.  Names  are  ASCII  and  must  match
-              [a-zA-Z_.][a-zA-Z_.0-9]*.
+              [a-zA-Z_.][a-zA-Z_.0-9]\*.
 
        ports: set of weak reference to Logical_Switch_Ports
               The logical switch ports belonging to the group in uuids.
@@ -1593,7 +1593,6 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
 
        OVN also implements native  DHCPv6  support  which  provides  stateless
        replies to DHCPv6 requests.
-0
    1. Summary:
        cidr                          string
        DHCPv4 options:
@@ -2053,7 +2052,7 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
 
        other_config: map of string-string pairs
 
-DNS TABLE
+#### DNS TABLE
        Each row in this table stores the DNS records. The  Logical_Switch  ta‐
        ble’s dns_records references these records.
 
@@ -2071,7 +2070,7 @@ DNS TABLE
        external_ids: map of string-string pairs
               See External IDs at the beginning of this document.
 
-SSL TABLE
+#### SSL TABLE
        SSL configuration for ovn-nb database access.
 
    Summary:
@@ -2126,7 +2125,7 @@ SSL TABLE
 
        external_ids: map of string-string pairs
 
-Gateway_Chassis TABLE
+#### Gateway_Chassis TABLE
        Association  of one or more chassis to a logical router port. The traf‐
        fic going out through an specific router port will be redirected  to  a
        chassis, or a set of them in high availability configurations. A single
