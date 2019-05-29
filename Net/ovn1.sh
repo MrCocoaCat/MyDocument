@@ -80,6 +80,7 @@ ovs-vsctl add-port br-int vm1 -- set interface vm1 type=internal
 ip link set vm1 address 02:ac:10:ff:01:30
 ip link set vm1 netns vm1
 ovs-vsctl set Interface vm1 external_ids:iface-id=dmz-vm1
+
 ip netns exec vm1 dhclient vm1
 ip netns exec vm1 ip addr show vm1
 ip netns exec vm1 ip route show
@@ -87,6 +88,7 @@ ip netns exec vm1 ip route show
 ip netns add vm3
 ovs-vsctl add-port br-int vm3 -- set interface vm3 type=internal
 ip link set vm3 address 02:ac:10:ff:01:94
+
 ip link set vm3 netns vm3
 ovs-vsctl set Interface vm3 external_ids:iface-id=inside-vm3
 ip netns exec vm3 dhclient vm3
