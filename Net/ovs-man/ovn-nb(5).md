@@ -29,29 +29,28 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
  The  following list summarizes the purpose of each of the tables in the
  OVN_Northbound database.  Each table is described in more detail  on  a
  later page.
-
-|Table              |     Purpose             |
-|:-----------------:|:-----------------------:|
-|NB_Global          | Northbound configuration|
-|Logical_Switch     |L2 logical switch        |
-|Logical_Switch_Port|L2 logical switch port   |
-|Address_Set        |Address Sets             |
-|Port_Group         |       Port Groups       |
-|Load_Balancer      |       load balancer     |
-|ACL                |Access Control List (ACL) rule|
-|Logical_Router     |  L3 logical router      |
-|QoS                |       QoS rule          |
-|Meter              |     Meter entry         |
-|   Meter_Band      | Band for meter entries  |
-|Logical_Router_Port|   L3 logical router port|
-|Logical_Router_Static_Route|Logical router static routes|
-| NAT                |   NAT rules            |
-|DHCP_Options       | DHCP options            |
-|Connection         |OVSDB client connections.|
-| DNS               | Native DNS resolution   |
-|   SSL             | SSL configuration.      |
-| Gateway_Chassis   |Gateway_Chassis configuration.|
-|NB_Global TABLE    |Northbound  configuration  for  an OVN system. This table must have exactly one row.|
+  |Table              |     Purpose             |
+  |:-----------------:|:-----------------------:|
+  |NB_Global          | Northbound configuration|
+  |Logical_Switch     |L2 logical switch        |
+  |Logical_Switch_Port|L2 logical switch port   |
+  |Address_Set        |Address Sets             |
+  |Port_Group         |       Port Groups       |
+  |Load_Balancer      |       load balancer     |
+  |ACL                |Access Control List (ACL) rule|
+  |Logical_Router     |  L3 logical router      |
+  |QoS                |       QoS rule          |
+  |Meter              |     Meter entry         |
+  |   Meter_Band      | Band for meter entries  |
+  |Logical_Router_Port|   L3 logical router port|
+  |Logical_Router_Static_Route|Logical router static routes|
+  | NAT                |   NAT rules            |
+  |DHCP_Options       | DHCP options            |
+  |Connection         |OVSDB client connections.|
+  | DNS               | Native DNS resolution   |
+  |   SSL             | SSL configuration.      |
+  | Gateway_Chassis   |Gateway_Chassis configuration.|
+  |NB_Global TABLE    |Northbound  configuration  for  an OVN system. This table must have exactly one row.|
 
    1. Summary:   
        Status:

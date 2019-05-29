@@ -12,7 +12,7 @@ SYNOPSIS
 
 DESCRIPTION
        This utility simulates packet forwarding within an OVN logical network.
-       It can be used to run through ``what-if’’ scenarios: if a packet origi‐
+       It can be used to run through “what-if’’ scenarios: if a packet origi‐
        nates at a logical port, what will happen to it and where will it ulti‐
        mately end up?  Users  already  familiar  with  the  Open  vSwitch  of‐
        proto/trace  command described in ovs-vswitch(8) will find ovn-trace to

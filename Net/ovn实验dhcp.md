@@ -60,7 +60,7 @@ ovn-nbctl show
 2.从哪个端口收到DHCP请求，就会从哪个接口分配IP地址。通过这种方式来实现DHCP。
 
 接下来，我们需要定义DHCP选项并将它们分配给逻辑端口。这里的处理将与我们以前看到的有点不同，因为我们将直接与OVN NB数据库进行交互。
- 用这种方式的原因是需要捕获DHCP_Options中的UUID，以便我们可以将UUID分配给交换机端口。 为此，我们将把捕获的ovn-nbctl命令的结果输出到一对bash变量中。
+用这种方式的原因是需要捕获DHCP_Options中的UUID，以便我们可以将UUID分配给交换机端口。 为此，我们将把捕获的ovn-nbctl命令的结果输出到一对bash变量中。
 
 ### 创建DHCP
 
@@ -78,15 +78,8 @@ options="\
 
 echo $s1Dhcp
 
-s2Dhcp="$(
-  ovn-nbctl create DHCP_Options cidr=10.0.200.0/24 \
-options="\
-          \"server_id\"=\"10.0.200.1\"\
-          \"server_mac\"=\"00:00:00:00:02:00\" \
-          \"lease_time\"=\"3600\"\
-          \"router\"=\"10.0.200.1\"\
-        "
-)"
+
+ovn-nbctl create DHCP_Options cidr=10.0.200.0/24
 echo $s2Dhcp
 
 ```
