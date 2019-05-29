@@ -157,6 +157,10 @@ ovn-nbctl [options] command [arg...]
 
   * lsp-set-addresses port [address]...   
     设置与端口地址关联的地址。每个地址应为以下之一
+
+
+  * lsp-set-addresses port [address]...   
+    设置与端口地址关联的地址。每个地址应为以下之一
         * 一个以太网地址, 可选地，后跟空格及一个或多个IP地址
                OVN将该以太网地址的数据包传送到此端口。
         * unknown
@@ -167,10 +171,23 @@ ovn-nbctl [options] command [arg...]
         * router
                 仅当逻辑交换机端口的类型是路由器时，才可以设置此选项。
                 这表示此逻辑交换机端口的以太网，IPv4和IPv6地址应从连接的逻辑路由器端口获取，如lsp-set-options中的router-port所指定
+
   可以设置多个地址。 如果没有给出地址参数，port将没有与之关联的地址。
 
   * lsp-get-addresses port   
-    在标准输出上列出与端口关联的所有地址，每行一个。
+  在标准输出上列出与端口关联的所有地址，每行一个。
+
+  * lsp-set-port-security port [addrs]...   
+    Sets the port security addresses associated with port to  addrs.
+    Multiple  sets  of  addresses may be set by using multiple addrs
+    arguments. If no addrs argument is given,  port  will  not  have
+    port security enabled.
+
+    Port security limits the addresses from which a logical port may
+    send packets and to  which  it  may  receive  packets.  See  the
+    ovn-nb(5) documentation for the port_security column in the Log‐
+    ical_Switch_Port table for details.
+
 
   * lsp-set-port-security port [addrs]...  
     将与端口关联的端口安全地址设置为addrs。
@@ -179,6 +196,7 @@ ovn-nbctl [options] command [arg...]
     Port security limits the addresses from which a logical port may
     send packets and to  which  it  may  receive  packets.
     有关详细信息，请参阅Logical_Switch_Port表中port_security列的ovn-nb（5）文档。
+
 
   * lsp-get-port-security port   
     在标准输出上列出与端口关联的所有端口安全地址，每个一行
@@ -222,13 +240,16 @@ ovn-nbctl [options] command [arg...]
     获取逻辑端口的type-specific选项
 
   * lsp-set-dhcpv4-options port dhcp_options   
-    为logical port 设置DHCPv4选项。dhcp_options是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
+
+    为逻辑 *port* 设置DHCPv4选项。*dhcp_options* 是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
 
   * lsp-get-dhcpv4-optoins port  
     获取逻辑端口的DHCPv4选项配置
 
   * lsp−set−dhcpv6−options port dhcp_options  
-    为logical port 设置DHCPv6选项。dhcp_options是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
+
+    为logical port 设置DHCPv6选项。*dhcp_options* 是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
+
 
   * lsp-get-dhcpv6-optoins port   
     获取逻辑端口的DHCPv6选项配置
@@ -251,30 +272,33 @@ ovn-nbctl [options] command [arg...]
 
 #### LOGICAL ROUTER PORT COMMANDS
   * [--may-exist] lrp-add router port mac network... [peer=peer]
-  在路由器上创建一个名为port的新逻辑路由器端口，其中包含Ethernet地址mac
-  和每个网络的一个或多个IP地址/网络掩码。  
-  可选参数peer标识连接到此端口的逻辑路由器端口。
-   以下示例，添加一个路由端口，带有IPv4 地址和IPv6 地址，并含有peer lr1
-  ```
-  lrp-add lr0 lrp0 00:11:22:33:44:55 192.168.0.1/24 2001:db8::1/64
-  peer=lr1
-  ```
-  如果指定了名为port的逻辑路由器端口，则会出错，除非指定了--may-exist。
-  --may-exist，如果现有路由器端口位于路由器以外的某个逻辑路由器中，则会出错
+
+    在路由器上创建一个名为 *port* 的新逻辑路由器端口，其中包含Ethernet地址mac
+    和每个网络的一个或多个IP地址/网络掩码。  
+    可选参数 *peer* 标识连接到此端口的逻辑路由器端口。
+    以下示例，添加一个路由端口，带有IPv4 地址和IPv6 地址，并含有peer lr1
+    ```
+    lrp-add lr0 lrp0 00:11:22:33:44:55 192.168.0.1/24 2001:db8::1/64
+    peer=lr1
+    ```
+    如果指定了名为port的逻辑路由器端口，则会出错，除非指定了--may-exist。
+    --may-exist，如果现有路由器端口位于路由器以外的某个逻辑路由器中，则会出错
 
    * [--if-exists] lrp-del port
-   删除端口，如果端口不存在则报错，除非指定--if-exists
+    删除端口，如果端口不存在则报错，除非指定--if-exists
 
    * lrp-list router
-  在标准输出中列出逻辑路由中的所有端口，每个一行
+   在标准输出中列出逻辑路由中的所有端口，每个一行
 
   * lrp-set-enabled port state
+
   设置端口administrative状态，开启或禁用。如果端口为禁用模式，流量禁止流入或流出该端口。
 
   * lrp-get-enabled port
     打印端口的administrative状态，开启或禁用
 
   * lrp-set-gateway-chassis port chassis [priority]
+
     Set gateway chassis for port. *chassis* is the name of  the  chas‐
     sis. This creates a gateway chassis entry in Gateway_Chassis ta‐
     ble. It won’t check if chassis really exists  in  OVN_Southbound
@@ -286,11 +310,11 @@ ovn-nbctl [options] command [arg...]
     chassis with chassis for port does not exist.
 
    * lrp-get-gateway-chassis port
-    Lists all the gateway chassis with priority within port on stan‐
-    dard output, one per line, ordered based on priority.
+      Lists all the gateway chassis with priority within port on stan‐
+      dard output, one per line, ordered based on priority.
 
 #### LOGICAL ROUTER STATIC ROUTE COMMANDS
- * [--may-exist]  [--policy=POLICY]  lr-route-add  router  prefix  nexthop
+ * [--may-exist]  [--policy=POLICY]  lr-route-add  *router*  *prefix*  *nexthop*
  [port]
   为路由器添加指定的路由规则。 *prefix* 描述该路由的IPv4或
   IPv6 前缀, 例如192.168.100.0/24.  *nexthop* 指定该路由所使用的网关，该网关是逻辑路由的逻辑端口的IP 地址or 逻辑端口的IP地址。
@@ -400,13 +424,16 @@ ovn-nbctl [options] command [arg...]
 
 #### DHCP OPTIONS COMMANDS
   * dhcp-options-create cidr [key=value]  
-  使用指定的cidr和可选的external-id在DHCP_Options表中创建新的DHCP选项条目。
+
+  使用指定的 *cidr* 和可选的 *external-id* 在DHCP_Options表中创建新的DHCP选项条目。
+
 
   * dhcp-options-list  
   列出DHCP选项条目。
 
   * dhcp-options-del dhcp-option  
-  删除dhcp-option UUID所引用的DHCP Options条目。
+  删除 *dhcp-option* UUID所引用的DHCP Options条目。
+
 
   * dhcp-options-set-options dhcp-option [key=value]...  
   设置dhcp-option UUID的DHCP选项。
@@ -499,10 +526,10 @@ ovn-nbctl [options] command [arg...]
 
        Database Command Syntax
 
-              [--if-exists]    [--columns=column[,column]...]    list    table
+              [--if-exists]    [--columns=column[,column]...]    list    *table*
               [record]...
                      Lists  the  data  in each specified record. If no records
-                     are specified, lists all the records in table.
+                     are specified, lists all the records in *table*.
 
                      If --columns is specified, only the requested columns are
                      listed,  in  the  specified order. Otherwise, all columns

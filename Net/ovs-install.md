@@ -3,9 +3,11 @@ This document describes how to build and install Open vSwitch on a generic Linux
 
 ### Obtaining Open vSwitch Sources
 The canonical location for Open vSwitch source code is its Git repository, which you can clone into a directory named “ovs” with:
+
 ```
 $ git clone https://github.com/openvswitch/ovs.git
 ```
+
 Cloning the repository leaves the “master” branch initially checked out. This is the right branch for general development. If, on the other hand, if you want to build a particular released version, you can check it out by running a command such as the following from the “ovs” directory:
 ```
 $ git checkout v2.7.0
@@ -184,9 +186,9 @@ Run GNU make in the build directory, e.g.:
 $ make
 ```
 or if GNU make is installed as “gmake”:
-
+```
 $ gmake
-
+```
 If you used a separate build directory, run make or gmake from that directory, e.g.:
 ```
 $ make -C _gcc
@@ -319,7 +321,7 @@ $ ovsdb-tool convert /usr/local/etc/openvswitch/conf.db \
     vswitchd/vswitch.ovsschema
 Start the Open vSwitch daemons as described under Starting above.
 
-Hot Upgrading¶
+### Hot Upgrading
 Upgrading Open vSwitch from one version to the next version with minimum disruption of traffic going through the system that is using that Open vSwitch needs some considerations:
 
 If the upgrade only involves upgrading the userspace utilities and daemons of Open vSwitch, make sure that the new userspace version is compatible with the previously loaded kernel module.

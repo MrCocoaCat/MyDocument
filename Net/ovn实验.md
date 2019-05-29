@@ -93,11 +93,11 @@ ovn-nbctl show
 ```
 ovs-vsctl set Interface tap1 external_ids:iface-id=ls1-vm2
 
-```
 ovs-vsctl set Interface tap2 external_ids:attached-mac=00:00:00:00:00:02
 
 ip link set tap1 address 00:00:00:00:00:01
 
+```
 
 6. 清理环境
 
