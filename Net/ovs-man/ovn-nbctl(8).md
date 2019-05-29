@@ -153,17 +153,10 @@ ovn-nbctl [options] command [arg...]
   如果设置了parent port ，则显示。否则不显示
 
   * lsp-get-tag port   
-<<<<<<< HEAD
-  如果设置了，则获取端口流量的tag。如未设置则不显示。
-
-  * lsp-set-addresses port [address]...   
-  设置与端口地址关联的地址。每个地址应为以下之一
-=======
     如果设置了，则获取端口流量的tag。如未设置则不显示。
 
   * lsp-set-addresses port [address]...   
     设置与端口地址关联的地址。每个地址应为以下之一
->>>>>>> cd6a0c2001dbe32ad7fcf004290cd6f3147250ef
         * 一个以太网地址, 可选地，后跟空格及一个或多个IP地址
                OVN将该以太网地址的数据包传送到此端口。
         * unknown
@@ -171,30 +164,13 @@ ovn-nbctl [options] command [arg...]
                传送到unknown端口。
         * dynamic
               使用此关键字可使ovn-northd生成全局唯一的MAC地址，并在逻辑端口的子网中选择未使用的IPv4地址，并将其存储在端口的dynamic_addresses列中。
-<<<<<<< HEAD
 
-=======
->>>>>>> cd6a0c2001dbe32ad7fcf004290cd6f3147250ef
         * router
                 仅当逻辑交换机端口的类型是路由器时，才可以设置此选项。
                 这表示此逻辑交换机端口的以太网，IPv4和IPv6地址应从连接的逻辑路由器端口获取，如lsp-set-options中的router-port所指定
   可以设置多个地址。 如果没有给出地址参数，port将没有与之关联的地址。
 
   * lsp-get-addresses port   
-<<<<<<< HEAD
-  在标准输出上列出与端口关联的所有地址，每行一个。
-
-  * lsp-set-port-security port [addrs]...   
-    Sets the port security addresses associated with port to  addrs.
-    Multiple  sets  of  addresses may be set by using multiple addrs
-    arguments. If no addrs argument is given,  port  will  not  have
-    port security enabled.
-
-    Port security limits the addresses from which a logical port may
-    send packets and to  which  it  may  receive  packets.  See  the
-    ovn-nb(5) documentation for the port_security column in the Log‐
-    ical_Switch_Port table for details.
-=======
     在标准输出上列出与端口关联的所有地址，每行一个。
 
   * lsp-set-port-security port [addrs]...  
@@ -204,7 +180,6 @@ ovn-nbctl [options] command [arg...]
     Port security limits the addresses from which a logical port may
     send packets and to  which  it  may  receive  packets.
     有关详细信息，请参阅Logical_Switch_Port表中port_security列的ovn-nb（5）文档。
->>>>>>> cd6a0c2001dbe32ad7fcf004290cd6f3147250ef
 
   * lsp-get-port-security port   
     在标准输出上列出与端口关联的所有端口安全地址，每个一行
@@ -248,22 +223,14 @@ ovn-nbctl [options] command [arg...]
     获取逻辑端口的type-specific选项
 
   * lsp-set-dhcpv4-options port dhcp_options   
-<<<<<<< HEAD
     为逻辑 *port* 设置DHCPv4选项。*dhcp_options* 是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
-=======
-    为logical port 设置DHCPv4选项。dhcp_options是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
->>>>>>> cd6a0c2001dbe32ad7fcf004290cd6f3147250ef
 
   * lsp-get-dhcpv4-optoins port  
     获取逻辑端口的DHCPv4选项配置
 
   * lsp−set−dhcpv6−options port dhcp_options  
-<<<<<<< HEAD
     为logical port 设置DHCPv6选项。*dhcp_options* 是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
 
-=======
-    为logical port 设置DHCPv6选项。dhcp_options是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
->>>>>>> cd6a0c2001dbe32ad7fcf004290cd6f3147250ef
 
   * lsp-get-dhcpv6-optoins port   
     获取逻辑端口的DHCPv6选项配置
@@ -286,15 +253,9 @@ ovn-nbctl [options] command [arg...]
 
 #### LOGICAL ROUTER PORT COMMANDS
   * [--may-exist] lrp-add router port mac network... [peer=peer]
-<<<<<<< HEAD
   在路由器上创建一个名为 *port* 的新逻辑路由器端口，其中包含Ethernet地址mac
   和每个网络的一个或多个IP地址/网络掩码。  
   可选参数 *peer* 标识连接到此端口的逻辑路由器端口。
-=======
-  在路由器上创建一个名为port的新逻辑路由器端口，其中包含Ethernet地址mac
-  和每个网络的一个或多个IP地址/网络掩码。  
-  可选参数peer标识连接到此端口的逻辑路由器端口。
->>>>>>> cd6a0c2001dbe32ad7fcf004290cd6f3147250ef
    以下示例，添加一个路由端口，带有IPv4 地址和IPv6 地址，并含有peer lr1
   ```
   lrp-add lr0 lrp0 00:11:22:33:44:55 192.168.0.1/24 2001:db8::1/64
@@ -310,23 +271,13 @@ ovn-nbctl [options] command [arg...]
   在标准输出中列出逻辑路由中的所有端口，每个一行
 
   * lrp-set-enabled port state
-<<<<<<< HEAD
-  Set  the  administrative  state  of port, either enabled or dis‐
-  abled. When a port is disabled, no traffic is  allowed  into  or
-  out of the port.
-=======
   设置端口administrative状态，开启或禁用。如果端口为禁用模式，流量禁止流入或流出该端口。
->>>>>>> cd6a0c2001dbe32ad7fcf004290cd6f3147250ef
 
   * lrp-get-enabled port
     打印端口的administrative状态，开启或禁用
 
   * lrp-set-gateway-chassis port chassis [priority]
-<<<<<<< HEAD
-    Set gateway chassis for port. chassis is the name of  the  chas‐
-=======
     Set gateway chassis for port. *chassis* is the name of  the  chas‐
->>>>>>> cd6a0c2001dbe32ad7fcf004290cd6f3147250ef
     sis. This creates a gateway chassis entry in Gateway_Chassis ta‐
     ble. It won’t check if chassis really exists  in  OVN_Southbound
     database.  Priority will be set to 0 if priority is not provided
@@ -451,21 +402,13 @@ ovn-nbctl [options] command [arg...]
 
 #### DHCP OPTIONS COMMANDS
   * dhcp-options-create cidr [key=value]  
-<<<<<<< HEAD
   使用指定的 *cidr* 和可选的 *external-id* 在DHCP_Options表中创建新的DHCP选项条目。
-=======
-  使用指定的cidr和可选的external-id在DHCP_Options表中创建新的DHCP选项条目。
->>>>>>> cd6a0c2001dbe32ad7fcf004290cd6f3147250ef
 
   * dhcp-options-list  
   列出DHCP选项条目。
 
   * dhcp-options-del dhcp-option  
-<<<<<<< HEAD
   删除 *dhcp-option* UUID所引用的DHCP Options条目。
-=======
-  删除dhcp-option UUID所引用的DHCP Options条目。
->>>>>>> cd6a0c2001dbe32ad7fcf004290cd6f3147250ef
 
   * dhcp-options-set-options dhcp-option [key=value]...  
   设置dhcp-option UUID的DHCP选项。
