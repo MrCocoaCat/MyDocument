@@ -19,64 +19,64 @@ ovn-nbctl [options] command [arg...]
 如提供router，则仅显示与该逻辑路由器相关的记录。
 
 #### LOGICAL SWITCH COMMANDS
-* ls-add       
-创建一个新的未命名的逻辑交换机，该交换机最初没有端口。
-交换机没有名称，其他命令必须通过其UUID引用此交换机。
+  * ls-add       
+  创建一个新的未命名的逻辑交换机，该交换机最初没有端口。
+  交换机没有名称，其他命令必须通过其UUID引用此交换机。
 
-* [--may-exist | --add-duplicate] ls-add switch    
-创建一个名为switch的新逻辑交换机，该交换机最初没有端口。
-OVN北向数据库模式（schema）不要求逻辑交换机名称是唯一的, 但是，名称的重点是为人们提供一种
-简单的方式来引用交换机，使用重复的名称对此无益。因此，在没有任何选项的情况下，
-如果switch是重复名称，则此命令将其视为错误。
-使用--may-exist选项, 添加重复名称会成功，但不会创建新的逻辑交换机。
-使用--add-duplicate选项,  该命令实际上创建了一个具有重复名称的新逻辑交换机。
-指定两个选项都是错误的。 如果有多个具有重复名称的逻辑交换机，应使用UUID配置逻辑交换机，
-而不是交换机名称。
+  * [--may-exist | --add-duplicate] ls-add switch    
+  创建一个名为switch的新逻辑交换机，该交换机最初没有端口。
+  OVN北向数据库模式（schema）不要求逻辑交换机名称是唯一的, 但是，名称的重点是为人们提供一种
+  简单的方式来引用交换机，使用重复的名称对此无益。因此，在没有任何选项的情况下，
+  如果switch是重复名称，则此命令将其视为错误。
+  使用--may-exist选项, 添加重复名称会成功，但不会创建新的逻辑交换机。
+  使用--add-duplicate选项,  该命令实际上创建了一个具有重复名称的新逻辑交换机。
+  指定两个选项都是错误的。 如果有多个具有重复名称的逻辑交换机，应使用UUID配置逻辑交换机，
+  而不是交换机名称。
 
-* [--if-exists] ls-del switch   
-删除switch。如果switch不存在，则报错,除非指定了--if-exists 选项。
+  * [--if-exists] ls-del switch   
+  删除switch。如果switch不存在，则报错,除非指定了--if-exists 选项。
 
-* ls-list   
-在标准输出中列出所有存在的switches，每条一行.
+  * ls-list   
+  在标准输出中列出所有存在的switches，每条一行.
 
 ### ACL COMMANDS
-These  commands  operates on ACL objects for a given entity. The entity
-can be either a logical switch or a port group. The entity can be spec‐
-ified  as  uuid  or  name. The --type option can be used to specify the
-type of the entity, in case both a logical switch and a port groups ex‐
-ist with the same name specified for entity. type must be either switch
-or port-group.
+  These  commands  operates on ACL objects for a given entity. The entity
+  can be either a logical switch or a port group. The entity can be spec‐
+  ified  as  uuid  or  name. The --type option can be used to specify the
+  type of the entity, in case both a logical switch and a port groups ex‐
+  ist with the same name specified for entity. type must be either switch
+  or port-group.
 
-  [--type={switch | port-group}] [--log] [--meter=meter] [--sever‐
-  ity=severity]  [--name=name] [--may-exist] acl-add entity direc‐
-  tion priority match verdict
-         Adds the specified ACL to entity. direction must  be  ei‐
-         ther  from-lport  or to-lport. priority must be between 0
-         and 32767, inclusive. A full description  of  the  fields
-         are  in  ovn-nb(5). If --may-exist is specified, adding a
-         duplicated ACL succeeds but the ACL is  not  really  cre‐
-         ated.  Without  --may-exist,  adding a duplicated ACL re‐
-         sults in error.
-         The --log option enables packet logging for the ACL.  The
-         options  --severity  and  --name  specify  a severity and
-         name, respectively, for log entries (and also enable log‐
-         ging).  The  severity  must be one of alert, warning, no‐
-         tice, info, or debug. If a severity is not specified, the
-         default  is  info.  The  --meter=meter  option is used to
-         rate-limit packet logging. The meter argument names a me‐
-         ter configured by meter-add.
+    [--type={switch | port-group}] [--log] [--meter=meter] [--sever‐
+    ity=severity]  [--name=name] [--may-exist] acl-add entity direc‐
+    tion priority match verdict
+           Adds the specified ACL to entity. direction must  be  ei‐
+           ther  from-lport  or to-lport. priority must be between 0
+           and 32767, inclusive. A full description  of  the  fields
+           are  in  ovn-nb(5). If --may-exist is specified, adding a
+           duplicated ACL succeeds but the ACL is  not  really  cre‐
+           ated.  Without  --may-exist,  adding a duplicated ACL re‐
+           sults in error.
+           The --log option enables packet logging for the ACL.  The
+           options  --severity  and  --name  specify  a severity and
+           name, respectively, for log entries (and also enable log‐
+           ging).  The  severity  must be one of alert, warning, no‐
+           tice, info, or debug. If a severity is not specified, the
+           default  is  info.  The  --meter=meter  option is used to
+           rate-limit packet logging. The meter argument names a me‐
+           ter configured by meter-add.
 
-  [--type={switch | port-group}] acl-del entity [direction [prior‐
-  ity match]]
-         Deletes ACLs from entity. If only entity is supplied, all
-         the  ACLs  from  the  entity are deleted. If direction is
-         also specified, then all the flows in that direction will
-         be  deleted from the entity. If all the fields are given,
-         then a single flow that matches all the  fields  will  be
-         deleted.
+    [--type={switch | port-group}] acl-del entity [direction [prior‐
+    ity match]]
+           Deletes ACLs from entity. If only entity is supplied, all
+           the  ACLs  from  the  entity are deleted. If direction is
+           also specified, then all the flows in that direction will
+           be  deleted from the entity. If all the fields are given,
+           then a single flow that matches all the  fields  will  be
+           deleted.
 
-  [--type={switch | port-group}] acl-list entity
-         Lists the ACLs on entity.
+    [--type={switch | port-group}] acl-list entity
+           Lists the ACLs on entity.
 
 ### LOGICAL SWITCH QOS RULE COMMANDS
        [--may-exist]  qos-add  switch  direction  priority  match  [dscp=dscp]
@@ -135,110 +135,109 @@ or port-group.
               Lists all meters.
 
 #### LOGICAL SWITCH PORT COMMANDS
-* [--may-exist] lsp-add switch port   
-在lswitch上创建一个新的逻辑switch port名为port。如果已存在名为port的逻辑端口，则会出错，除非指定了--may-exist选项。
-如果现有端口位于交换机以外的某个逻辑交换机中，或者如果它具有父端口，无论是否使--may-exist都会报错。
+  * [--may-exist] lsp-add switch port   
+  在lswitch上创建一个新的逻辑switch port名为port。如果已存在名为port的逻辑端口，则会出错，除非指定了--may-exist选项。
+  如果现有端口位于交换机以外的某个逻辑交换机中，或者如果它具有父端口，无论是否使--may-exist都会报错。
 
-* [--may-exist] lsp-add switch port parent tag_request   
-Creates on switch a logical switch port named  port  that  is  a child  of  parent  that  is identified with VLAN ID tag_request,which must be between 0 and 4095, inclusive. If  tag_request  is 0,  ovn-northd  generates  a  tag that is unique in the scope of parent. This is useful in cases such  as  virtualized  container environments  where  Open vSwitch does not have a direct connection to the container’s port and it must be shared with the virtual machine’s port.
+  * [--may-exist] lsp-add switch port parent tag_request   
+  Creates on switch a logical switch port named  port  that  is  a child  of  parent  that  is identified with VLAN ID tag_request,which must be between 0 and 4095, inclusive. If  tag_request  is 0,  ovn-northd  generates  a  tag that is unique in the scope of parent. This is useful in cases such  as  virtualized  container environments  where  Open vSwitch does not have a direct connection to the container’s port and it must be shared with the virtual machine’s port.
 
-It  is an error if a logical port named port already exists, unless --may-exist is specified. Regardless of --may-exist, it  is an error if the existing port is not in switch or if it does not have the specified parent and tag_request.
+  It  is an error if a logical port named port already exists, unless --may-exist is specified. Regardless of --may-exist, it  is an error if the existing port is not in switch or if it does not have the specified parent and tag_request.
 
-* [--if-exists] lsp-del port   
-删除端口.当端口不存在时则报错,unless --if-exists is specified.
+  * [--if-exists] lsp-del port   
+  删除端口.当端口不存在时则报错,unless --if-exists is specified.
 
-* lsp-list switch   
-列举switch中所有的logical switch ports在标准输出中，每一行
+  * lsp-list switch   
+  列举switch中所有的logical switch ports在标准输出中，每一行
 
-* lsp-get-parent port   
-如果设置了parent port ，则显示。否则不显示
+  * lsp-get-parent port   
+  如果设置了parent port ，则显示。否则不显示
 
-* lsp-get-tag port   
-如果设置了，则获取端口流量的tag。如未设置则不显示。
+  * lsp-get-tag port   
+  如果设置了，则获取端口流量的tag。如未设置则不显示。
 
-* lsp-set-addresses port [address]...   
-设置与端口地址关联的地址。每个地址应为以下之一
-      * 一个以太网地址, 可选地，后跟空格及一个或多个IP地址
-             OVN将该以太网地址的数据包传送到此端口。
-      * unknown
-             OVN将目的MAC地址不在任何逻辑端口地址列中的单播以太网数据包
-             传送到unknown端口。
-      * dynamic
-            使用此关键字可使ovn-northd生成全局唯一的MAC地址，并在逻辑端口的子网中选择未使用的IPv4地址，并将其存储在端口的dynamic_addresses列中。
+  * lsp-set-addresses port [address]...   
+  设置与端口地址关联的地址。每个地址应为以下之一
+        * 一个以太网地址, 可选地，后跟空格及一个或多个IP地址
+               OVN将该以太网地址的数据包传送到此端口。
+        * unknown
+               OVN将目的MAC地址不在任何逻辑端口地址列中的单播以太网数据包
+               传送到unknown端口。
+        * dynamic
+              使用此关键字可使ovn-northd生成全局唯一的MAC地址，并在逻辑端口的子网中选择未使用的IPv4地址，并将其存储在端口的dynamic_addresses列中。
 
-      * router
-              仅当逻辑交换机端口的类型是路由器时，才可以设置此选项。
-              这表示此逻辑交换机端口的以太网，IPv4和IPv6地址应从连接的逻辑路由器端口获取，如lsp-set-options中的router-port所指定
-可以设置多个地址。 如果没有给出地址参数，port将没有与之关联的地址。
+        * router
+                仅当逻辑交换机端口的类型是路由器时，才可以设置此选项。
+                这表示此逻辑交换机端口的以太网，IPv4和IPv6地址应从连接的逻辑路由器端口获取，如lsp-set-options中的router-port所指定
+  可以设置多个地址。 如果没有给出地址参数，port将没有与之关联的地址。
 
-* lsp-get-addresses port   
-在标准输出上列出与端口关联的所有地址，每行一个。
+  * lsp-get-addresses port   
+  在标准输出上列出与端口关联的所有地址，每行一个。
 
-* lsp-set-port-security port [addrs]...   
-  Sets the port security addresses associated with port to  addrs.
-  Multiple  sets  of  addresses may be set by using multiple addrs
-  arguments. If no addrs argument is given,  port  will  not  have
-  port security enabled.
+  * lsp-set-port-security port [addrs]...   
+    Sets the port security addresses associated with port to  addrs.
+    Multiple  sets  of  addresses may be set by using multiple addrs
+    arguments. If no addrs argument is given,  port  will  not  have
+    port security enabled.
 
-  Port security limits the addresses from which a logical port may
-  send packets and to  which  it  may  receive  packets.  See  the
-  ovn-nb(5) documentation for the port_security column in the Log‐
-  ical_Switch_Port table for details.
+    Port security limits the addresses from which a logical port may
+    send packets and to  which  it  may  receive  packets.  See  the
+    ovn-nb(5) documentation for the port_security column in the Log‐
+    ical_Switch_Port table for details.
 
-* lsp-get-port-security port   
-  在标准输出上列出与端口关联的所有端口安全地址，每个一行
+  * lsp-get-port-security port   
+    在标准输出上列出与端口关联的所有端口安全地址，每个一行
 
-* lsp-get-up port   
-  显示端口状态，开启或关闭
+  * lsp-get-up port   
+    显示端口状态，开启或关闭
 
-* lsp-set-enabled port state   
-  设置端口的administrative状态, 启用或禁用。当端口禁用时，流量禁止流入或流出端口
+  * lsp-set-enabled port state   
+    设置端口的administrative状态, 启用或禁用。当端口禁用时，流量禁止流入或流出端口
 
-* lsp-get-enabled port   
-  显示端口的administrative状态, 启用或禁用
+  * lsp-get-enabled port   
+    显示端口的administrative状态, 启用或禁用
 
-* lsp-set-type port type   
-      设置逻辑端口的类型。 类型必须是以下之一:
-      * (empty string)
-             A VM (or VIF) interface.
-      * router
-             与逻辑路由器的连接
-      * localnet
-             从每个ovn控制器实例连接到本地可访问的网络。
-             逻辑交换机只能连接一个localnet端口。 这用于建立与现有网络直接连接的模型。
-      * localport
-             A connection to a local VIF. Traffic that  arrives  on  a  localport  is  never  forwarded  over a tunnel to another
-             chassis. These ports are present  on  every  chassis  and
-             have  the  same  address  in all of them. This is used to
-             model connectivity to local services that  run  on  every
-             hypervisor.
-      * l2gateway
-             与物理网络的连接
-      * vtep  
-             A port to a logical switch on a VTEP gateway.
+  * lsp-set-type port type   
+        设置逻辑端口的类型。 类型必须是以下之一:
+        * (empty string)
+               A VM (or VIF) interface.
+        * router
+               与逻辑路由器的连接
+        * localnet
+               从每个ovn控制器实例连接到本地可访问的网络。
+               逻辑交换机只能连接一个localnet端口。 这用于建立与现有网络直接连接的模型。
+        * localport
+               A connection to a local VIF. Traffic that  arrives  on  a  localport  is  never  forwarded  over a tunnel to another
+               chassis. These ports are present  on  every  chassis  and
+               have  the  same  address  in all of them. This is used to
+               model connectivity to local services that  run  on  every
+               hypervisor.
+        * l2gateway
+               与物理网络的连接
+        * vtep  
+               A port to a logical switch on a VTEP gateway.
 
-* lsp-get-type port     
-  获取逻辑端口的类型
+  * lsp-get-type port     
+    获取逻辑端口的类型
 
-* lsp-set-options port [key=value]...   
-  为逻辑端口设置type-specific key-value选项
+  * lsp-set-options port [key=value]...   
+    为逻辑端口设置type-specific key-value选项
 
-* lsp-get-options port     
-  获取逻辑端口的type-specific选项
+  * lsp-get-options port     
+    获取逻辑端口的type-specific选项
 
-* lsp-set-dhcpv4-options port dhcp_options   
-  为logical port 设置DHCPv4选项。dhcp_options是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
+  * lsp-set-dhcpv4-options port dhcp_options   
+    为逻辑 *port* 设置DHCPv4选项。*dhcp_options* 是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
 
-* lsp-get-dhcpv4-optoins port  
-  获取逻辑端口的DHCPv4选项配置
+  * lsp-get-dhcpv4-optoins port  
+    获取逻辑端口的DHCPv4选项配置
 
-* lsp−set−dhcpv6−options port dhcp_options  
-  为logical port 设置DHCPv6选项。dhcp_options是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
+  * lsp−set−dhcpv6−options port dhcp_options  
+    为logical port 设置DHCPv6选项。*dhcp_options* 是一个UUID，指的是DHCP_Options表中的一组DHCP选项。
 
 
-* lsp-get-dhcpv6-optoins port   
-  获取逻辑端口的DHCPv6选项配置
-
+  * lsp-get-dhcpv6-optoins port   
+    获取逻辑端口的DHCPv6选项配置
 
 #### LOGICAL ROUTER COMMANDS
 lr-add创建一个新的，未命名的逻辑路由器，它最初没有端口。 路由器没有名称，其他命令必须通过其UUID引用此路由器。
@@ -257,46 +256,46 @@ lr-add创建一个新的，未命名的逻辑路由器，它最初没有端口�
 在标准输出中，列出所有存在的路由，每个一行
 
 #### LOGICAL ROUTER PORT COMMANDS
-* [--may-exist] lrp-add router port mac network... [peer=peer]
-在路由器上创建一个名为port的新逻辑路由器端口，其中包含Ethernet地址mac
-和每个网络的一个或多个IP地址/网络掩码。  
-可选参数peer标识连接到此端口的逻辑路由器端口。
- 以下示例，添加一个路由端口，带有IPv4 地址和IPv6 地址，并含有peer lr1
-```
-lrp-add lr0 lrp0 00:11:22:33:44:55 192.168.0.1/24 2001:db8::1/64
-peer=lr1
-```
-如果指定了名为port的逻辑路由器端口，则会出错，除非指定了--may-exist。
---may-exist，如果现有路由器端口位于路由器以外的某个逻辑路由器中，则会出错
+  * [--may-exist] lrp-add router port mac network... [peer=peer]
+  在路由器上创建一个名为 *port* 的新逻辑路由器端口，其中包含Ethernet地址mac
+  和每个网络的一个或多个IP地址/网络掩码。  
+  可选参数 *peer* 标识连接到此端口的逻辑路由器端口。
+   以下示例，添加一个路由端口，带有IPv4 地址和IPv6 地址，并含有peer lr1
+  ```
+  lrp-add lr0 lrp0 00:11:22:33:44:55 192.168.0.1/24 2001:db8::1/64
+  peer=lr1
+  ```
+  如果指定了名为port的逻辑路由器端口，则会出错，除非指定了--may-exist。
+  --may-exist，如果现有路由器端口位于路由器以外的某个逻辑路由器中，则会出错
 
- * [--if-exists] lrp-del port
- 删除端口，如果端口不存在则报错，除非指定--if-exists
+   * [--if-exists] lrp-del port
+   删除端口，如果端口不存在则报错，除非指定--if-exists
 
- * lrp-list router
-在标准输出中列出逻辑路由中的所有端口，每个一行
+   * lrp-list router
+  在标准输出中列出逻辑路由中的所有端口，每个一行
 
-* lrp-set-enabled port state
-Set  the  administrative  state  of port, either enabled or dis‐
-abled. When a port is disabled, no traffic is  allowed  into  or
-out of the port.
+  * lrp-set-enabled port state
+  Set  the  administrative  state  of port, either enabled or dis‐
+  abled. When a port is disabled, no traffic is  allowed  into  or
+  out of the port.
 
-* lrp-get-enabled port
-  打印端口的administrative状态，开启或禁用
+  * lrp-get-enabled port
+    打印端口的administrative状态，开启或禁用
 
-* lrp-set-gateway-chassis port chassis [priority]
-  Set gateway chassis for port. chassis is the name of  the  chas‐
-  sis. This creates a gateway chassis entry in Gateway_Chassis ta‐
-  ble. It won’t check if chassis really exists  in  OVN_Southbound
-  database.  Priority will be set to 0 if priority is not provided
-  by user. priority must be between 0 and 32767, inclusive.
+  * lrp-set-gateway-chassis port chassis [priority]
+    Set gateway chassis for port. chassis is the name of  the  chas‐
+    sis. This creates a gateway chassis entry in Gateway_Chassis ta‐
+    ble. It won’t check if chassis really exists  in  OVN_Southbound
+    database.  Priority will be set to 0 if priority is not provided
+    by user. priority must be between 0 and 32767, inclusive.
 
- * lrp-del-gateway-chassis port chassis
-  Deletes gateway chassis from port. It is  an  error  if  gateway
-  chassis with chassis for port does not exist.
+   * lrp-del-gateway-chassis port chassis
+    Deletes gateway chassis from port. It is  an  error  if  gateway
+    chassis with chassis for port does not exist.
 
- * lrp-get-gateway-chassis port
-  Lists all the gateway chassis with priority within port on stan‐
-  dard output, one per line, ordered based on priority.
+   * lrp-get-gateway-chassis port
+    Lists all the gateway chassis with priority within port on stan‐
+    dard output, one per line, ordered based on priority.
 
 #### LOGICAL ROUTER STATIC ROUTE COMMANDS
  * [--may-exist]  [--policy=POLICY]  lr-route-add  router  prefix  nexthop
@@ -314,7 +313,6 @@ out of the port.
 
  * lr-route-list router
    列出路由器上的路由规则
-
 
 #### NAT COMMANDS
  * [--may-exist] lr-nat-add  router  type  external_ip  logical_ip  [logi‐
@@ -409,20 +407,20 @@ out of the port.
               Lists the LBs for the given router.
 
 #### DHCP OPTIONS COMMANDS
-* dhcp-options-create cidr [key=value]  
-使用指定的cidr和可选的external-id在DHCP_Options表中创建新的DHCP选项条目。
+  * dhcp-options-create cidr [key=value]  
+  使用指定的 *cidr* 和可选的 *external-id* 在DHCP_Options表中创建新的DHCP选项条目。
 
-* dhcp-options-list  
-列出DHCP选项条目。
+  * dhcp-options-list  
+  列出DHCP选项条目。
 
-* dhcp-options-del dhcp-option  
-删除dhcp-option UUID所引用的DHCP Options条目。
+  * dhcp-options-del dhcp-option  
+  删除 *dhcp-option* UUID所引用的DHCP Options条目。
 
-* dhcp-options-set-options dhcp-option [key=value]...  
-设置dhcp-option UUID的DHCP选项。
+  * dhcp-options-set-options dhcp-option [key=value]...  
+  设置dhcp-option UUID的DHCP选项。
 
-* dhcp-options-get-options dhcp-option  
-列出dhcp-option UUID的DHCP选项。    
+  * dhcp-options-get-options dhcp-option  
+  列出dhcp-option UUID的DHCP选项。    
 
 #### PORT GROUP COMMANDS
        pg-add group [port]...
