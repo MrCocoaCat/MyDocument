@@ -1,7 +1,4 @@
 ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
-
-
-
 ### NAME
        ovn-nb - OVN_Northbound database schema
 
@@ -1585,14 +1582,14 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
               See External IDs at the beginning of this document.
 
 #### DHCP_Options TABLE
-       OVN implements native DHCPv4 support which caters  to  the  common  use
-       case  of  providing  an IPv4 address to a booting instance by providing
-       stateless replies to DHCPv4 requests based on statically configured ad‐
-       dress  mappings. To do this it allows a short list of DHCPv4 options to
-       be configured and applied at each compute host running ovn-controller.
+  OVN implements native DHCPv4 support which caters  to  the  common  use
+  case  of  providing  an IPv4 address to a booting instance by providing
+  stateless replies to DHCPv4 requests based on statically configured ad‐
+  dress  mappings. To do this it allows a short list of DHCPv4 options to
+  be configured and applied at each compute host running ovn-controller.
 
-       OVN also implements native  DHCPv6  support  which  provides  stateless
-       replies to DHCPv6 requests.
+  OVN also implements native  DHCPv6  support  which  provides  stateless
+  replies to DHCPv6 requests.
    1. Summary:
        cidr                          string
        DHCPv4 options:
