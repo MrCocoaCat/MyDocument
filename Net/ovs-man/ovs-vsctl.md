@@ -815,7 +815,7 @@ COMMANDS
        is inclusive. A range has a maximum size of 4096 elements. If more ele‐
        ments are needed, they can be specified in seperate ranges.
 
-       A  few  database columns are ``maps'' of key-value pairs, where the key
+       A  few  database columns are "maps" of key-value pairs, where the key
        and the value are each some fixed database type.  These  are  specified
        in  the  form  key=value, where key and value follow the syntax for the
        column's key type and value type, respectively.   When  multiple  pairs
@@ -1075,7 +1075,7 @@ EXAMPLES
 
 CONFIGURATION COOKBOOK
    Port Configuration
-       Add an ``internal port'' vlan10 to bridge br0 as a VLAN access port for
+       Add an "internal port'' vlan10 to bridge br0 as a VLAN access port for
        VLAN 10, and configure it with an IP address:
 
               ovs-vsctl add-port br0 vlan10 tag=10  --  set  Interface  vlan10

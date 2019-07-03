@@ -139,9 +139,9 @@ ovn-nbctl [options] command [arg...]
   如果现有端口位于交换机以外的某个逻辑交换机中，或者如果它具有父端口，无论是否使--may-exist都会报错。
 
   * [--may-exist] lsp-add switch port parent tag_request   
-  Creates on switch a logical switch port named  port  that  is  a child  of  parent  that  is identified with VLAN ID tag_request,which must be between 0 and 4095, inclusive. If  tag_request  is 0,  ovn-northd  generates  a  tag that is unique in the scope of parent. This is useful in cases such  as  virtualized  container environments  where  Open vSwitch does not have a direct connection to the container’s port and it must be shared with the virtual machine’s port.
+      Creates on switch a logical switch port named  port  that  is  a child  of  parent  that  is identified with VLAN ID tag_request,which must be between 0 and 4095, inclusive. If  tag_request  is 0,  ovn-northd  generates  a  tag that is unique in the scope of parent. This is useful in cases such  as  virtualized  container environments  where  Open vSwitch does not have a direct connection to the container’s port and it must be shared with the virtual machine’s port.
 
-  It  is an error if a logical port named port already exists, unless --may-exist is specified. Regardless of --may-exist, it  is an error if the existing port is not in switch or if it does not have the specified parent and tag_request.
+      It  is an error if a logical port named port already exists, unless --may-exist is specified. Regardless of --may-exist, it  is an error if the existing port is not in switch or if it does not have the specified parent and tag_request.
 
   * [--if-exists] lsp-del port   
   删除端口.当端口不存在时则报错,unless --if-exists is specified.
@@ -167,7 +167,8 @@ ovn-nbctl [options] command [arg...]
                OVN将目的MAC地址不在任何逻辑端口地址列中的单播以太网数据包
                传送到unknown端口。
         * dynamic
-              使用此关键字可使ovn-northd生成全局唯一的MAC地址，并在逻辑端口的子网中选择未使用的IPv4地址，并将其存储在端口的dynamic_addresses列中。
+              使用此关键字可使ovn-northd生成全局唯一的MAC地址，并在逻辑端口的子网中选择
+              未使用的IPv4地址，并将其存储在端口的dynamic_addresses列中。
         * router
                 仅当逻辑交换机端口的类型是路由器时，才可以设置此选项。
                 这表示此逻辑交换机端口的以太网，IPv4和IPv6地址应从连接的逻辑路由器端口获取，如lsp-set-options中的router-port所指定
@@ -175,19 +176,7 @@ ovn-nbctl [options] command [arg...]
   可以设置多个地址。 如果没有给出地址参数，port将没有与之关联的地址。
 
   * lsp-get-addresses port   
-  在标准输出上列出与端口关联的所有地址，每行一个。
-
-  * lsp-set-port-security port [addrs]...   
-    Sets the port security addresses associated with port to  addrs.
-    Multiple  sets  of  addresses may be set by using multiple addrs
-    arguments. If no addrs argument is given,  port  will  not  have
-    port security enabled.
-
-    Port security limits the addresses from which a logical port may
-    send packets and to  which  it  may  receive  packets.  See  the
-    ovn-nb(5) documentation for the port_security column in the Log‐
-    ical_Switch_Port table for details.
-
+    在标准输出上列出与端口关联的所有地址，每行一个。
 
   * lsp-set-port-security port [addrs]...  
     将与端口关联的端口安全地址设置为addrs。
@@ -196,7 +185,6 @@ ovn-nbctl [options] command [arg...]
     Port security limits the addresses from which a logical port may
     send packets and to  which  it  may  receive  packets.
     有关详细信息，请参阅Logical_Switch_Port表中port_security列的ovn-nb（5）文档。
-
 
   * lsp-get-port-security port   
     在标准输出上列出与端口关联的所有端口安全地址，每个一行
@@ -273,7 +261,7 @@ ovn-nbctl [options] command [arg...]
 #### LOGICAL ROUTER PORT COMMANDS
   * [--may-exist] lrp-add router port mac network... [peer=peer]
 
-    在路由器上创建一个名为 *port* 的新逻辑路由器端口，其中包含Ethernet地址mac
+    在路由器上创建一个名为 *port* 的新逻辑路由器端口，其中包含Ethernet mac地址
     和每个网络的一个或多个IP地址/网络掩码。  
     可选参数 *peer* 标识连接到此端口的逻辑路由器端口。
     以下示例，添加一个路由端口，带有IPv4 地址和IPv6 地址，并含有peer lr1
@@ -319,42 +307,44 @@ ovn-nbctl [options] command [arg...]
   为路由器添加指定的路由规则。 *prefix* 描述该路由的IPv4或
   IPv6 前缀, 例如192.168.100.0/24.  *nexthop* 指定该路由所使用的网关，该网关是逻辑路由的逻辑端口的IP 地址or 逻辑端口的IP地址。
   如果指定了 *port*，则匹配此路由的包通过此端口发送出去，当 *port* 省略时，通过 *nexthup* 判断输出端口
-  --policy 描述用于制定路由策略的规则，这应该是“dst-ip”或“src-ip”。 如果未指定，则默认为“dst-ip”。
+  --policy 描述用于制定路由策略的规则，这应该是“dst-ip”或“src-ip”。如果未指定，则默认为“dst-ip”。
   如果带有相同前缀的路由已经存在，则报错。除非指定了--may-exist is specified.
 
  * [--if-exists] lr-route-del router [prefix]
   删除路由器的路由规则。如果仅仅提供 *router*, 则逻辑路由器的所有路由规则均被删除。
   如果 *prefix* 也被指定，则逻辑路由器中匹配 *prefix* 的所有路由规则将被删除。
-  如果指定的 *prefix* 无相应匹配的路由规则，则报错。除非制定了 --if-exists
+  如果指定的 *prefix* 无相应匹配的路由规则，则报错。除非制定了--if-exists
 
  * lr-route-list router
    列出路由器上的路由规则
 
 #### NAT COMMANDS
- * [--may-exist] lr-nat-add  router  type  external_ip  logical_ip  [logi‐
- cal_port external_mac]   
- 为路由器器添加特定的NAT。*type* 必须为 snat,dnat,或dnat_and_snat。The *external_ip* 是一个IPv4地址. *logical_ip* 是一个IPv4网络 (e.g 192.168.1.0/24) 或IPv4 地址。
- 仅当路由器是分布式路由器（distributed  router），而不是网关路由器(gateway  router）且类型为dnat_and_snat时，才接受 *logical_port* 和 *external_mac*。
- *logical_port* 是logical_ip所在的现有逻辑交换机端口名称， *external_mac* 是Ethernet地址.
- 当type是 *dnat* 时，外部可见的IP地址 *external_ip* 被DNAT到逻辑空间中的IP地址 *logical_ip*
- 当type为 *snat* 时，其源IP地址与 *logical_ip* 中的IP地址匹配或者在
- *logical_ip* 提供的网络中的IP数据包被SNAT到 *external_ip* 中的IP地址。
- 当type为 *dnat_and_snat* 时，外部可见的IP地址 *external_ip* 被DNAT化为logcal空间中的IP地址 *logical_ip*。
- 此外，源IP地址与 *logical_ip* 匹配的IP数据包被SNAT到 *external_ip* 中的IP地址。
+   * [--may-exist] lr-nat-add  router  type  external_ip  logical_ip  [logi‐
+   cal_port external_mac]   
 
- 指定logical_port和external_mac时，NAT规则将在logical_port所在的chassis上编程。
- 这包括对 *external_ip* 的ARP回复，返回 *external_mac* 的值。
- 使用 *external_mac* 发送源IP地址等于 *external_ip* 的所有数据包。
+   为路由器添加特定的NAT。*type* 必须为 snat,dnat,或dnat_and_snat。The *external_ip* 是一个IPv4地址. *logical_ip* 是一个IPv4网络 (e.g 192.168.1.0/24) 或IPv4 地址。
+   仅当路由器是分布式路由器（distributed  router），而不是网关路由器(gateway router)且类型为dnat_and_snat时，才接受 *logical_port* 和 *external_mac*。
+   *logical_port* 是logical_ip所在的现有逻辑交换机端口名称， *external_mac* 是Ethernet地址.
+   当type是 *dnat* 时，外部可见的IP地址 *external_ip* 被DNAT到逻辑空间中的IP地址 *logical_ip*
+   当type为 *snat* 时，其源IP地址与 *logical_ip* 中的IP地址匹配或者在
+   *logical_ip* 提供的网络中的IP数据包被SNAT到 *external_ip* 中的IP地址。
 
- 如果已存在具有相同值的router，type，external_ip和logical_ip的NAT，则会出错，除非指定了--may-exist。如果指定了--may-exist，logical_port和external_mac，则会覆盖logical_port和external_mac的现有值。
+   当type为 *dnat_and_snat* 时，外部可见的IP地址 *external_ip* 被DNAT化为logcal空间中的IP地址 *logical_ip*。
+   此外，源IP地址与 *logical_ip* 匹配的IP数据包被SNAT到 *external_ip* 中的IP地址。
 
- * [--if-exists] lr-nat-del router [type [ip]]
- 从路由器删除NAT。 如果仅提供路由器，则会删除逻辑路由器中的所有NAT。 如果还指定了type，则将从逻辑路由器中删除与该类型匹配的所有NAT。 如果给出了所有字段，则将删除与所有字段匹配的单个NAT规则。
- 当type是snat时，ip应该是logical_ip。 当type是dnat或dnat_and_snat时，ip应该是external_ip。
- 如果指定了ip并且没有匹配的NAT条目，则会出错，除非指定了--if-exists。
+   指定logical_port和external_mac时，NAT规则将在logical_port所在的chassis上编程。
+   这包括对 *external_ip* 的ARP回复，返回 *external_mac* 的值。
+   使用 *external_mac* 发送源IP地址等于 *external_ip* 的所有数据包。
 
- * lr-nat-list router
- 显示路由器上的所有NATs
+   如果已存在具有相同值的router，type，external_ip和logical_ip的NAT，则会出错，除非指定了--may-exist。如果指定了--may-exist，logical_port和external_mac，则会覆盖logical_port和external_mac的现有值。
+
+   * [--if-exists] lr-nat-del router [type [ip]]
+   从路由器删除NAT。 如果仅提供路由器，则会删除逻辑路由器中的所有NAT。 如果还指定了type，则将从逻辑路由器中删除与该类型匹配的所有NAT。 如果给出了所有字段，则将删除与所有字段匹配的单个NAT规则。
+   当type是 *snat* 时，ip应该是 *logical_ip*。 当type是 *dnat* 或 *dnat_and_snat* 时，ip应该是 *external_ip*。
+   如果指定了ip并且没有匹配的NAT条目，则会出错，除非指定了--if-exists。
+
+   * lr-nat-list router
+   显示路由器上的所有NATs
 
 #### LOAD BALANCER COMMANDS
      [--may-exist | --add-duplicate] lb-add lb vip ips [protocol]
@@ -455,7 +445,6 @@ ovn-nbctl [options] command [arg...]
               ist.
 
 #### DATABASE COMMANDS
-
    这些命令查询和修改ovsdb表的内容。
    它们是ovsdb接口的略微抽象，因此它们的运行级别低于其他ovn-nbctl命令。
    *Identifying Tables, Records, and Columns*
@@ -476,36 +465,34 @@ ovn-nbctl [options] command [arg...]
    ably.  Unique  abbreviations  of table and column names are acceptable,
    e.g. d or dhcp is sufficient to identify the DHCP_Options table.
 
-       Database Values
+   Database Values
+   Each column in the database accepts a fixed type of data. The currently
+   defined basic types, and their representations, are:
+          integer
+                 A  decimal integer in the range -2**63 to 2**63-1, inclu‐
+                 sive.
 
-       Each column in the database accepts a fixed type of data. The currently
-       defined basic types, and their representations, are:
+          real   
+                  A floating-point number.
+          Boolean
+                 True or false, written true or false, respectively.
+          string
+                  An arbitrary Unicode string, except that null  bytes  are
+                 not  allowed.  Quotes  are optional for most strings that
+                 begin with an English letter or  underscore  and  consist
+                 only  of letters, underscores, hyphens, and periods. How‐
+                 ever, true and false and strings that match the syntax of
+                 UUIDs  (see  below)  must be enclosed in double quotes to
+                 distinguish them from  other  basic  types.  When  double
+                 quotes  are  used, the syntax is that of strings in JSON,
+                 e.g. backslashes may be used to  escape  special  charac‐
+                 ters.  The  empty string must be represented as a pair of
+                 double quotes ("").
 
-              integer
-                     A  decimal integer in the range -2**63 to 2**63-1, inclu‐
-                     sive.
-
-              real   A floating-point number.
-
-              Boolean
-                     True or false, written true or false, respectively.
-
-              string An arbitrary Unicode string, except that null  bytes  are
-                     not  allowed.  Quotes  are optional for most strings that
-                     begin with an English letter or  underscore  and  consist
-                     only  of letters, underscores, hyphens, and periods. How‐
-                     ever, true and false and strings that match the syntax of
-                     UUIDs  (see  below)  must be enclosed in double quotes to
-                     distinguish them from  other  basic  types.  When  double
-                     quotes  are  used, the syntax is that of strings in JSON,
-                     e.g. backslashes may be used to  escape  special  charac‐
-                     ters.  The  empty string must be represented as a pair of
-                     double quotes ("").
-
-              UUID   Either a universally unique identifier in  the  style  of
-                     RFC  4122,  e.g. f81d4fae-7dec-11d0-a765-00a0c91e6bf6, or
-                     an @name defined by a get or create  command  within  the
-                     same ovn-nbctl invocation.
+          UUID   Either a universally unique identifier in  the  style  of
+                 RFC  4122,  e.g. f81d4fae-7dec-11d0-a765-00a0c91e6bf6, or
+                 an @name defined by a get or create  command  within  the
+                 same ovn-nbctl invocation.
 
        Multiple values in a single column may be separated by spaces or a sin‐
        gle comma. When multiple values are present,  duplicates  are  not  al‐
@@ -524,244 +511,242 @@ ovn-nbctl [options] command [arg...]
        from  expanding other-config={0=x,1=y} into other-config=0=x other-con‐
        fig=1=y, which may not have the desired effect).
 
-       Database Command Syntax
+##### Database Command Syntax
 
-              [--if-exists]    [--columns=column[,column]...]    list    *table*
-              [record]...
-                     Lists  the  data  in each specified record. If no records
-                     are specified, lists all the records in *table*.
+  * [--if-exists]    [--columns=column[,column]...]    list    *table*
+  [record]...
+         Lists  the  data  in each specified record. If no records
+         are specified, lists all the records in *table*.
 
-                     If --columns is specified, only the requested columns are
-                     listed,  in  the  specified order. Otherwise, all columns
-                     are listed, in alphabetical order by column name.
+         If --columns is specified, only the requested columns are
+         listed,  in  the  specified order. Otherwise, all columns
+         are listed, in alphabetical order by column name.
 
-                     Without --if-exists, it is  an  error  if  any  specified
-                     record  does not exist. With --if-exists, the command ig‐
-                     nores any record that does not exist,  without  producing
-                     any output.
+         Without --if-exists, it is  an  error  if  any  specified
+         record  does not exist. With --if-exists, the command ig‐
+         nores any record that does not exist,  without  producing
+         any output.
 
-              [--columns=column[,column]...]       find       table      [col‐
-              umn[:key]=value]...
-                     Lists the data in  each  record  in  table  whose  column
-                     equals  value  or, if key is specified, whose column con‐
-                     tains a key with the specified value. The following oper‐
-                     ators  may  be used where = is written in the syntax sum‐
-                     mary:
+  * [--columns=column[,column]...]    find     table   [column[:key]=value]...
+         Lists the data in  each  record  in  table  whose  column
+         equals  value  or, if key is specified, whose column con‐
+         tains a key with the specified value. The following oper‐
+         ators  may  be used where = is written in the syntax sum‐
+         mary:
 
-                     = != gt;>gt; = >gt;>gt;=
-                            Selects records in which column[:key] equals, does
-                            not  equal, is less than, is greater than, is less
-                            than or equal to, or is greater than or  equal  to
-                            value, respectively.
+         = != gt;>gt; = >gt;>gt;=
+                Selects records in which column[:key] equals, does
+                not  equal, is less than, is greater than, is less
+                than or equal to, or is greater than or  equal  to
+                value, respectively.
 
-                            Consider  column[:key]  and  value as sets of ele‐
-                            ments. Identical sets are considered equal. Other‐
-                            wise,  if  the sets have different numbers of ele‐
-                            ments, then the set with more elements is  consid‐
-                            ered  to  be larger. Otherwise, consider a element
-                            from each set pairwise, in increasing order within
-                            each  set.  The first pair that differs determines
-                            the result. (For a column that contains  key-value
-                            pairs, first all the keys are compared, and values
-                            are considered only if the two sets contain  iden‐
-                            tical keys.)
+                Consider  column[:key]  and  value as sets of ele‐
+                ments. Identical sets are considered equal. Other‐
+                wise,  if  the sets have different numbers of ele‐
+                ments, then the set with more elements is  consid‐
+                ered  to  be larger. Otherwise, consider a element
+                from each set pairwise, in increasing order within
+                each  set.  The first pair that differs determines
+                the result. (For a column that contains  key-value
+                pairs, first all the keys are compared, and values
+                are considered only if the two sets contain  iden‐
+                tical keys.)
 
-                     {=} {!=}
-                            Test for set equality or inequality, respectively.
+         {=} {!=}
+                Test for set equality or inequality, respectively.
 
-                     {=}   Selects  records in which column[:key] is a subset
-                            of value. For example, flood-vlans{=}1,2  selects
-                            records  in  which  the  flood-vlans column is the
-                            empty set or contains 1 or 2 or both.
+         {=}   Selects  records in which column[:key] is a subset
+                of value. For example, flood-vlans{=}1,2  selects
+                records  in  which  the  flood-vlans column is the
+                empty set or contains 1 or 2 or both.
 
-                     {}    Selects records in which column[:key] is a  proper
-                            subset  of  value.  For example, flood-vlans{}1,2
-                            selects records in which the flood-vlans column is
-                            the empty set or contains 1 or 2 but not both.
+         {}    Selects records in which column[:key] is a  proper
+                subset  of  value.  For example, flood-vlans{}1,2
+                selects records in which the flood-vlans column is
+                the empty set or contains 1 or 2 but not both.
 
-                     {>gt;>gt;=} {>gt;>gt;}
-                            Same  as  {=}  and {}, respectively, except that
-                            the  relationship  is   reversed.   For   example,
-                            flood-vlans{>gt;>gt;=}1,2  selects  records  
-                            in which the
-                            flood-vlans column contains both 1 and 2.
+         {>gt;>gt;=} {>gt;>gt;}
+                Same  as  {=}  and {}, respectively, except that
+                the  relationship  is   reversed.   For   example,
+                flood-vlans{>gt;>gt;=}1,2  selects  records  
+                in which the
+                flood-vlans column contains both 1 and 2.
 
-                     For arithmetic operators (= != gt;>gt; = >gt;>gt;=),
-                      when  key  is
-                     specified  but a particular record’s column does not con‐
-                     tain key, the record is always omitted from the  results.
-                     Thus,   the   condition   other-config:mtu!=1500  matches
-                     records that have a mtu key whose value is not 1500,  but
-                     not those that lack an mtu key.
+         For arithmetic operators (= != gt;>gt; = >gt;>gt;=),
+          when  key  is
+         specified  but a particular record’s column does not con‐
+         tain key, the record is always omitted from the  results.
+         Thus,   the   condition   other-config:mtu!=1500  matches
+         records that have a mtu key whose value is not 1500,  but
+         not those that lack an mtu key.
 
-                     For  the  set operators, when key is specified but a par‐
-                     ticular record’s column does not contain key, the compar‐
-                     ison  is  done  against an empty set. Thus, the condition
-                     other-config:mtu{!=}1500 matches records that have a  mtu
-                     key  whose  value  is not 1500 and those that lack an mtu
-                     key.
+         For  the  set operators, when key is specified but a par‐
+         ticular record’s column does not contain key, the compar‐
+         ison  is  done  against an empty set. Thus, the condition
+         other-config:mtu{!=}1500 matches records that have a  mtu
+         key  whose  value  is not 1500 and those that lack an mtu
+         key.
 
-                     Don’t forget to escape gt;>gt; from interpretation by  the
-                     shell.
+         Don’t forget to escape gt;>gt; from interpretation by  the
+         shell.
 
-                     If --columns is specified, only the requested columns are
-                     listed, in the specified order. Otherwise all columns are
-                     listed, in alphabetical order by column name.
+         If --columns is specified, only the requested columns are
+         listed, in the specified order. Otherwise all columns are
+         listed, in alphabetical order by column name.
 
-                     The  UUIDs  shown  for rows created in the same ovn-nbctl
-                     invocation will be wrong.
+         The  UUIDs  shown  for rows created in the same ovn-nbctl
+         invocation will be wrong.
 
-              [--if-exists] [--id=@name] get table record [column[:key]]...
-                     Prints the value of each specified column  in  the  given
-                     record in table. For map columns, a key may optionally be
-                     specified, in which case the value associated with key in
-                     the column is printed, instead of the entire map.
+  * [--if-exists] [--id=@name] get table record [column[:key]]...
+         Prints the value of each specified column  in  the  given
+         record in table. For map columns, a key may optionally be
+         specified, in which case the value associated with key in
+         the column is printed, instead of the entire map.
 
-                     Without  --if-exists,  it  is an error if record does not
-                     exist or key is specified,  if  key  does  not  exist  in
-                     record. With --if-exists, a missing record yields no out‐
-                     put and a missing key prints a blank line.
+         Without  --if-exists,  it  is an error if record does not
+         exist or key is specified,  if  key  does  not  exist  in
+         record. With --if-exists, a missing record yields no out‐
+         put and a missing key prints a blank line.
 
-                     If @name is specified, then the UUID for  record  may  be
-                     referred  to by that name later in the same ovn-nbctl in‐
-                     vocation in contexts where a UUID is expected.
+         If @name is specified, then the UUID for  record  may  be
+         referred  to by that name later in the same ovn-nbctl in‐
+         vocation in contexts where a UUID is expected.
 
-                     Both --id and the column arguments are optional, but usu‐
-                     ally  at  least  one or the other should be specified. If
-                     both are omitted, then get has no effect except to verify
-                     that record exists in table.
+         Both --id and the column arguments are optional, but usu‐
+         ally  at  least  one or the other should be specified. If
+         both are omitted, then get has no effect except to verify
+         that record exists in table.
 
-                     --id and --if-exists cannot be used together.
+         --id and --if-exists cannot be used together.
 
-              [--if-exists] set table record column[:key]=value...
-                     Sets  the  value  of  each  specified column in the given
-                     record in table to value. For map columns, a key may  op‐
-                     tionally be specified, in which case the value associated
-                     with key in that column is changed (or added, if none ex‐
-                     ists), instead of the entire map.
+  * [--if-exists] set table record column[:key]=value...
+         Sets  the  value  of  each  specified column in the given
+         record in table to value. For map columns, a key may  op‐
+         tionally be specified, in which case the value associated
+         with key in that column is changed (or added, if none ex‐
+         ists), instead of the entire map.
 
-                     Without  --if-exists,  it  is an error if record does not
-                     exist. With --if-exists, this  command  does  nothing  if
-                     record does not exist.
+         Without  --if-exists,  it  is an error if record does not
+         exist. With --if-exists, this  command  does  nothing  if
+         record does not exist.
 
-              [--if-exists] add table record column [key=]value...
-                     Adds  the  specified value or key-value pair to column in
-                     record in table. If column is a  map,  then  key  is  re‐
-                     quired, otherwise it is prohibited. If key already exists
-                     in a map column, then the current value is  not  replaced
-                     (use the set command to replace an existing value).
+  * [--if-exists] add table record column [key=]value...
+         Adds  the  specified value or key-value pair to column in
+         record in table. If column is a  map,  then  key  is  re‐
+         quired, otherwise it is prohibited. If key already exists
+         in a map column, then the current value is  not  replaced
+         (use the set command to replace an existing value).
 
-                     Without  --if-exists,  it  is an error if record does not
-                     exist. With --if-exists, this  command  does  nothing  if
-                     record does not exist.
+         Without  --if-exists,  it  is an error if record does not
+         exist. With --if-exists, this  command  does  nothing  if
+         record does not exist.
 
-              [--if-exists] remove table record column value...
+  * [--if-exists] remove table record column value...
 
-                     [--if-exists] remove table record column key...
+         [--if-exists] remove table record column key...
 
-                     [--if-exists]  remove  table  record  column key=value...
-                     Removes the specified values or key-value pairs from col‐
-                     umn in record in table. The first form applies to columns
-                     that are not maps: each specified value is  removed  from
-                     the  column. The second and third forms apply to map col‐
-                     umns: if only a key is specified, then any key-value pair
-                     with  the  given key is removed, regardless of its value;
-                     if a value is given then a pair is removed only  if  both
-                     key and value match.
+         [--if-exists]  remove  table  record  column key=value...
+         Removes the specified values or key-value pairs from col‐
+         umn in record in table. The first form applies to columns
+         that are not maps: each specified value is  removed  from
+         the  column. The second and third forms apply to map col‐
+         umns: if only a key is specified, then any key-value pair
+         with  the  given key is removed, regardless of its value;
+         if a value is given then a pair is removed only  if  both
+         key and value match.
 
-                     It  is  not  an  error if the column does not contain the
-                     specified key or value or pair.
+         It  is  not  an  error if the column does not contain the
+         specified key or value or pair.
 
-                     Without --if-exists, it is an error if  record  does  not
-                     exist.  With  --if-exists,  this  command does nothing if
-                     record does not exist.
+         Without --if-exists, it is an error if  record  does  not
+         exist.  With  --if-exists,  this  command does nothing if
+         record does not exist.
 
-              [--if-exists] clear table record column...
-                     Sets each column in record in table to the empty  set  or
-                     empty  map,  as appropriate. This command applies only to
-                     columns that are allowed to be empty.
+  * [--if-exists] clear table record column...
+         Sets each column in record in table to the empty  set  or
+         empty  map,  as appropriate. This command applies only to
+         columns that are allowed to be empty.
 
-                     Without --if-exists, it is an error if  record  does  not
-                     exist.  With  --if-exists,  this  command does nothing if
-                     record does not exist.
+         Without --if-exists, it is an error if  record  does  not
+         exist.  With  --if-exists,  this  command does nothing if
+         record does not exist.
 
-              [--id=@name] create table column[:key]=value...
-                     Creates a new record in table and sets the initial values
-                     of  each  column. Columns not explicitly set will receive
-                     their default values. Outputs the UUID of the new row.
+  * [--id=@name] create table column[:key]=value...
+         在表(table)中创建一条新的记录(record)，然后设置每个列(column)的初始值，
+         未明确设置的列(column)将接收其默认值。输出新记录的UUID
 
-                     If @name is specified, then the UUID for the new row  may
-                     be  referred  to by that name elsewhere in the same \*(PN
-                     invocation in contexts where a  UUID  is  expected.  Such
-                     references may precede or follow the create command.
+         If @name is specified, then the UUID for the new row  may
+         be  referred  to by that name elsewhere in the same \*(PN
+         invocation in contexts where a  UUID  is  expected.  Such
+         references may precede or follow the create command.
 
-                     Caution (ovs-vsctl as example)
-                            Records  in the Open vSwitch database are signifi‐
-                            cant only when they can be reached directly or in‐
-                            directly  from  the Open_vSwitch table. Except for
-                            records in the QoS or Queue tables,  records  that
-                            are  not reachable from the Open_vSwitch table are
-                            automatically  deleted  from  the  database.  This
-                            deletion  happens immediately, without waiting for
-                            additional ovs-vsctl commands  or  other  database
-                            activity. Thus, a create command must generally be
-                            accompanied by additional commands within the same
-                            ovs-vsctl  invocation to add a chain of references
-                            to the newly created  record  from  the  top-level
-                            Open_vSwitch  record.  The  EXAMPLES section gives
-                            some examples that show how to do this.
+         Caution (ovs-vsctl as example)
+                Records  in the Open vSwitch database are signifi‐
+                cant only when they can be reached directly or in‐
+                directly  from  the Open_vSwitch table. Except for
+                records in the QoS or Queue tables,  records  that
+                are  not reachable from the Open_vSwitch table are
+                automatically  deleted  from  the  database.  This
+                deletion  happens immediately, without waiting for
+                additional ovs-vsctl commands  or  other  database
+                activity. Thus, a create command must generally be
+                accompanied by additional commands within the same
+                ovs-vsctl  invocation to add a chain of references
+                to the newly created  record  from  the  top-level
+                Open_vSwitch  record.  The  EXAMPLES section gives
+                some examples that show how to do this.
 
-              [--if-exists] destroy table record...
-                     Deletes each specified record from table. Unless --if-ex‐
-                     ists is specified, each records must exist.
+  * [--if-exists] destroy table record...
+         Deletes each specified record from table. Unless --if-ex‐
+         ists is specified, each records must exist.
 
-              --all destroy table
-                     Deletes all records from the table.
+  * --all destroy table
+         Deletes all records from the table.
 
-                     Caution (ovs-vsctl as example)
-                            The  destroy command is only useful for records in
-                            the QoS or Queue tables. Records in  other  tables
-                            are  automatically  deleted from the database when
-                            they become unreachable from the Open_vSwitch  ta‐
-                            ble.  This  means that deleting the last reference
-                            to a record is sufficient for deleting the  record
-                            itself.  For  records  in these tables, destroy is
-                            silently ignored. See the EXAMPLES  section  below
-                            for more information.
+         Caution (ovs-vsctl as example)
+                The  destroy command is only useful for records in
+                the QoS or Queue tables. Records in  other  tables
+                are  automatically  deleted from the database when
+                they become unreachable from the Open_vSwitch  ta‐
+                ble.  This  means that deleting the last reference
+                to a record is sufficient for deleting the  record
+                itself.  For  records  in these tables, destroy is
+                silently ignored. See the EXAMPLES  section  below
+                for more information.
 
-              wait-until table record [column[:key]=value]...
-                     Waits  until  table  contains a record named record whose
-                     column equals value or, if key is specified, whose column
-                     contains a key with the specified value. Any of the oper‐
-                     ators !=, gt;>gt;, =, or >gt;>gt;= may be  substituted  for  =  to
-                     test  for  inequality, less than, greater than, less than
-                     or equal to, or greater than or equal  to,  respectively.
-                     (Don’t forget to escape gt;>gt; from interpretation by the
-                     shell.)
+  * wait-until table record [column[:key]=value]...
+         Waits  until  table  contains a record named record whose
+         column equals value or, if key is specified, whose column
+         contains a key with the specified value. Any of the oper‐
+         ators !=, gt;>gt;, =, or >gt;>gt;= may be  substituted  for  =  to
+         test  for  inequality, less than, greater than, less than
+         or equal to, or greater than or equal  to,  respectively.
+         (Don’t forget to escape gt;>gt; from interpretation by the
+         shell.)
 
-                     If no column[:key]=value arguments are given,  this  com‐
-                     mand  waits  only  until  record exists. If more than one
-                     such argument is given, the command waits  until  all  of
-                     them are satisfied.
+         If no column[:key]=value arguments are given,  this  com‐
+         mand  waits  only  until  record exists. If more than one
+         such argument is given, the command waits  until  all  of
+         them are satisfied.
 
-                     Caution (ovs-vsctl as example)
-                            Usually  wait-until should be placed at the begin‐
-                            ning of a set of ovs-vsctl commands. For  example,
-                            wait-until  bridge  br0  --  get  bridge br0 data‐
-                            path_id waits until a bridge named br0 is created,
-                            then  prints  its  datapath_id column, whereas get
-                            bridge br0 datapath_id --  wait-until  bridge  br0
-                            will  abort  if  no  bridge  named br0 exists when
-                            ovs-vsctl initially connects to the database.
+         Caution (ovs-vsctl as example)
+                Usually  wait-until should be placed at the begin‐
+                ning of a set of ovs-vsctl commands. For  example,
+                wait-until  bridge  br0  --  get  bridge br0 data‐
+                path_id waits until a bridge named br0 is created,
+                then  prints  its  datapath_id column, whereas get
+                bridge br0 datapath_id --  wait-until  bridge  br0
+                will  abort  if  no  bridge  named br0 exists when
+                ovs-vsctl initially connects to the database.
 
-                     Consider specifying --timeout=0 along with  --wait-until,
-                     to  prevent ovn-nbctl from terminating after waiting only
-                     at most 5 seconds.
+         Consider specifying --timeout=0 along with  --wait-until,
+         to  prevent ovn-nbctl from terminating after waiting only
+         at most 5 seconds.
 
-              comment [arg]...
-                     This command has no effect on behavior, but any  database
-                     log  record  created by the command will include the com‐
-                     mand and its arguments.
+  * comment [arg]...
+         This command has no effect on behavior, but any  database
+         log  record  created by the command will include the com‐
+         mand and its arguments.
 
 #### SYNCHRONIZATION COMMANDS
        sync   Ordinarily, --wait=sb or --wait=hv only waits for changes by the

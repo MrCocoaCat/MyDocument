@@ -229,10 +229,9 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
   IP Address Assignment:
 
    These options control automatic IP address management (IPAM) for  ports
-   attached to the logical switch. To enable IPAM for IPv4, set other_con‐
-   fig:subnet and optionally other_config:exclude_ips. To enable IPAM  for
-   IPv6,  set  other_config:ipv6_prefix.  IPv4 and IPv6 may be enabled to‐
-   gether or separately.
+   attached to the logical switch. To enable IPAM for IPv4, set other_config:subnet and optionally other_config:exclude_ips.
+    To enable IPAM  for
+   IPv6,  set  other_config:ipv6_prefix.  IPv4 and IPv6 may be enabled together or separately.
 
    To request dynamic address assignment for a particular  port,  use  the
    dynamic   keyword   in   the  addresses  column  of  the  port’s  Logi‐
@@ -241,8 +240,7 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
 
    other_config : subnet: optional string
           Set  this  to  an  IPv4  subnet,  e.g. 192.168.0.0/24, to enable
-          ovn-northd to automatically assign IP addresses within that sub‐
-          net.
+          ovn-northd to automatically assign IP addresses within that subnet.
 
    other_config : exclude_ips: optional string
           To  exclude some addresses from automatic IP address management,
@@ -281,8 +279,7 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
           •      8230:5678::
 
    other_config : mac_only: optional string, either true or false
-          Value  used to request to assign L2 address only if neither sub‐
-          net nor ipv6_prefix are specified
+          Value  used to request to assign L2 address only if neither subnet nor ipv6_prefix are specified
 
   Common Columns:
 
@@ -566,8 +563,7 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
                      address on the port.
 
                      If IPv4 or IPv6 address(es) (or both) are defined, it in‐
-                     dicates  that  the  logical  port  owns  the given IP ad‐
-                     dresses.
+                     dicates  that  the  logical  port  owns  the given IP addresses.
 
                      If IPv4 address(es) are defined, the OVN  logical  switch
                      uses  this information to synthesize responses to ARP re‐
@@ -612,8 +608,7 @@ ovn-nb(5)                     Open vSwitch Manual                    ovn-nb(5)
                      unique MAC address and choose an unused IPv4 address with
                      the  logical  port’s  subnet and store them in the port’s
                      dynamic_addresses column. ovn-northd will use the  subnet
-                     specified  in  other_config:subnet  in  the  port’s Logi‐
-                     cal_Switch.
+                     specified  in  other_config:subnet  in  the  port’s *Logical_Switch*.
 
               Ethernet address followed by keyword "dynamic"
                      The keyword dynamic after the MAC address indicates  that
