@@ -45,6 +45,10 @@ virt-install --connect=xen:///    --name ubuntu16     --ram 512 --cdrom ./ubuntu
 sudo virt-install --connect=xen:/// --name u18.04 --ram 1024 --disk  ./vm1.raw --graphics vnc,listen=0.0.0.0,port=5921  --cdrom ./ubuntu-18.04.2-desktop-amd64.iso
 
 
+### ovs
+
+openvswitch-switch and openvswitch-common
+
 ### 参考
 libvirt xen参考
 https://libvirt.org/drvxen.html
