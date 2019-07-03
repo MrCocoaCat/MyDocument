@@ -36,13 +36,13 @@ libvirt 1.3.1
 
 
 
+sudo virt-install --connect=xen:/// --name u14.04 --ram 1024 --disk u14.04.img,size=4 --graphics vnc,listen=0.0.0.0,port=5930 --location http://ftp.ubuntu.com/ubuntu/dists/trusty/main/installer-amd64/
+
+virt-install --connect=xen:///    --name ubuntu16     --ram 512 --cdrom ./ubuntu-16.04.6-server-amd64.iso --disk path=./ub16.img,size=20,format=qcow2,bus=virtio --network bridge=br5 --os-type=linux  --graphics vnc,listen=0.0.0.0,port=5920
 
 
-virt-install --connect=xen:///   --vcpus=1 --name ubuntu16     --ram 512 --cdrom ./ubuntu-16.04.6-server-amd64.iso --disk path=./ub16.img,size=20,format=qcow2,bus=virtio --network bridge=br5 --os-type=linux  --graphics vnc,listen=0.0.0.0,port=5920
 
-
-
-sudo virt-install --connect=xen:/// --name u14.04 --ram 1024 --disk  u14.04.img,size=4 --graphics vnc,listen=0.0.0.0,port=5920  --cdrom ./CentOS-7-x86_64-Minimal-1810.iso
+sudo virt-install --connect=xen:/// --name u18.04 --ram 1024 --disk  ./vm1.raw --graphics vnc,listen=0.0.0.0,port=5921  --cdrom ./ubuntu-18.04.2-desktop-amd64.iso
 
 
 ### 参考
