@@ -1101,7 +1101,7 @@ CONFIGURATION COOKBOOK
 
               -- --id=@eth2 get Port eth2 \
 
-              --   --id=@m    create    Mirror    name=mymirror    select-dst-
+              --  --id=@m    create    Mirror    name=mymirror    select-dst-
               port=@eth0,@eth1 select-src-port=@eth0,@eth1 output-port=@eth2
 
        Remove  the mirror created above from br0, which also destroys the Mir‐
@@ -1117,7 +1117,7 @@ CONFIGURATION COOKBOOK
 
    Quality of Service (QoS)
        Create a linux-htb QoS record that points to a few queues and use it on
-       eth0 and eth1:
+       eth0 and eth1:``
 
               ovs-vsctl -- set Port eth0 qos=@newqos \
 
