@@ -14,6 +14,7 @@ sudo update-grub
 ```
 
 3. Set the default toolstack to xm (aka xend):
+
 ```
 sudo sed -i 's/TOOLSTACK=.*\+/TOOLSTACK="xm"/' /etc/default/xen
 ```
@@ -32,7 +33,7 @@ apt-get install libvirt-bin
 
 ubuntu 16.04.6
 xen 4.6.5
-libvirt 1.3.1
+# libvirt 1.3.1
 
 
 
