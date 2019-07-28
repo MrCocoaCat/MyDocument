@@ -395,3 +395,23 @@ Build OpenVSwitch and OVN
 53 systemctl start ovn-northd
 54 ### Start ovn-controller
 55 systemctl start ovn-controller
+
+
+
+
+
+
+
+
+
+
+####
+# ovs-ctl stop 停止ovs服务
+
+# ovs-dpctl show查看内核，会有一个ovs-system的datapath
+
+# ovs-dpctl del-dp ovs-system 删除上一步出现的datapath（不进行这一步，rmmod可能会报错）
+
+# rmmod  openvswitch 卸载openvswitch内核模块，使用lsmod | grep openvswitch 没有openvswitch
+
+# 进入ovs源代码目录，按照前述编译步骤重新编译安装
