@@ -158,7 +158,6 @@ ovn-nbctl [options] command [arg...]
   * lsp-set-addresses port [address]...   
     设置与端口地址关联的地址。每个地址应为以下之一
 
-
   * lsp-set-addresses port [address]...   
     设置与端口地址关联的地址。每个地址应为以下之一
         * 一个以太网地址, 可选地，后跟空格及一个或多个IP地址
