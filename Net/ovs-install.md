@@ -13,11 +13,12 @@ Cloning the repository leaves the “master” branch initially checked out. Thi
 $ git checkout v2.7.0
 ```
 The repository also has a branch for each release series. For example, to obtain the latest fixes in the Open vSwitch 2.7.x release series, which might include bug fixes that have not yet been in any released version, you can check it out from the “ovs” directory with:
-
+```
 $ git checkout origin/branch-2.7
+```
 If you do not want to use Git, you can also obtain tarballs for Open vSwitch release versions via http://openvswitch.org/download/, or download a ZIP file for any snapshot from the web interface at https://github.com/openvswitch/ovs.
 
-Build Requirements
+### Build Requirements
 To compile the userspace programs in the Open vSwitch distribution, you will need the following software:
 
 GNU make
@@ -271,13 +272,16 @@ $ ovsdb-tool create /usr/local/etc/openvswitch/conf.db \
 Configure ovsdb-server to use database created above, to listen on a Unix domain socket, to connect to any managers specified in the database itself, and to use the SSL configuration in the database:
 ```
 $ mkdir -p /usr/local/var/run/openvswitch
-$ ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
+$ ovsdb-server \
+    --remote=punix:/usr/local/var/run/openvswitch/db.sock \
     --remote=db:Open_vSwitch,Open_vSwitch,manager_options \
     --private-key=db:Open_vSwitch,SSL,private_key \
     --certificate=db:Open_vSwitch,SSL,certificate \
     --bootstrap-ca-cert=db:Open_vSwitch,SSL,ca_cert \
     --pidfile --detach --log-file
+# remote=punix:/usr/local/var/run/openvswitch/db.sock  指定
 ```
+
 >Note
 If you built Open vSwitch without SSL support, then omit --private-key, --certificate, and --bootstrap-ca-cert.)
 

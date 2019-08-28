@@ -1,4 +1,4 @@
-```
+
 #############################################################################
 #
 #        DNS 选项
@@ -198,7 +198,7 @@ dns-forward-max=1000
 #dhcp-range=192.168.10.150,192.168.10.180,static,255.255.255.0,1h
 
 # 根据 MAC 地址或 id 固定分配客户端的 IP 地址、主机名、租期。
-# IPv4 下指定 id:* 将忽略 DHCP 客户端的 ID ，仅根据 MAC 来进行 IP 地址分配。
+# IPv4 下指定 id:* 将忽略 DHCP 客户端的ID ，仅根据 MAC 来进行 IP 地址分配。
 # 在读取 /etc/hosts 的情况，也可以根据 /etc/hosts 中的主机名分配对应 IP 地址。
 # 指定 ignore 将忽略指定客户端得 DHCP 请求。
 #dhcp-host=[<hwaddr>][,id:<client_id>|*][,set:<tag>][,<ipaddr>][,<hostname>][,<lease_time>][,ignore]
@@ -457,4 +457,3 @@ dns-forward-max=1000
 #conf-file=/etc/dnsmasq.more.conf
 conf-dir=/etc/dnsmasq.d
 #servers-file=<file>
-```
