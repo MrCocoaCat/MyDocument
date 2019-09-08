@@ -415,3 +415,28 @@ Build OpenVSwitch and OVN
 # rmmod  openvswitch 卸载openvswitch内核模块，使用lsmod | grep openvswitch 没有openvswitch
 
 # 进入ovs源代码目录，按照前述编译步骤重新编译安装
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+***
+
+### Distributions packaging Open vSwitch¶
+
+You can use apt-get or aptitude to install the .deb packages and must be superuser.
+
+1. Debian has openvswitch-switch and openvswitch-common .deb packages that includes the core userspace components of the switch.
+
+2. For kernel datapath, openvswitch-datapath-dkms can be installed to automatically build and install Open vSwitch kernel module for your running kernel.
+
+3. For DPDK datapath, Open vSwitch with DPDK support is bundled in the package openvswitch-switch-dpdk.
