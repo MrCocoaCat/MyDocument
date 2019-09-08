@@ -56,7 +56,8 @@ actions: OUTPUT SET_VLAN_VID SET_VLAN_PCP STRIP_VLAN SET_DL_SRC SET_DL_DST SET_N
 OFPT_GET_CONFIG_REPLY (xid=0x4): frags=normal miss_send_len=0
 ```
 
-　　当一个bridge上连接有多台虚拟机（或VM有多个IF）时，我们还常常需要知道VM的IF与bridge  port的对应，这时候可以使用：
+### 查看MAC 地址表
+当一个bridge上连接有多台虚拟机（或VM有多个IF）时，我们还常常需要知道VM的IF与bridge  port的对应，这时候可以使用：
 ```
 ovs-appctl fdb/show [bridge]
 ```
@@ -88,7 +89,7 @@ ovs-vsctl add-port br-eth patch-eth -- set interface patch-eth type=patch option
 #### 添加vxlan
 
 ovs-vsctl del-port gre0
-ovs-vsctl add-port br0 vxlan0 -- set interface vxlan0 type=vxlan options:remote_ip=10.0.2.12 options:key=100 
+ovs-vsctl add-port br0 vxlan0 -- set interface vxlan0 type=vxlan options:remote_ip=10.0.2.12 options:key=100
 
 
 #### tag
@@ -98,3 +99,35 @@ Port的一个重要的方面就是VLAN Configuration，有两种模式：
 
 trunk port，这个port不配置tag，配置trunks，如果trunks为空，则所有的VLAN都trunk，也就意味着对于所有的VLAN的包，本身带什么VLAN ID，就是携带者什么VLAN ID，如果没有设置VLAN，就属于VLAN 0，全部允许通过。如果trunks不为空，则仅仅带着这些VLAN ID的包通过。
 access port，这个port配置tag，从这个port进来的包会被打上这个tag，如果从其他的trunk port中进来的本身就带有VLAN ID的包，如果VLAN ID等于tag，则会从这个port发出，从其他的access port上来的包，如果tag相同，也会被forward到这个port。从access port发出的包不带VLAN ID。如果一个本身带VLAN ID的包到达access port，即便VLAN ID等于tag，也会被抛弃。
+
+
+
+
+
+
+
+
+
+
+cookie=0xaaa0e760a7848ec3, duration=76543.287s, table=20, n_packets=28, n_bytes=3180, idle_age=33324, hard_age=65534, priority=2,dl_vlan=1,dl_dst=fa:16:3e:fd:8a:ed actions=strip_vlan,set_tunnel:0x64,output:2
+
+
+
+
+ovs-ofctl add-flow br-int \
+    ’in_port=1 actions=set_tunnel:5001,set_field:192.168.1.1->gt;>gt;tun_dst,3’
+ovs-ofctl add-flow br-int ’in_port=3,tun_src=192.168.1.1,tun_id=5001 actions=1’
+
+
+
+
+
+
+
+
+
+
+
+
+ovs-ofctl add-flow br-int ’in_port=1 actions=set_tunnel:5001,set_field:192.168.1.1->gt;>gt;tun_dst,3’
+ovs-ofctl add-flow br-int ’in_port=3,tun_src=192.168.1.1,tun_id=5001 actions=1’

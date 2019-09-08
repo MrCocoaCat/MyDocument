@@ -43,8 +43,10 @@ log-async=10
 # 分配DNS
 dhcp-option=6,114.114.114.114
 
-# hcp动态分配的地址范围
+# dhcp动态分配的地址范围
 dhcp-range=set:tag0,5.6.0.1,5.6.0.1,255.255.0.0,infinite
+# 服务的静态绑定
+#  dhcp-host的配置方式有很多种，这里使用的是：[client端MAC地址] + [分配的IP]+ [主机名]
 dhcp-host=12:34:56:78:00:00,5.6.0.1
 
 
@@ -251,3 +253,13 @@ dhcp-host=12:34:56:78:00:32,5.6.0.51
 
 
  ip netns exec ubuntu /usr/sbin/dnsmasq --conf-file=/home/zjl/ubuntu.con
+
+
+https://www.cnblogs.com/CasonChan/p/4604871.html
+
+
+
+
+
+
+在“GRUB_CMDLINE_LINUX”位置处不改变之前原有信息，在其基础上进行追加信息“net.ifnames=0 biosdevname=0”

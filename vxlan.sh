@@ -75,8 +75,8 @@ ovs-vsctl set interface vxlan-$b ofport_request=$b
 sleep 1
 virsh destroy ubuntu-server-61111 2>/dev/null
 virsh destroy ubuntu-server-61112 2>/dev/null
-virsh create /root/liyubo/vxlan1/ubuntu.xml 
-virsh create /root/liyubo/vxlan2/ubuntu.xml 
+virsh create /root/liyubo/vxlan1/ubuntu.xml
+virsh create /root/liyubo/vxlan2/ubuntu.xml
 
 sleep 1
 ovs-vsctl set port tap1 tag=$a
@@ -91,4 +91,3 @@ addFlow2
 ifconfig tap1 mtu 1600
 ifconfig tap2 mtu 1600
 ifconfig tap2 mtu 1600
-
