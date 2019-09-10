@@ -42,7 +42,7 @@ tions are applied:
 * move
 * mod_dl_dst
 * mod_dl_src
-*  mod_nw_dst
+* mod_nw_dst
 * mod_nw_src
 * mod_nw_tos
 * mod_nw_ecn
@@ -899,7 +899,7 @@ as a no-op.
 
        In OpenFlow 1.1 and later, consistency rules allow these  actions  only
        in a flow that matches only packets that contain an IPv4 or IPv6 header
-       (or following an action that adds such a  header).  See  ``Inconsisten‐
+       (or following an action that adds such a  header).  See "Inconsisten‐
        cies’’, above, for more information.
 
        Conformance:

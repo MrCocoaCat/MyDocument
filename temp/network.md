@@ -66,15 +66,15 @@ nameserver 159.226.8.7
 
 
 
-
-
-
-#
-/etc/network/
+#/etc/network/
 
 sudo /etc/init.d/networking restart
 
 
 ### dhcp网卡启动慢
 命令：sudo vim /etc/systemd/system/network-online.target.wants/networking.service
-将里面的TimeoutStartSec=5min  修改为TimeoutStartSec=2sec
+将里面的TimeoutStartSec=5min  修改为TimeoutStartSec=10sec
+
+
+### 网卡名称变更
+https://blog.51cto.com/bella41981/2361482?source=dra
