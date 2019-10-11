@@ -157,7 +157,7 @@ OPTIONS
                             text strings.
 
        -d format
-       --data=format
+
               Sets the formatting for cells within output  tables  unless  the
               table  format  is  set to json, in which case json formatting is
               always used when formatting cells.  The following types of  for‐

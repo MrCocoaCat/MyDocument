@@ -114,20 +114,10 @@ cookie=0xaaa0e760a7848ec3, duration=76543.287s, table=20, n_packets=28, n_bytes=
 
 
 
-ovs-ofctl add-flow br-int \
-    ’in_port=1 actions=set_tunnel:5001,set_field:192.168.1.1->gt;>gt;tun_dst,3’
-ovs-ofctl add-flow br-int ’in_port=3,tun_src=192.168.1.1,tun_id=5001 actions=1’
-
-
-
-
-
-
-
-
-
-
 
 
 ovs-ofctl add-flow br-int ’in_port=1 actions=set_tunnel:5001,set_field:192.168.1.1->gt;>gt;tun_dst,3’
 ovs-ofctl add-flow br-int ’in_port=3,tun_src=192.168.1.1,tun_id=5001 actions=1’
+
+
+NXM_OF_VLAN_TCI[0..11],NXM_OF_ETH_DST[]=NXM_OF_ETH_SRC[],load:0->NXM_OF_VLAN_TCI[],load:NXM_NX_TUN_ID[]->NXM_NX_TUN_ID[],output:NXM_OF_IN_PORT[]
