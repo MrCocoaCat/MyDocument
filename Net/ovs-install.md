@@ -444,3 +444,36 @@ You can use apt-get or aptitude to install the .deb packages and must be superus
 2. For kernel datapath, openvswitch-datapath-dkms can be installed to automatically build and install Open vSwitch kernel module for your running kernel.
 
 3. For DPDK datapath, Open vSwitch with DPDK support is bundled in the package openvswitch-switch-dpdk.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 处理问题
+ovs-vsctl: unix:/usr/local/var/run/openvswitch/db.sock: database connection failed (No such file or directory)
+
+```
+ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
+                     --remote=db:Open_vSwitch,Open_vSwitch,manager_options \
+                     --private-key=db:Open_vSwitch,SSL,private_key \
+                     --certificate=db:Open_vSwitch,SSL,certificate \
+                     --bootstrap-ca-cert=db:Open_vSwitch,SSL,ca_cert \
+                     --pidfile --detach
+ovs-vsctl --no-wait init
+ovs-vswitchd --pidfile --detach
+```
+解决方法二：
+```
+sudo /usr/share/openvswitch/scripts/ovs-ctl start
+```
